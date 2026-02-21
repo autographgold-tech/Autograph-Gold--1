@@ -72,7 +72,7 @@
       overflow:auto;-webkit-overflow-scrolling:touch;
     }
     .modal{
-      max-width:780px;width:100%;
+      max-width:820px;width:100%;
       background:#0f0f0f;border:1px solid var(--gold);
       border-radius:16px;padding:14px;margin:0 auto;
       max-height: calc(100vh - 28px); overflow:auto; -webkit-overflow-scrolling:touch;
@@ -116,6 +116,23 @@
     .choiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     @media (max-width:560px){ .choiceGrid{grid-template-columns:1fr} }
     .choiceGrid select{width:100%}
+
+    .optLine{
+      margin-top:10px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      background:#0b0b0b;
+      border-radius:12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .optLine label{display:flex;gap:8px;align-items:center;cursor:pointer}
+    .optLine input{transform:scale(1.1)}
   </style>
 </head>
 
@@ -142,7 +159,7 @@
     </div>
 
     <button class="btnTop" id="packsBtn">Пакеты 🎁</button>
-    <button class="btnTop" id="partyBtn">Праздник 🎉</button>
+    <button class="btnTop" id="partyBtn">Autograph поздравление 🎉</button>
   </div>
 
   <div id="menu"></div>
@@ -209,12 +226,17 @@
 
     <div class="grid" id="pkCards"></div>
 
-    <div class="choiceWrap">
-      <div class="choiceTitle" id="pkMainTitle">Основное: блюда на компанию</div>
-      <div class="choiceGrid" id="pkCompanyChoices"></div>
+    <div class="choiceWrap" id="pkChoices">
+      <div class="choiceTitle" id="pkMainTitle">Основное (на 8–10 человек):</div>
+      <div class="choiceGrid" id="pkMainChoices"></div>
 
-      <div class="choiceTitle" id="pkPreTitle" style="display:none">Дополнительно: блюда по предзаказу</div>
-      <div class="choiceGrid" id="pkPreChoices" style="display:none"></div>
+      <div class="optLine" id="pkCongratsLine" style="display:none">
+        <label>
+          <input type="checkbox" id="pkAddCongrats" />
+          <span id="pkCongratsText">Добавить Autograph поздравление +30 000 ₸</span>
+        </label>
+        <span id="pkCongratsNote">Торт • Martini Asti • фейерверк/свечи • поздравление</span>
+      </div>
     </div>
 
     <div class="hint" id="pkHint"></div>
@@ -230,10 +252,10 @@
   </div>
 </div>
 
-<!-- ✅ PARTY MODAL (Dubai Congrats) -->
+<!-- ✅ AUTOGRAPH CONGRATS MODAL -->
 <div class="mb" id="partyMb">
   <div class="modal">
-    <h3 id="ptTitle">Праздник</h3>
+    <h3 id="ptTitle">Autograph поздравление</h3>
 
     <div class="row">
       <div>
@@ -245,22 +267,11 @@
         <label id="ptTypeLabel">Повод</label><br>
         <select id="ptType"></select>
       </div>
-
-      <div>
-        <label id="ptGuestsLabel">Гостей</label><br>
-        <div class="num">
-          <button id="ptMinus" type="button">−</button>
-          <span id="ptGuests">10</span>
-          <button id="ptPlus" type="button">+</button>
-        </div>
-      </div>
     </div>
 
-    <div id="ptWarn" class="warn" style="display:none"></div>
-
     <div class="card active">
-      <h4 id="ptName">Dubai-Поздравление</h4>
-      <div class="desc" id="ptDesc">Заход “как в Дубае”: Martini Asti + торт + фейерверк/свечи + поздравление в VIP.</div>
+      <h4 id="ptName">Autograph поздравление</h4>
+      <div class="desc" id="ptDesc">Праздничная подача в VIP с тортом и напитком.</div>
       <div class="price" id="ptPrice">30 000 ₸</div>
       <div class="mini" id="ptInc">Включено: Martini Asti (1 бут) • Торт (подача) • Фейерверк/свечи • Поздравление в VIP</div>
       <div class="mini" id="ptNote">* Время подачи согласовать с менеджером.</div>
@@ -278,7 +289,6 @@
 
 <script>
   // ========= SETTINGS =========
-  // Меняй только эту строку (можно 8... или +7... — код сам нормализует)
   const WA_PHONE_RAW = '77777785757';
   const WA_PHONE = WA_PHONE_RAW.replace(/^\+/, '').replace(/^8/, '7').replace(/\D/g,'');
 
@@ -400,11 +410,11 @@
     }
   };
 
-  // For KZ/EN reuse RU data (быстро и без потери функционала)
+  // For KZ/EN reuse RU data
   DATA.kz.food = DATA.ru.food; DATA.kz.bar = DATA.ru.bar; DATA.kz.hookah = DATA.ru.hookah;
   DATA.en.food = DATA.ru.food; DATA.en.bar = DATA.ru.bar; DATA.en.hookah = DATA.ru.hookah;
 
-  // ========= PACKAGES (2 пакета) =========
+  // ========= PACKAGES =========
   const EVENTS = {
     ru:[
       {val:'birthday', label:'День рождения'},
@@ -426,25 +436,17 @@
     ]
   };
 
-  // Автосостав пакета (под ключ) — гость выбирает только основное
-  // Кол-ва зависят от гостей:
-  // company dishes = ceil(guests/9)
-  // salads fixed picks, qty by ranges: 2/3/4/5
-  // cold apps: 1/2/3/4
-  // hot apps: 1/2/2/3
-  // lemonades: 2/3/5/8
-  // hookah: 1 (<=12) / 2 (13-20) / 3 (21-35) — умеренно
   const PACKS = [
     {
       id:'standard',
       name:{ru:'STANDARD', kz:'STANDARD', en:'STANDARD'},
       desc:{
-        ru:'Под ключ: салаты + закуски + лимонады + кальян(ы) + основное на компанию. Вы выбираете только “блюда на компанию”.',
-        kz:'“Под ключ”: салаттар + тіскебасар + лимонад + кальян + компанияға арналған негізгі тағам.',
-        en:'Turn-key: salads + appetizers + lemonades + hookah(s) + main sharing dishes.'
+        ru:'Под ключ: салаты + закуски + лимонады + кальян(ы). Вы выбираете только “основное” (на 8–10 человек).',
+        kz:'“Под ключ”: салаттар + тіскебасар + лимонад + кальян. Тек “негізгі” таңдайсыз.',
+        en:'Turn-key: salads + appetizers + lemonades + hookah(s). You choose only “main” (sharing).'
       },
       note:{
-        ru:'* Сервис 10% по чеку отдельно. Состав закусок/салатов можно заменить на аналогичные позиции из меню.',
+        ru:'* Сервис 10% по чеку отдельно. Салаты/закуски можно заменить на аналогичные позиции из меню.',
         kz:'* Қызмет 10% бөлек. Құрамын ұқсас позицияларға ауыстыруға болады.',
         en:'* Service 10% is separate. Items can be swapped for similar menu options.'
       },
@@ -454,9 +456,9 @@
       id:'premium',
       name:{ru:'PREMIUM', kz:'PREMIUM', en:'PREMIUM'},
       desc:{
-        ru:'Максимум: усиленный стол + блюда по предзаказу + 🎤 ведущий (до 30 мин). Вы выбираете “блюда на компанию” и “предзаказ”.',
-        kz:'Максимум: күшейтілген үстел + алдын ала тапсырыс + 🎤 жүргізуші (30 мин дейін).',
-        en:'Maximum: enhanced table + pre-order dishes + 🎤 host (up to 30 min).'
+        ru:'Максимум: усиленный стол + 🎤 ведущий (до 30 мин). Вы выбираете только “основное” (на 8–10 человек).',
+        kz:'Максимум: күшейтілген үстел + 🎤 жүргізуші (30 мин дейін).',
+        en:'Maximum: enhanced table + 🎤 host (up to 30 min). You choose only main sharing dishes.'
       },
       note:{
         ru:'🎤 Ведущий — только по предварительному бронированию минимум за 24 часа (при подтверждении менеджером). Сервис 10% отдельно.',
@@ -474,10 +476,9 @@
   let pkGuests = 10;
   let pkType = 'birthday';
   let pkPack = 'standard';
-  let pkCompany = []; // chosen company dishes (names)
-  let pkPre = [];     // chosen pre-order dishes (names) for premium
+  let pkMain = []; // chosen main dishes (mix of company + pre-order)
+  let pkAddCongrats = false;
 
-  let ptGuests = 10;
   let ptType = 'birthday';
 
   // ========= HELPERS =========
@@ -700,15 +701,6 @@
     }catch(e){}
     $('orderText').textContent=t;
     showModal();
-    try{
-      const range=document.createRange();
-      range.selectNodeContents($('orderText'));
-      const sel=window.getSelection();
-      sel.removeAllRanges(); sel.addRange(range);
-      document.execCommand('copy');
-      sel.removeAllRanges();
-      alert(ui().copied);
-    }catch(e){}
   }
 
   function sendWA(text){
@@ -718,7 +710,6 @@
 
   // ========= PACKAGE BUILDING =========
   function getCategoryItems(catNameRu){
-    // ищем категорию по RU названиям (потому что DATA.kz/en = RU)
     for(const c of DATA.ru.food){
       if(c.name === catNameRu) return c.items.slice();
     }
@@ -761,31 +752,31 @@
   ];
 
   function qtyByGuests(g, a,b,c,d){
-    // ranges: 4-8, 9-12, 13-20, 21-35
     if(g<=8) return a;
     if(g<=12) return b;
     if(g<=20) return c;
     return d;
   }
 
-  function companyCount(g){ return Math.ceil(g/9); }
-  function preorderCount(g){ return (g<=15?1:2); }
+  // ✅ Основное на 8–10 человек: 1 позиция примерно на 9 гостей
+  function mainCount(g){
+    return Math.ceil(g/9);
+  }
 
   function hookahCount(g){
+    // умеренно
     if(g<=12) return 1;
     if(g<=20) return 2;
     return 3;
   }
 
   function priceOf(name){
-    // search in RU food/bar/hookah
     const all = [].concat(...DATA.ru.food.map(c=>c.items), ...DATA.ru.bar.map(c=>c.items), ...DATA.ru.hookah.map(c=>c.items));
     const found = all.find(([n])=>n===name);
     return found ? Number(found[1]||0) : 0;
   }
 
   function buildAutoIncluded(g, packId){
-    // fixed auto items (guest doesn't choose these)
     const saladsN = qtyByGuests(g,2,3,4,5);
     const coldN   = qtyByGuests(g,1,2,3,4);
     const hotN    = qtyByGuests(g,1,2,2,3);
@@ -794,23 +785,14 @@
 
     const included = [];
 
-    for(let i=0;i<saladsN;i++){
-      included.push({name:SALAD_POOL[i % SALAD_POOL.length], qty:1, group:'salad'});
-    }
-    for(let i=0;i<coldN;i++){
-      included.push({name:COLD_POOL[i % COLD_POOL.length], qty:1, group:'cold'});
-    }
-    for(let i=0;i<hotN;i++){
-      included.push({name:HOT_POOL[i % HOT_POOL.length], qty:1, group:'hot'});
-    }
-    for(let i=0;i<lemN;i++){
-      included.push({name:LEM_POOL[i % LEM_POOL.length], qty:1, group:'lem'});
-    }
+    for(let i=0;i<saladsN;i++) included.push({name:SALAD_POOL[i % SALAD_POOL.length], qty:1, group:'salad'});
+    for(let i=0;i<coldN;i++)   included.push({name:COLD_POOL[i % COLD_POOL.length], qty:1, group:'cold'});
+    for(let i=0;i<hotN;i++)    included.push({name:HOT_POOL[i % HOT_POOL.length], qty:1, group:'hot'});
+    for(let i=0;i<lemN;i++)    included.push({name:LEM_POOL[i % LEM_POOL.length], qty:1, group:'lem'});
 
-    // hookah (Lite) — умеренно
     included.push({name:'Lite', qty:hookN, group:'hookah'});
 
-    // Premium slightly stronger: +1 lemonade and +1 hot app on big groups
+    // Premium чуть богаче (без перегиба): +1 лимонад на 13+ гостей, +1 горячая закуска на 21+ гостей
     if(packId==='premium'){
       if(g>=13) included.push({name:LEM_POOL[(lemN) % LEM_POOL.length], qty:1, group:'lem'});
       if(g>=21) included.push({name:HOT_POOL[(hotN) % HOT_POOL.length], qty:1, group:'hot'});
@@ -823,7 +805,6 @@
     const vip = getVip(vipVal);
     if(g<=vip.cap) return {ok:true, msg:''};
 
-    // suggest VIPs that fit
     const fits = VIPS.filter(v=>g<=v.cap).map(v=>v.val).join(', ');
     const name = (lang==='ru'?vip.ru:(lang==='kz'?vip.kz:vip.en));
     const msg = (lang==='ru'
@@ -834,6 +815,33 @@
       )
     );
     return {ok:false, msg};
+  }
+
+  // ✅ Основное — общий список из 2 разделов (оба на 8–10 человек)
+  function mainOptions(){
+    const company = getCategoryItems('Блюда на компанию').map(([n,p])=>({name:n, price:p, group:'company'}));
+    const pre     = getCategoryItems('Блюда по предзаказу').map(([n,p])=>({name:n, price:p, group:'pre'}));
+    return [...company, ...pre];
+  }
+
+  function labelOption(opt){
+    const g = opt.group==='company'
+      ? (lang==='ru'?'(на компанию)':(lang==='kz'?'(компанияға)': '(sharing)'))
+      : (lang==='ru'?'(предзаказ)':(lang==='kz'?'(алдын ала)': '(pre-order)'));
+    return `${opt.name} ${g} — ${fmt(opt.price)} ₸`;
+  }
+
+  function estimatePackTotal(packId, guests, mainSel, addCongrats){
+    let sum = 0;
+
+    const auto = buildAutoIncluded(guests, packId);
+    for(const it of auto) sum += priceOf(it.name) * it.qty;
+
+    for(const nm of (mainSel||[])) sum += priceOf(nm);
+
+    if(addCongrats) sum += 30000;
+
+    return sum;
   }
 
   function renderPackCards(){
@@ -853,9 +861,7 @@
       d.textContent = p.desc[lang];
       card.appendChild(d);
 
-      const auto = buildAutoIncluded(pkGuests, p.id);
-      const est = estimatePackTotal(p.id, pkGuests, pkCompany, pkPre);
-
+      const est = estimatePackTotal(p.id, pkGuests, pkMain, (p.id==='premium' && pkAddCongrats));
       const pr = document.createElement('div');
       pr.className='price';
       pr.textContent = `${fmt(est)} ₸`;
@@ -895,87 +901,82 @@
     }
   }
 
-  function renderCompanyChoices(){
-    const root = $('pkCompanyChoices');
-    root.innerHTML = '';
-
-    const need = companyCount(pkGuests);
-    const options = getCategoryItems('Блюда на компанию');
-    if(pkCompany.length !== need){
-      pkCompany = Array.from({length:need}, (_,i)=> options[i % options.length]?.[0] || options[0]?.[0] || '');
+  function ensureMainSelections(){
+    const need = mainCount(pkGuests);
+    const opts = mainOptions();
+    if(!opts.length){
+      pkMain = [];
+      return;
     }
-
-    for(let i=0;i<need;i++){
-      const sel = document.createElement('select');
-      sel.dataset.companyIndex = String(i);
-      for(const [name, price] of options){
-        const o = document.createElement('option');
-        o.value = name;
-        o.textContent = `${name} — ${fmt(price)} ₸`;
-        sel.appendChild(o);
-      }
-      sel.value = pkCompany[i] || (options[0]?.[0] || '');
-      root.appendChild(sel);
+    if(pkMain.length !== need){
+      pkMain = Array.from({length:need}, (_,i)=> opts[i % opts.length].name);
+    } else {
+      // если вдруг выбранного нет в списке — заменим на первый
+      const names = new Set(opts.map(o=>o.name));
+      pkMain = pkMain.map(x => names.has(x) ? x : opts[0].name);
     }
   }
 
-  function renderPreChoices(){
-    const title = $('pkPreTitle');
-    const root = $('pkPreChoices');
+  function renderMainChoices(){
+    ensureMainSelections();
+    const root = $('pkMainChoices');
+    root.innerHTML = '';
+
+    const opts = mainOptions();
+    const need = mainCount(pkGuests);
+
+    for(let i=0;i<need;i++){
+      const sel = document.createElement('select');
+      sel.dataset.mainIndex = String(i);
+
+      for(const opt of opts){
+        const o = document.createElement('option');
+        o.value = opt.name;
+        o.textContent = labelOption(opt);
+        sel.appendChild(o);
+      }
+
+      sel.value = pkMain[i] || (opts[0]?.name || '');
+      root.appendChild(sel);
+    }
+
+    // Titles
+    $('pkMainTitle').textContent = (lang==='ru'
+      ? `Основное (на 8–10 человек): выберите ${need} шт`
+      : (lang==='kz'
+        ? `Негізгі (8–10 адамға): ${need} дана таңдаңыз`
+        : `Main (8–10 people): choose ${need}`
+      )
+    );
+  }
+
+  function renderCongratsOption(){
+    const line = $('pkCongratsLine');
+    const text = $('pkCongratsText');
+    const note = $('pkCongratsNote');
 
     if(pkPack !== 'premium'){
-      title.style.display='none';
-      root.style.display='none';
-      pkPre = [];
+      line.style.display = 'none';
+      pkAddCongrats = false;
+      $('pkAddCongrats').checked = false;
       return;
     }
 
-    title.style.display='';
-    root.style.display='';
-    root.innerHTML = '';
-
-    const need = preorderCount(pkGuests);
-    const options = getCategoryItems('Блюда по предзаказу');
-    if(pkPre.length !== need){
-      pkPre = Array.from({length:need}, (_,i)=> options[i % options.length]?.[0] || options[0]?.[0] || '');
-    }
-
-    for(let i=0;i<need;i++){
-      const sel = document.createElement('select');
-      sel.dataset.preIndex = String(i);
-      for(const [name, price] of options){
-        const o = document.createElement('option');
-        o.value = name;
-        o.textContent = `${name} — ${fmt(price)} ₸`;
-        sel.appendChild(o);
-      }
-      sel.value = pkPre[i] || (options[0]?.[0] || '');
-      root.appendChild(sel);
-    }
-  }
-
-  function estimatePackTotal(packId, guests, companySel, preSel){
-    let sum = 0;
-
-    // auto-included
-    const auto = buildAutoIncluded(guests, packId);
-    for(const it of auto){
-      sum += priceOf(it.name) * it.qty;
-    }
-
-    // company dishes chosen
-    for(const nm of (companySel||[])){
-      sum += priceOf(nm);
-    }
-
-    // pre-order chosen (premium only)
-    if(packId==='premium'){
-      for(const nm of (preSel||[])){
-        sum += priceOf(nm);
-      }
-    }
-
-    return sum;
+    line.style.display = '';
+    text.textContent = (lang==='ru'
+      ? 'Добавить Autograph поздравление +30 000 ₸'
+      : (lang==='kz'
+        ? 'Autograph құттықтауы +30 000 ₸ қосу'
+        : 'Add Autograph congratulations +30 000 ₸'
+      )
+    );
+    note.textContent = (lang==='ru'
+      ? 'Торт • Martini Asti • фейерверк/свечи • поздравление'
+      : (lang==='kz'
+        ? 'Торт • Martini Asti • фейерверк/шам • құттықтау'
+        : 'Cake • Martini Asti • sparkler/candles • congratulations'
+      )
+    );
   }
 
   function packText(){
@@ -986,7 +987,7 @@
     const pack = PACKS.find(x=>x.id===pkPack) || PACKS[0];
 
     const auto = buildAutoIncluded(pkGuests, pkPack);
-    const total = estimatePackTotal(pkPack, pkGuests, pkCompany, pkPre);
+    const total = estimatePackTotal(pkPack, pkGuests, pkMain, (pkPack==='premium' && pkAddCongrats));
 
     const lines = [];
     lines.push(`AUTOGRAPH GOLD — ПАКЕТ`);
@@ -996,24 +997,15 @@
     lines.push(`Пакет: ${pack.name[lang]}`);
     lines.push('');
 
-    lines.push('Основное (выбор гостя):');
-    const cc = companyCount(pkGuests);
-    lines.push(`• Блюда на компанию: ${cc} шт`);
-    pkCompany.forEach((x,i)=> lines.push(`   ${i+1}) ${x}`));
-    if(pkPack==='premium'){
-      const pc = preorderCount(pkGuests);
-      lines.push(`• Блюда по предзаказу: ${pc} шт`);
-      pkPre.forEach((x,i)=> lines.push(`   ${i+1}) ${x}`));
-    }
-    lines.push('');
+    lines.push(`Основное (на 8–10 человек): ${pkMain.length} шт`);
+    pkMain.forEach((x,i)=> lines.push(`• ${i+1}) ${x}`));
 
+    lines.push('');
     lines.push('Авто-включено (под ключ):');
-    // group by type
     const grouped = {};
     for(const it of auto){
-      const key = it.group;
-      if(!grouped[key]) grouped[key]=[];
-      grouped[key].push(it);
+      if(!grouped[it.group]) grouped[it.group]=[];
+      grouped[it.group].push(it);
     }
     function emitGroup(title, arr){
       if(!arr || !arr.length) return;
@@ -1032,6 +1024,12 @@
       lines.push('');
       lines.push('🎤 Ведущий: программа до 30 минут');
       lines.push('Условие: бронирование ведущего минимум за 24 часа (при подтверждении менеджером).');
+
+      if(pkAddCongrats){
+        lines.push('');
+        lines.push('🎉 Autograph поздравление: +30 000 ₸');
+        lines.push('Включено: Martini Asti (1 бутылка) • Торт (подача) • Фейерверк/свечи • Поздравление в VIP');
+      }
     }
 
     lines.push('');
@@ -1063,14 +1061,12 @@
       sendBtn.classList.add('disabled');
     }
 
-    // cards & choices
     renderPackCards();
-    renderCompanyChoices();
-    renderPreChoices();
+    renderMainChoices();
+    renderCongratsOption();
 
-    // hint
     $('pkHint').textContent = (lang==='ru'
-      ? 'Выберите пакет и основное. Салаты/закуски/лимонады/кальяны подставляются автоматически — чтобы всем хватило.'
+      ? 'Выберите пакет и основное. Всё остальное подставляется автоматически — чтобы всем хватило.'
       : (lang==='kz'
         ? 'Пакет пен негізгі тағамды таңдаңыз. Қалғаны автоматты түрде қосылады — бәріне жетеді.'
         : 'Pick a package and main dishes. The rest is auto-included so everyone has enough.'
@@ -1090,6 +1086,8 @@
     $('packsMb').scrollTop = 0;
 
     renderPacksUI();
+    // сразу покажем превью, чтобы было видно что “происходит”
+    showPack(true);
   }
   function closePacks(){ $('packsMb').style.display='none'; }
 
@@ -1104,37 +1102,33 @@
     }catch(e){}
     $('pkText').style.display='block';
     $('pkText').textContent = t;
-    try{
-      const range=document.createRange();
-      range.selectNodeContents($('pkText'));
-      const sel=window.getSelection();
-      sel.removeAllRanges(); sel.addRange(range);
-      document.execCommand('copy');
-      sel.removeAllRanges();
-      alert(ui().copied);
-    }catch(e){}
   }
 
-  function showPack(){
+  function showPack(scrollToChoices){
     const t = packText();
     $('pkText').style.display='block';
     $('pkText').textContent = t;
+
+    if(scrollToChoices){
+      // мягко прокрутим к выбору основного
+      const el = $('pkChoices');
+      el?.scrollIntoView({behavior:'smooth', block:'start'});
+    }
   }
 
-  // ========= PARTY (Dubai Congrats) =========
-  function partyText(){
+  // ========= AUTOGRAPH CONGRATS =========
+  function congratsText(){
     const vipVal = $('ptVip').value || $('vip').value || VIPS[0].val;
     const vipObj = getVip(vipVal);
     const vipLabel = (lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
     const typeLabel = EVENTS[lang].find(x=>x.val===ptType)?.label || '';
 
     const lines = [];
-    lines.push('AUTOGRAPH GOLD — ПРАЗДНИК 🎉');
+    lines.push('AUTOGRAPH GOLD — AUTOGRAPH ПОЗДРАВЛЕНИЕ 🎉');
     lines.push(`VIP: ${vipLabel}`);
     lines.push(`Повод: ${typeLabel}`);
-    lines.push(`Гостей: ${ptGuests}`);
     lines.push('');
-    lines.push('Dubai-Поздравление — 30 000 ₸');
+    lines.push('Стоимость: 30 000 ₸');
     lines.push('Включено:');
     lines.push('• Martini Asti (1 бутылка)');
     lines.push('• Торт (подача)');
@@ -1146,22 +1140,7 @@
     return lines.join('\n');
   }
 
-  function renderPartyWarn(){
-    $('ptGuests').textContent = String(ptGuests);
-    const vipVal = $('ptVip').value || $('vip').value || VIPS[0].val;
-    const check = validateVipGuests(vipVal, ptGuests);
-    const warn = $('ptWarn');
-
-    if(check.ok){
-      warn.style.display='none';
-      warn.textContent='';
-    } else {
-      warn.style.display='';
-      warn.textContent=check.msg;
-    }
-  }
-
-  function openParty(){
+  function openCongrats(){
     fillVip('ptVip');
     fillEvents('ptType');
     $('ptVip').value = $('vip').value || VIPS[0].val;
@@ -1169,12 +1148,11 @@
     $('ptText').style.display='none';
     $('partyMb').style.display='flex';
     $('partyMb').scrollTop = 0;
-    renderPartyWarn();
   }
-  function closeParty(){ $('partyMb').style.display='none'; }
+  function closeCongrats(){ $('partyMb').style.display='none'; }
 
-  async function copyParty(){
-    const t = partyText();
+  async function copyCongrats(){
+    const t = congratsText();
     try{
       if(navigator.clipboard?.writeText){
         await navigator.clipboard.writeText(t);
@@ -1190,18 +1168,15 @@
   document.addEventListener('click',(e)=>{
     const t=e.target;
 
-    // language / menu tabs
     if(t.matches('[data-lang]')) return setLang(t.dataset.lang);
     if(t.matches('[data-section]')) return setSection(t.dataset.section);
 
-    // add/sub cart
     if(t.dataset.action){
       const name=t.dataset.name;
       if(t.dataset.action==='add') return add(name, Number(t.dataset.price||0));
       return sub(name);
     }
 
-    // cart buttons
     if(t.id==='clearBtn') return clearCart();
     if(t.id==='copyBtn') return showModal();
     if(t.id==='sendBtn') return sendWA();
@@ -1209,70 +1184,62 @@
     if(t.id==='mCopy') return copyOrder();
     if(t.id==='mClose' || t.id==='mb') return hideModal();
 
-    // open modals
     if(t.id==='packsBtn') return openPacks();
-    if(t.id==='partyBtn') return openParty();
+    if(t.id==='partyBtn') return openCongrats();
 
-    // close modals by overlay click
     if(t.id==='packsMb') return closePacks();
-    if(t.id==='partyMb') return closeParty();
+    if(t.id==='partyMb') return closeCongrats();
 
-    // packages modal buttons
     if(t.id==='pkClose') return closePacks();
-    if(t.id==='pkShow') return showPack();
+    if(t.id==='pkShow') return showPack(true);
     if(t.id==='pkCopy') return copyPack();
     if(t.id==='pkSend'){
       if(t.classList.contains('disabled')) return;
       return sendWA(packText());
     }
 
-    // party modal
-    if(t.id==='ptClose') return closeParty();
-    if(t.id==='ptCopy') return copyParty();
-    if(t.id==='ptSend') return sendWA(partyText());
+    if(t.id==='ptClose') return closeCongrats();
+    if(t.id==='ptCopy') return copyCongrats();
+    if(t.id==='ptSend') return sendWA(congratsText());
 
-    // guests +/- (packages)
-    if(t.id==='pkMinus'){ pkGuests = Math.max(4, pkGuests-1); renderPacksUI(); return; }
-    if(t.id==='pkPlus'){ pkGuests = Math.min(35, pkGuests+1); renderPacksUI(); return; }
+    if(t.id==='pkMinus'){ pkGuests = Math.max(4, pkGuests-1); renderPacksUI(); showPack(false); return; }
+    if(t.id==='pkPlus'){ pkGuests = Math.min(35, pkGuests+1); renderPacksUI(); showPack(false); return; }
 
-    // guests +/- (party)
-    if(t.id==='ptMinus'){ ptGuests = Math.max(1, ptGuests-1); renderPartyWarn(); return; }
-    if(t.id==='ptPlus'){ ptGuests = Math.min(60, ptGuests+1); renderPartyWarn(); return; }
-
-    // select pack
     if(t.dataset.pack){
       pkPack = t.dataset.pack;
+      // при смене пакета не теряем выбор основного, просто обновим UI
       renderPacksUI();
+      // покажем превью сразу (чтобы было видно, что “произошло”)
+      showPack(true);
       return;
     }
   });
 
-  // packages selects
   $('q').addEventListener('input', render);
   $('svc').addEventListener('change', updateCart);
 
-  $('pkVip').addEventListener('change', renderPacksUI);
-  $('pkType').addEventListener('change', (e)=>{ pkType = e.target.value; });
+  $('pkVip').addEventListener('change', ()=>{ renderPacksUI(); showPack(false); });
+  $('pkType').addEventListener('change', (e)=>{ pkType = e.target.value; showPack(false); });
 
-  $('pkCompanyChoices').addEventListener('change', (e)=>{
-    const idx = e.target?.dataset?.companyIndex;
+  $('pkMainChoices').addEventListener('change', (e)=>{
+    const idx = e.target?.dataset?.mainIndex;
     if(idx==null) return;
-    pkCompany[Number(idx)] = e.target.value;
-    renderPackCards(); // update estimate
-  });
-
-  $('pkPreChoices').addEventListener('change', (e)=>{
-    const idx = e.target?.dataset?.preIndex;
-    if(idx==null) return;
-    pkPre[Number(idx)] = e.target.value;
+    pkMain[Number(idx)] = e.target.value;
     renderPackCards();
+    showPack(false);
   });
 
-  // party selects
-  $('ptVip').addEventListener('change', renderPartyWarn);
+  $('pkAddCongrats').addEventListener('change', (e)=>{
+    pkAddCongrats = !!e.target.checked;
+    renderPackCards();
+    showPack(false);
+  });
+
+  $('ptVip').addEventListener('change', ()=>{/* nothing else */});
   $('ptType').addEventListener('change', (e)=>{ ptType = e.target.value; });
 
   // init
+  fillVip('vip');
   setLang('ru');
   setSection('all');
 </script>
