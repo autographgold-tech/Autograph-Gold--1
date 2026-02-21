@@ -36,7 +36,6 @@
       font-weight:900;
       white-space:nowrap;
     }
-    .btnTop:hover{filter:brightness(1.08)}
 
     .category{margin:22px 0}
     .category h2{margin:0 0 10px;color:var(--gold);border-bottom:1px solid var(--gold);padding-bottom:6px;font-size:18px}
@@ -48,7 +47,14 @@
     .btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--gold);background:#000;color:var(--gold);font-size:18px;cursor:pointer}
     .qty{min-width:18px;text-align:center;font-weight:900}
 
-    .cart{position:fixed;left:0;right:0;bottom:0;background:rgba(17,17,17,.96);border-top:2px solid var(--gold);padding:12px 14px;backdrop-filter:blur(6px);padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+    .cart{
+      position:fixed;left:0;right:0;bottom:0;
+      background:rgba(17,17,17,.96);
+      border-top:2px solid var(--gold);
+      padding:12px 14px;
+      backdrop-filter:blur(6px);
+      padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))
+    }
     .cart-inner{max-width:980px;margin:0 auto;display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
     .cart-left{min-width:240px;flex:1}
     .cart-title{color:var(--muted);font-size:12px;margin-bottom:6px}
@@ -64,7 +70,7 @@
     .send{background:var(--gold);color:#000}
     .disabled{opacity:.45;pointer-events:none}
 
-    /* ✅ mobile-safe modal */
+    /* ✅ mobile-safe modal (скролл, safe-area, ничего не обрезается) */
     .mb{
       position:fixed;inset:0;background:rgba(0,0,0,.65);
       display:none;align-items:flex-start;justify-content:center;
@@ -73,8 +79,7 @@
     }
     .modal{
       max-width:820px;width:100%;
-      background:#0f0f0f;border:1px solid var(--gold);
-      border-radius:16px;padding:14px;margin:0 auto;
+      background:#0f0f0f;border:1px solid var(--gold);border-radius:16px;padding:14px;
       max-height: calc(100vh - 28px); overflow:auto; -webkit-overflow-scrolling:touch;
     }
     .modal h3{margin:0 0 10px;color:var(--gold);letter-spacing:1px}
@@ -82,10 +87,10 @@
     .m-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}
     .close{background:#222;color:#fff;border:1px solid #444}
 
-    /* packages UI */
+    /* Packages UI */
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;margin:10px 0}
     .row label{color:var(--muted);font-size:12px}
-    .row select,.row input{
+    .row select{
       min-width:190px;background:#0f0f0f;border:1px solid var(--line);color:var(--text);
       padding:10px 12px;border-radius:12px;outline:none
     }
@@ -95,9 +100,7 @@
 
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
     @media (max-width:560px){ .grid{grid-template-columns:1fr} }
-    .card{
-      border:1px solid var(--line);background:#0b0b0b;border-radius:14px;padding:12px
-    }
+    .card{border:1px solid var(--line);background:#0b0b0b;border-radius:14px;padding:12px}
     .card.active{border:1px solid var(--gold);box-shadow:0 0 0 1px rgba(201,178,124,.25) inset}
     .card h4{margin:0 0 6px;color:var(--gold)}
     .desc{color:var(--muted);font-size:12px;line-height:1.35;margin:0 0 10px}
@@ -115,21 +118,10 @@
     .choiceTitle{color:var(--gold);font-weight:900;margin:10px 0 6px}
     .choiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     @media (max-width:560px){ .choiceGrid{grid-template-columns:1fr} }
-    .choiceGrid select{width:100%}
 
     .optLine{
-      margin-top:10px;
-      padding:10px 12px;
-      border:1px solid var(--line);
-      background:#0b0b0b;
-      border-radius:12px;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      color:var(--muted);
-      font-size:12px;
+      margin-top:10px;padding:10px 12px;border:1px solid var(--line);background:#0b0b0b;border-radius:12px;
+      display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;color:var(--muted);font-size:12px;
     }
     .optLine label{display:flex;gap:8px;align-items:center;cursor:pointer}
     .optLine input{transform:scale(1.1)}
@@ -150,7 +142,6 @@
   <div class="toolbar">
     <input id="q" class="search" placeholder="Поиск по меню..." />
     <select id="vip" class="vipSel"></select>
-
     <div class="tabs">
       <button class="tab active" data-section="all">Всё</button>
       <button class="tab" data-section="food">Кухня</button>
@@ -161,7 +152,6 @@
     <button class="btnTop" id="packsBtn">Пакеты 🎁</button>
     <button class="btnTop" id="partyBtn">Autograph поздравление 🎉</button>
   </div>
-
   <div id="menu"></div>
 </div>
 
@@ -184,7 +174,7 @@
   </div>
 </div>
 
-<!-- Order modal -->
+<!-- Base order modal -->
 <div class="mb" id="mb">
   <div class="modal">
     <h3 id="mTitle">Заказ</h3>
@@ -196,7 +186,7 @@
   </div>
 </div>
 
-<!-- ✅ PACKAGES MODAL -->
+<!-- Packages modal -->
 <div class="mb" id="packsMb">
   <div class="modal">
     <h3 id="pkTitle">Пакеты</h3>
@@ -252,7 +242,7 @@
   </div>
 </div>
 
-<!-- ✅ AUTOGRAPH CONGRATS MODAL -->
+<!-- Autograph Congrats modal -->
 <div class="mb" id="partyMb">
   <div class="modal">
     <h3 id="ptTitle">Autograph поздравление</h3>
@@ -288,10 +278,10 @@
 </div>
 
 <script>
-  // ========= SETTINGS =========
   const WA_PHONE_RAW = '77777785757';
   const WA_PHONE = WA_PHONE_RAW.replace(/^\+/, '').replace(/^8/, '7').replace(/\D/g,'');
 
+  // ✅ VIP + вместимость
   const VIPS = [
     {ru:'VIP Boss', kz:'VIP Boss', en:'VIP Boss', val:'Boss', cap:8},
     {ru:'VIP Author', kz:'VIP Author', en:'VIP Author', val:'Author', cap:12},
@@ -300,7 +290,7 @@
     {ru:'VIP Luxor', kz:'VIP Luxor', en:'VIP Luxor', val:'Luxor', cap:35},
   ];
 
-  // ========= FULL MENU DATA (RU/KZ/EN) =========
+  // ====== MENU DATA (RU/KZ/EN) ======
   const DATA = {
     ru: {
       ui: {
@@ -309,7 +299,9 @@
         svc:'Сервис 10%', clear:'Очистить', show:'Показать заказ', send:'Отправить на WhatsApp',
         sum:'Сумма', svcLine:'сервис 10%', svcOff:'сервис выключен',
         modal:'Заказ', copied:'Скопировано ✅',
-        vipLabel:'VIP'
+        vipLabel:'VIP',
+        packs:'Пакеты 🎁',
+        congrats:'Autograph поздравление 🎉'
       },
       food: [
         { name:'Супы', items:[
@@ -408,7 +400,7 @@
         { name:'Блюда по предзаказу', items:[
           ['Запечённая сёмга целиком',139990],
           ['Томлёные рёбра говядины',44990],
-          ['Запечённая ножка ягнёнка',48990],
+          ['Запечённая ножка ягнёнка',48990], // ✅ убрали (до 15 чел)
           ['Куырдак',49990],
           ['Бешбармак',65000],
           ['Казан кебаб',44990],
@@ -528,7 +520,9 @@
         svc:'Қызмет 10%', clear:'Тазалау', show:'Тапсырысты көрсету', send:'WhatsApp-қа жіберу',
         sum:'Сома', svcLine:'қызмет 10%', svcOff:'қызмет өшірулі',
         modal:'Тапсырыс', copied:'Көшірілді ✅',
-        vipLabel:'VIP'
+        vipLabel:'VIP',
+        packs:'Пакеттер 🎁',
+        congrats:'Autograph құттықтауы 🎉'
       },
       food: [
         { name:'Сорпалар', items:[
@@ -627,7 +621,7 @@
         { name:'Алдын ала тапсырыс тағамдары', items:[
           ['Тұтас пісірілген албырт',139990],
           ['Бұқтырылған сиыр қабырғасы',44990],
-          ['Пісірілген қозы жамбасы',48990],
+          ['Пісірілген қозы жамбасы',48990], // ✅ убрали (15 адамға дейін)
           ['Қуырдақ',49990],
           ['Бешбармақ',65000],
           ['Қазан кебаб',44990],
@@ -650,7 +644,9 @@
         svc:'Service 10%', clear:'Clear', show:'Show order', send:'Send to WhatsApp',
         sum:'Subtotal', svcLine:'service 10%', svcOff:'service off',
         modal:'Order', copied:'Copied ✅',
-        vipLabel:'VIP'
+        vipLabel:'VIP',
+        packs:'Packages 🎁',
+        congrats:'Autograph congratulations 🎉'
       },
       food: [
         { name:'Soups', items:[
@@ -749,7 +745,7 @@
         { name:'Pre-order dishes', items:[
           ['Whole baked salmon',139990],
           ['Braised beef ribs',44990],
-          ['Baked lamb leg',48990],
+          ['Baked lamb leg',48990], // ✅ убрали (up to 15)
           ['Kuirdak',49990],
           ['Beshbarmak',65000],
           ['Kazan kebab',44990],
@@ -766,11 +762,11 @@
     }
   };
 
-  // ✅ Full bar everywhere (so KZ/EN also show full bar)
+  // Use RU bar for KZ/EN too (so “полный бар” везде)
   DATA.kz.bar = DATA.ru.bar;
   DATA.en.bar = DATA.ru.bar;
 
-  // ========= PACKAGES =========
+  // ====== пакеты / праздники ======
   const EVENTS = {
     ru:[
       {val:'birthday', label:'День рождения'},
@@ -802,9 +798,9 @@
         en:'Turn-key: salads + appetizers + lemonades + hookah(s). You choose only “main” (sharing).'
       },
       note:{
-        ru:'* Сервис 10% по чеку отдельно. Салаты/закуски можно заменить на аналогичные позиции из меню.',
-        kz:'* Қызмет 10% бөлек. Құрамын ұқсас позицияларға ауыстыруға болады.',
-        en:'* Service 10% is separate. Items can be swapped for similar menu options.'
+        ru:'* Сервис 10% по чеку отдельно.',
+        kz:'* Қызмет 10% бөлек.',
+        en:'* Service 10% is separate.'
       },
       host:false
     },
@@ -818,31 +814,31 @@
       },
       note:{
         ru:'🎤 Ведущий — только по предварительному бронированию минимум за 24 часа (при подтверждении менеджером). Сервис 10% отдельно.',
-        kz:'🎤 Жүргізуші — кемінде 24 сағат бұрын бронь (менеджер растаған жағдайда).',
-        en:'🎤 Host requires booking at least 24h in advance (manager confirmation).'
+        kz:'🎤 Жүргізуші — кемінде 24 сағат бұрын бронь (менеджер растаған жағдайда). Қызмет 10% бөлек.',
+        en:'🎤 Host requires booking at least 24h in advance (manager confirmation). Service 10% is separate.'
       },
       host:true
     }
   ];
 
-  // ========= STATE =========
   let lang='ru', section='all';
   let cart = {};
 
   let pkGuests = 10;
   let pkType = 'birthday';
   let pkPack = 'standard';
-  let pkMain = []; // chosen main dishes (mix of company + pre-order)
+  let pkMain = [];     // выбранные "основные" блюда (из Блюда на компанию + Предзаказ)
   let pkAddCongrats = false;
 
   let ptType = 'birthday';
 
-  // ========= HELPERS =========
   const $ = (id)=>document.getElementById(id);
   const fmt = (n)=>String(n||0).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
   const ui = ()=>DATA[lang].ui;
 
-  function fillVip(selectId){
+  function getVip(val){ return VIPS.find(v=>v.val===val) || VIPS[0]; }
+
+  function fillVip(selectId='vip'){
     const sel = $(selectId);
     sel.innerHTML = '';
     for(const v of VIPS){
@@ -852,7 +848,6 @@
       sel.appendChild(o);
     }
   }
-
   function fillEvents(selectId){
     const sel = $(selectId);
     sel.innerHTML = '';
@@ -863,8 +858,6 @@
       sel.appendChild(o);
     }
   }
-
-  function getVip(val){ return VIPS.find(v=>v.val===val) || VIPS[0]; }
 
   function setLang(l){
     lang=l;
@@ -883,7 +876,15 @@
     $('sendBtn').textContent = ui().send;
     $('mTitle').textContent = ui().modal;
 
+    $('packsBtn').textContent = ui().packs;
+    $('partyBtn').textContent = ui().congrats;
+
     fillVip('vip');
+    fillVip('pkVip');
+    fillVip('ptVip');
+    fillEvents('pkType');
+    fillEvents('ptType');
+
     render();
     updateCart();
   }
@@ -910,13 +911,9 @@
   function blocks(){
     const d = DATA[lang];
     const out=[];
-    const food = Array.isArray(d.food) ? d.food : [];
-    const bar  = Array.isArray(d.bar) ? d.bar : [];
-    const hook = Array.isArray(d.hookah) ? d.hookah : [];
-
-    if(section==='all'||section==='food') out.push(...food);
-    if(section==='all'||section==='bar') out.push(...bar);
-    if(section==='all'||section==='hookah') out.push(...hook);
+    if(section==='all'||section==='food') out.push(...d.food);
+    if(section==='all'||section==='bar') out.push(...d.bar);
+    if(section==='all'||section==='hookah') out.push(...d.hookah);
     return out;
   }
 
@@ -1038,6 +1035,12 @@
     return t;
   }
 
+  async function copyOrder(){
+    const t=orderText(); if(!t) return;
+    try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
+    catch{ $('orderText').textContent=t; showModal(); }
+  }
+
   function showModal(){
     const t=orderText(); if(!t) return;
     $('orderText').textContent=t;
@@ -1046,30 +1049,27 @@
   }
   function hideModal(){ $('mb').style.display='none'; }
 
-  async function copyOrder(){
-    const t=orderText(); if(!t) return;
-    try{
-      if(navigator.clipboard?.writeText){
-        await navigator.clipboard.writeText(t);
-        alert(ui().copied);
-        return;
-      }
-    }catch(e){}
-    $('orderText').textContent=t;
-    showModal();
-  }
-
   function sendWA(text){
     const t = text || orderText(); if(!t) return;
     window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(t)}`, '_blank');
   }
 
-  // ========= PACKAGES LOGIC =========
+  // ========= PACKS =========
   function qtyByGuests(g, a,b,c,d){ if(g<=8) return a; if(g<=12) return b; if(g<=20) return c; return d; }
-  function mainCount(g){ return Math.ceil(g/9); }
+  function mainCount(g){ return Math.ceil(g/9); } // 8–10 на 1 позицию
   function hookahCount(g){ if(g<=12) return 1; if(g<=20) return 2; return 3; }
 
-  function priceOf(name){
+  function getCategoryItemsRu(catNameRu){
+    for(const c of DATA.ru.food){ if(c.name===catNameRu) return c.items.slice(); }
+    return [];
+  }
+
+  const SALAD_POOL = ['Цезарь с цыплёнком','Салат «Баварский»','Тёплый салат с лососем','Салат с ростбифом','Салат с рукколой и креветками'];
+  const COLD_POOL  = ['Ассорти брускетт','Ассорти из солений','Сырное плато','Мясная нарезка','Фруктовое ассорти'];
+  const HOT_POOL   = ['Томлённые баклажаны','Соте из баклажан','Пивные креветки','Бараньи семечки','Пивной сет'];
+  const LEM_POOL   = ['Mango – Passion Fruit','Raspberry','Pomegranate','Kiwi – Lime','Watermelon – Melon'];
+
+  function priceOfRu(name){
     const all = [].concat(
       ...DATA.ru.food.map(c=>c.items),
       ...DATA.ru.bar.map(c=>c.items),
@@ -1078,12 +1078,6 @@
     const found = all.find(([n])=>n===name);
     return found ? Number(found[1]||0) : 0;
   }
-
-  // pools in RU names (для автокомплекта)
-  const SALAD_POOL = ['Цезарь с цыплёнком','Салат «Баварский»','Тёплый салат с лососем','Салат с ростбифом','Салат с рукколой и креветками'];
-  const COLD_POOL  = ['Ассорти брускетт','Ассорти из солений','Сырное плато','Мясная нарезка','Фруктовое ассорти'];
-  const HOT_POOL   = ['Томлённые баклажаны','Соте из баклажан','Пивные креветки','Бараньи семечки','Пивной сет'];
-  const LEM_POOL   = ['Mango – Passion Fruit','Raspberry','Pomegranate','Kiwi – Lime','Watermelon – Melon'];
 
   function buildAutoIncluded(g, packId){
     const saladsN = qtyByGuests(g,2,3,4,5);
@@ -1099,6 +1093,7 @@
     for(let i=0;i<lemN;i++)    included.push({name:LEM_POOL[i % LEM_POOL.length], qty:1, group:'lem'});
     included.push({name:'Lite', qty:hookN, group:'hookah'});
 
+    // немного “жирнее” в premium
     if(packId==='premium'){
       if(g>=13) included.push({name:LEM_POOL[(lemN) % LEM_POOL.length], qty:1, group:'lem'});
       if(g>=21) included.push({name:HOT_POOL[(hotN) % HOT_POOL.length], qty:1, group:'hot'});
@@ -1109,7 +1104,7 @@
   function validateVipGuests(vipVal, g){
     const vip = getVip(vipVal);
     if(g<=vip.cap) return {ok:true, msg:''};
-    const fits = VIPS.filter(v=>g<=v.cap).map(v=>v.val).join(', ');
+    const fits = VIPS.filter(v=>g<=v.cap).map(v=> (lang==='ru'?v.ru:(lang==='kz'?v.kz:v.en)) ).join(', ');
     const name = (lang==='ru'?vip.ru:(lang==='kz'?vip.kz:vip.en));
     const msg = (lang==='ru'
       ? `⚠️ В ${name} максимум ${vip.cap} гостей. Для ${g} гостей выберите: ${fits || 'другой VIP'}.`
@@ -1121,28 +1116,22 @@
     return {ok:false, msg};
   }
 
-  // MAIN options = company + preorder (оба считаем на 8–10)
-  function getCategoryItemsRu(catNameRu){
-    for(const c of DATA.ru.food){ if(c.name===catNameRu) return c.items.slice(); }
-    for(const c of DATA.ru.bar){ if(c.name===catNameRu) return c.items.slice(); }
-    for(const c of DATA.ru.hookah){ if(c.name===catNameRu) return c.items.slice(); }
-    return [];
-  }
-  function mainOptions(){
+  function mainOptionsRu(){
     const company = getCategoryItemsRu('Блюда на компанию').map(([n,p])=>({name:n, price:p, group:'company'}));
     const pre     = getCategoryItemsRu('Блюда по предзаказу').map(([n,p])=>({name:n, price:p, group:'pre'}));
     return [...company, ...pre];
   }
+
   function labelOption(opt){
     const g = opt.group==='company'
-      ? (lang==='ru'?'(на компанию)':(lang==='kz'?'(компанияға)': '(sharing)'))
-      : (lang==='ru'?'(предзаказ)':(lang==='kz'?'(алдын ала)': '(pre-order)'));
+      ? (lang==='ru'?'(на компанию)':(lang==='kz'?'(компанияға)':'(sharing)'))
+      : (lang==='ru'?'(предзаказ)':(lang==='kz'?'(алдын ала)':'(pre-order)'));
     return `${opt.name} ${g} — ${fmt(opt.price)} ₸`;
   }
 
   function ensureMainSelections(){
     const need = mainCount(pkGuests);
-    const opts = mainOptions();
+    const opts = mainOptionsRu();
     if(!opts.length){ pkMain=[]; return; }
     if(pkMain.length !== need){
       pkMain = Array.from({length:need}, (_,i)=> opts[i % opts.length].name);
@@ -1155,8 +1144,8 @@
   function estimatePackTotal(packId, guests, mainSel, addCongrats){
     let sum = 0;
     const auto = buildAutoIncluded(guests, packId);
-    for(const it of auto) sum += priceOf(it.name) * it.qty;
-    for(const nm of (mainSel||[])) sum += priceOf(nm);
+    for(const it of auto) sum += priceOfRu(it.name) * it.qty;
+    for(const nm of (mainSel||[])) sum += priceOfRu(nm);
     if(addCongrats) sum += 30000;
     return sum;
   }
@@ -1184,7 +1173,7 @@
       card.appendChild(pr);
 
       const mini = document.createElement('div');
-      mini.className = 'mini';
+      mini.className='mini';
       mini.textContent = (lang==='ru'
         ? `Авто-включено: салаты ${qtyByGuests(pkGuests,2,3,4,5)} • закуски ${qtyByGuests(pkGuests,1,2,3,4)}+${qtyByGuests(pkGuests,1,2,2,3)} • лимонады ${qtyByGuests(pkGuests,2,3,5,8)} • кальян Lite ×${hookahCount(pkGuests)}`
         : (lang==='kz'
@@ -1209,7 +1198,7 @@
 
       const btn = document.createElement('button');
       btn.type='button';
-      btn.textContent = (lang==='ru' ? 'Выбрать' : 'Select');
+      btn.textContent = (lang==='ru' ? 'Выбрать' : (lang==='kz' ? 'Таңдау' : 'Select'));
       btn.dataset.pack = p.id;
       card.appendChild(btn);
 
@@ -1222,7 +1211,7 @@
     const root = $('pkMainChoices');
     root.innerHTML = '';
 
-    const opts = mainOptions();
+    const opts = mainOptionsRu();
     const need = mainCount(pkGuests);
 
     for(let i=0;i<need;i++){
@@ -1249,25 +1238,21 @@
 
   function renderCongratsOption(){
     const line = $('pkCongratsLine');
-    const text = $('pkCongratsText');
-    const note = $('pkCongratsNote');
-
     if(pkPack !== 'premium'){
       line.style.display = 'none';
       pkAddCongrats = false;
       $('pkAddCongrats').checked = false;
       return;
     }
-
     line.style.display = '';
-    text.textContent = (lang==='ru'
+    $('pkCongratsText').textContent = (lang==='ru'
       ? 'Добавить Autograph поздравление +30 000 ₸'
       : (lang==='kz'
         ? 'Autograph құттықтауы +30 000 ₸ қосу'
         : 'Add Autograph congratulations +30 000 ₸'
       )
     );
-    note.textContent = (lang==='ru'
+    $('pkCongratsNote').textContent = (lang==='ru'
       ? 'Торт • Martini Asti • фейерверк/свечи • поздравление'
       : (lang==='kz'
         ? 'Торт • Martini Asti • фейерверк/шам • құттықтау'
@@ -1289,38 +1274,39 @@
     const lines = [];
     lines.push(`AUTOGRAPH GOLD — ПАКЕТ`);
     lines.push(`VIP: ${vipLabel}`);
-    lines.push(`Повод: ${typeLabel}`);
-    lines.push(`Гостей: ${pkGuests}`);
-    lines.push(`Пакет: ${pack.name[lang]}`);
+    lines.push(`${lang==='en'?'Occasion':'Повод'}: ${typeLabel}`);
+    lines.push(`${lang==='en'?'Guests':'Гостей'}: ${pkGuests}`);
+    lines.push(`${lang==='en'?'Package':'Пакет'}: ${pack.name[lang]}`);
     lines.push('');
 
-    lines.push(`Основное (на 8–10 человек): ${pkMain.length} шт`);
+    lines.push(`${lang==='en'?'Main (8–10 people):':'Основное (на 8–10 человек):'} ${pkMain.length} шт`);
     pkMain.forEach((x,i)=> lines.push(`• ${i+1}) ${x}`));
 
     lines.push('');
-    lines.push('Авто-включено (под ключ):');
-    const grouped = {};
-    for(const it of auto){
-      if(!grouped[it.group]) grouped[it.group]=[];
-      grouped[it.group].push(it);
-    }
-    function emitGroup(title, arr){
-      if(!arr || !arr.length) return;
+    lines.push(lang==='en' ? 'Auto-included:' : 'Авто-включено (под ключ):');
+
+    function emit(title, list){
+      if(!list.length) return;
       lines.push(`• ${title}:`);
-      for(const it of arr){
-        lines.push(`   - ${it.name}${it.qty>1 ? ` ×${it.qty}`:''}`);
-      }
+      for(const it of list) lines.push(`   - ${it.name}${it.qty>1 ? ` ×${it.qty}`:''}`);
     }
-    emitGroup('Салаты', grouped.salad);
-    emitGroup('Холодные закуски', grouped.cold);
-    emitGroup('Горячие закуски', grouped.hot);
-    emitGroup('Лимонады', grouped.lem);
-    emitGroup('Кальян', grouped.hookah);
+
+    emit(lang==='en'?'Salads':'Салаты', auto.filter(x=>x.group==='salad'));
+    emit(lang==='en'?'Cold appetizers':'Холодные закуски', auto.filter(x=>x.group==='cold'));
+    emit(lang==='en'?'Hot appetizers':'Горячие закуски', auto.filter(x=>x.group==='hot'));
+    emit(lang==='en'?'Lemonades':'Лимонады', auto.filter(x=>x.group==='lem'));
+    emit(lang==='en'?'Hookah':'Кальян', auto.filter(x=>x.group==='hookah'));
 
     if(pkPack==='premium'){
       lines.push('');
-      lines.push('🎤 Ведущий: программа до 30 минут');
-      lines.push('Условие: бронирование ведущего минимум за 24 часа (при подтверждении менеджером).');
+      lines.push('🎤 ' + (lang==='en' ? 'Host: up to 30 min' : (lang==='kz' ? 'Жүргізуші: 30 мин дейін' : 'Ведущий: до 30 минут')));
+      lines.push(lang==='en'
+        ? 'Condition: book at least 24h in advance (manager confirmation).'
+        : (lang==='kz'
+          ? 'Шарт: кемінде 24 сағат бұрын бронь (менеджер растауы).'
+          : 'Условие: бронирование ведущего минимум за 24 часа (при подтверждении менеджером).'
+        )
+      );
 
       if(pkAddCongrats){
         lines.push('');
@@ -1330,23 +1316,13 @@
     }
 
     lines.push('');
-    lines.push(`Ориентир по сумме: ${fmt(total)} ₸`);
-    lines.push('Сервис 10% по чеку отдельно.');
+    lines.push(`${lang==='en'?'Estimated total':'Ориентир по сумме'}: ${fmt(total)} ₸`);
+    lines.push(lang==='en'?'Service 10% is separate.':'Сервис 10% по чеку отдельно.');
     lines.push(pack.note[lang] || '');
     lines.push('');
-    lines.push('Напишите дату/время — менеджер подтвердит бронирование.');
+    lines.push(lang==='en'?'Send date/time — manager will confirm.':'Напишите дату/время — менеджер подтвердит бронирование.');
 
     return lines.join('\n');
-  }
-
-  function showPack(scrollToChoices){
-    const t = packText();
-    $('pkText').style.display='block';
-    $('pkText').textContent = t;
-    if(scrollToChoices){
-      const el = $('pkChoices');
-      el?.scrollIntoView({behavior:'smooth', block:'start'});
-    }
   }
 
   function renderPacksUI(){
@@ -1355,16 +1331,15 @@
     const vipVal = $('pkVip').value || $('vip').value || VIPS[0].val;
     const check = validateVipGuests(vipVal, pkGuests);
     const warn = $('pkWarn');
-    const sendBtn = $('pkSend');
 
     if(check.ok){
       warn.style.display='none';
       warn.textContent='';
-      sendBtn.classList.remove('disabled');
+      $('pkSend').classList.remove('disabled');
     } else {
       warn.style.display='';
       warn.textContent=check.msg;
-      sendBtn.classList.add('disabled');
+      $('pkSend').classList.add('disabled');
     }
 
     renderPackCards();
@@ -1372,17 +1347,16 @@
     renderCongratsOption();
 
     $('pkHint').textContent = (lang==='ru'
-      ? 'Выберите пакет и основное. Всё остальное подставляется автоматически — чтобы всем хватило.'
+      ? 'Выберите пакет и “основное”. Всё остальное подставляется автоматически — чтобы всем хватило.'
       : (lang==='kz'
-        ? 'Пакет пен негізгі тағамды таңдаңыз. Қалғаны автоматты түрде қосылады — бәріне жетеді.'
+        ? 'Пакет пен “негізгі” таңдаңыз. Қалғаны автоматты түрде қосылады — бәріне жетеді.'
         : 'Pick a package and main dishes. The rest is auto-included so everyone has enough.'
       )
     );
   }
 
   function openPacks(){
-    fillVip('pkVip');
-    fillEvents('pkType');
+    fillVip('pkVip'); fillEvents('pkType');
     $('pkVip').value = $('vip').value || VIPS[0].val;
     $('pkType').value = pkType;
 
@@ -1395,20 +1369,22 @@
   }
   function closePacks(){ $('packsMb').style.display='none'; }
 
-  async function copyPack(){
+  function showPack(scrollToChoices){
     const t = packText();
-    try{
-      if(navigator.clipboard?.writeText){
-        await navigator.clipboard.writeText(t);
-        alert(ui().copied);
-        return;
-      }
-    }catch(e){}
     $('pkText').style.display='block';
     $('pkText').textContent = t;
+    if(scrollToChoices){
+      $('pkChoices')?.scrollIntoView({behavior:'smooth', block:'start'});
+    }
   }
 
-  // ========= AUTOGRAPH CONGRATS =========
+  async function copyPack(){
+    const t = packText();
+    try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
+    catch{ $('pkText').style.display='block'; $('pkText').textContent=t; }
+  }
+
+  // ========= CONGRATS =========
   function congratsText(){
     const vipVal = $('ptVip').value || $('vip').value || VIPS[0].val;
     const vipObj = getVip(vipVal);
@@ -1416,44 +1392,59 @@
     const typeLabel = EVENTS[lang].find(x=>x.val===ptType)?.label || '';
 
     const lines = [];
-    lines.push('AUTOGRAPH GOLD — AUTOGRAPH ПОЗДРАВЛЕНИЕ 🎉');
+    lines.push(`AUTOGRAPH GOLD — AUTOGRAPH ${lang==='en'?'CONGRATULATIONS':'ПОЗДРАВЛЕНИЕ'} 🎉`);
     lines.push(`VIP: ${vipLabel}`);
-    lines.push(`Повод: ${typeLabel}`);
+    lines.push(`${lang==='en'?'Occasion':'Повод'}: ${typeLabel}`);
     lines.push('');
-    lines.push('Стоимость: 30 000 ₸');
-    lines.push('Включено:');
+    lines.push(`${lang==='en'?'Price':'Стоимость'}: 30 000 ₸`);
+    lines.push(lang==='en'?'Included:':'Включено:');
     lines.push('• Martini Asti (1 бутылка)');
     lines.push('• Торт (подача)');
     lines.push('• Фейерверк/свечи (подача)');
     lines.push('• Поздравление в VIP');
     lines.push('');
-    lines.push('* Время подачи согласовать с менеджером.');
-    lines.push('Напишите дату/время и имя — менеджер подтвердит.');
+    lines.push(lang==='en'?'* Please confirm serving time with manager.':'* Время подачи согласовать с менеджером.');
+    lines.push(lang==='en'?'Send date/time & name — manager will confirm.':'Напишите дату/время и имя — менеджер подтвердит.');
     return lines.join('\n');
   }
 
   function openCongrats(){
-    fillVip('ptVip');
-    fillEvents('ptType');
+    fillVip('ptVip'); fillEvents('ptType');
     $('ptVip').value = $('vip').value || VIPS[0].val;
     $('ptType').value = ptType;
+
     $('ptText').style.display='none';
     $('partyMb').style.display='flex';
     $('partyMb').scrollTop = 0;
+
+    // localized card text
+    $('ptTitle').textContent = (lang==='ru'?'Autograph поздравление':(lang==='kz'?'Autograph құттықтауы':'Autograph congratulations'));
+    $('ptName').textContent  = $('ptTitle').textContent;
+    $('ptDesc').textContent  = (lang==='ru'
+      ? 'Праздничная подача в VIP с тортом и напитком.'
+      : (lang==='kz' ? 'VIP ішінде торт пен сусынмен мерекелік подача.' : 'A festive VIP presentation with cake & a drink.')
+    );
+    $('ptInc').textContent   = (lang==='ru'
+      ? 'Включено: Martini Asti (1 бут) • Торт (подача) • Фейерверк/свечи • Поздравление в VIP'
+      : (lang==='kz'
+        ? 'Кіреді: Martini Asti (1 бут) • Торт • фейерверк/шам • VIP құттықтау'
+        : 'Included: Martini Asti (1 btl) • Cake • sparkler/candles • VIP congratulations'
+      )
+    );
+    $('ptNote').textContent  = (lang==='ru'
+      ? '* Время подачи согласовать с менеджером.'
+      : (lang==='kz'
+        ? '* Подача уақытын менеджермен келісіңіз.'
+        : '* Please confirm serving time with manager.'
+      )
+    );
   }
   function closeCongrats(){ $('partyMb').style.display='none'; }
 
   async function copyCongrats(){
     const t = congratsText();
-    try{
-      if(navigator.clipboard?.writeText){
-        await navigator.clipboard.writeText(t);
-        alert(ui().copied);
-        return;
-      }
-    }catch(e){}
-    $('ptText').style.display='block';
-    $('ptText').textContent = t;
+    try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
+    catch{ $('ptText').style.display='block'; $('ptText').textContent=t; }
   }
 
   // ========= EVENTS =========
@@ -1525,7 +1516,6 @@
     showPack(false);
   });
 
-  $('ptVip').addEventListener('change', ()=>{});
   $('ptType').addEventListener('change', (e)=>{ ptType = e.target.value; });
 
   // init
