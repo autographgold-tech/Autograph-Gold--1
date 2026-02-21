@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Autograph Gold — QR Menu</title>
   <style>
-    :root{--bg:#0b0b0b;--gold:#c9b27c;--text:#f5f5f5;--muted:#bdbdbd;--line:#2a2a2a}
+    :root{--bg:#0b0b0b;--gold:#c9b27c;--text:#f5f5f5;--muted:#bdbdbd;--line:#2a2a2a;--bad:#ff5a5a}
     *{box-sizing:border-box}
     body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-    header{padding:16px 14px;text-align:center;border-bottom:2px solid var(--gold)}
+    header{
+      padding: calc(16px + env(safe-area-inset-top,0px)) 14px 16px;
+      text-align:center;border-bottom:2px solid var(--gold)
+    }
     h1{margin:0;letter-spacing:3px;color:var(--gold);font-size:22px}
     .top{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:10px}
     .chip{border:1px solid var(--gold);background:#000;color:var(--gold);padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:700}
@@ -22,6 +25,18 @@
     .tabs{display:flex;gap:8px;flex-wrap:wrap}
     .tab{border:1px solid var(--gold);background:transparent;color:var(--gold);padding:8px 10px;border-radius:12px;cursor:pointer;font-weight:700}
     .tab.active{background:var(--gold);color:#000}
+
+    .btnTop{
+      border:1px solid var(--gold);
+      background:#000;
+      color:var(--gold);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .btnTop:hover{filter:brightness(1.08)}
 
     .category{margin:22px 0}
     .category h2{margin:0 0 10px;color:var(--gold);border-bottom:1px solid var(--gold);padding-bottom:6px;font-size:18px}
@@ -47,65 +62,60 @@
     .clear{background:#3a0b0b;color:#fff}
     .copy{background:#1a1a1a;color:var(--gold);border:1px solid var(--gold)}
     .send{background:var(--gold);color:#000}
+    .disabled{opacity:.45;pointer-events:none}
 
-    .mb{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:14px}
-    .modal{max-width:720px;width:100%;background:#0f0f0f;border:1px solid var(--gold);border-radius:16px;padding:14px}
+    /* ✅ mobile-safe modal */
+    .mb{
+      position:fixed;inset:0;background:rgba(0,0,0,.65);
+      display:none;align-items:flex-start;justify-content:center;
+      padding: max(14px, env(safe-area-inset-top, 0px)) 14px max(14px, env(safe-area-inset-bottom, 0px));
+      overflow:auto;-webkit-overflow-scrolling:touch;
+    }
+    .modal{
+      max-width:780px;width:100%;
+      background:#0f0f0f;border:1px solid var(--gold);
+      border-radius:16px;padding:14px;margin:0 auto;
+      max-height: calc(100vh - 28px); overflow:auto; -webkit-overflow-scrolling:touch;
+    }
     .modal h3{margin:0 0 10px;color:var(--gold);letter-spacing:1px}
     .modal pre{white-space:pre-wrap;word-break:break-word;background:#0b0b0b;border:1px solid var(--line);border-radius:12px;padding:10px;color:var(--text);font-size:13px}
     .m-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}
     .close{background:#222;color:#fff;border:1px solid #444}
 
-    /* ===== PARTY UI ===== */
-    .partyBtn{
-      border:1px solid var(--gold);
-      background:#000;
-      color:var(--gold);
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:900;
-    }
-    .partyBtn:hover{filter:brightness(1.08)}
-
-    .partyRow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;margin:10px 0}
-    .partyRow label{color:var(--muted);font-size:12px}
-    .partyRow select{
+    /* packages UI */
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;margin:10px 0}
+    .row label{color:var(--muted);font-size:12px}
+    .row select,.row input{
       min-width:190px;background:#0f0f0f;border:1px solid var(--line);color:var(--text);
       padding:10px 12px;border-radius:12px;outline:none
     }
-    .partyNum{display:flex;gap:8px;align-items:center}
-    .partyNum button{
-      width:36px;height:36px;border-radius:10px;border:1px solid var(--gold);
-      background:#000;color:var(--gold);font-size:18px;cursor:pointer
-    }
-    .partyNum span{min-width:34px;text-align:center;font-weight:900}
+    .num{display:flex;gap:8px;align-items:center}
+    .num button{width:36px;height:36px;border-radius:10px;border:1px solid var(--gold);background:#000;color:var(--gold);font-size:18px;cursor:pointer}
+    .num span{min-width:34px;text-align:center;font-weight:900}
 
-    .packGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-    @media (max-width:560px){ .packGrid{grid-template-columns:1fr} }
-    .pack{
-      border:1px solid var(--line);
-      background:#0b0b0b;
-      border-radius:14px;
-      padding:12px;
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    @media (max-width:560px){ .grid{grid-template-columns:1fr} }
+    .card{
+      border:1px solid var(--line);background:#0b0b0b;border-radius:14px;padding:12px
     }
-    .pack.active{border:1px solid var(--gold); box-shadow:0 0 0 1px rgba(201,178,124,.25) inset}
-    .pack h4{margin:0 0 6px;color:var(--gold)}
-    .pack .pdesc{color:var(--muted);font-size:12px;line-height:1.35;margin:0 0 10px}
-    .pack .pprice{color:var(--gold);font-weight:900}
-    .pack .pmini{color:var(--muted);font-size:12px;margin-top:6px}
-    .pack button{
-      margin-top:10px;
-      width:100%;
-      border-radius:12px;
-      border:1px solid var(--gold);
-      background:#000;
-      color:var(--gold);
-      padding:10px 12px;
-      cursor:pointer;
-      font-weight:900;
+    .card.active{border:1px solid var(--gold);box-shadow:0 0 0 1px rgba(201,178,124,.25) inset}
+    .card h4{margin:0 0 6px;color:var(--gold)}
+    .desc{color:var(--muted);font-size:12px;line-height:1.35;margin:0 0 10px}
+    .price{color:var(--gold);font-weight:900}
+    .mini{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.35}
+    .card button{
+      margin-top:10px;width:100%;
+      border-radius:12px;border:1px solid var(--gold);
+      background:#000;color:var(--gold);padding:10px 12px;cursor:pointer;font-weight:900
     }
-    .pack button:hover{filter:brightness(1.08)}
-    .partySmall{color:var(--muted);font-size:12px;line-height:1.35;margin-top:10px}
+    .hint{color:var(--muted);font-size:12px;line-height:1.35;margin-top:10px}
+    .warn{color:var(--bad);font-size:12px;line-height:1.35;margin-top:10px}
+
+    .choiceWrap{margin-top:10px}
+    .choiceTitle{color:var(--gold);font-weight:900;margin:10px 0 6px}
+    .choiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:560px){ .choiceGrid{grid-template-columns:1fr} }
+    .choiceGrid select{width:100%}
   </style>
 </head>
 
@@ -131,7 +141,8 @@
       <button class="tab" data-section="hookah">Кальян</button>
     </div>
 
-    <button class="partyBtn" id="partyBtn">Праздник 🎉</button>
+    <button class="btnTop" id="packsBtn">Пакеты 🎁</button>
+    <button class="btnTop" id="partyBtn">Праздник 🎉</button>
   </div>
 
   <div id="menu"></div>
@@ -168,61 +179,118 @@
   </div>
 </div>
 
-<!-- Party modal -->
-<div class="mb" id="partyMb">
+<!-- ✅ PACKAGES MODAL -->
+<div class="mb" id="packsMb">
   <div class="modal">
-    <h3 id="pTitle">Праздник</h3>
+    <h3 id="pkTitle">Пакеты</h3>
 
-    <div class="partyRow">
+    <div class="row">
       <div>
-        <label id="pVipLabel">VIP</label><br>
-        <select id="pVip"></select>
+        <label id="pkVipLabel">VIP</label><br>
+        <select id="pkVip"></select>
       </div>
 
       <div>
-        <label id="pTypeLabel">Повод</label><br>
-        <select id="pType"></select>
+        <label id="pkTypeLabel">Повод</label><br>
+        <select id="pkType"></select>
       </div>
 
       <div>
-        <label id="pGuestsLabel">Гостей</label><br>
-        <div class="partyNum">
-          <button id="gMinus" type="button">−</button>
-          <span id="gVal">10</span>
-          <button id="gPlus" type="button">+</button>
+        <label id="pkGuestsLabel">Гостей</label><br>
+        <div class="num">
+          <button id="pkMinus" type="button">−</button>
+          <span id="pkGuests">10</span>
+          <button id="pkPlus" type="button">+</button>
         </div>
       </div>
     </div>
 
-    <div class="packGrid" id="pPacks"></div>
+    <div id="pkWarn" class="warn" style="display:none"></div>
 
-    <div class="m-actions">
-      <button class="action copy" id="pShow">Показать</button>
-      <button class="action copy" id="pCopy">Скопировать</button>
-      <button class="action send" id="pSend">Отправить в WhatsApp</button>
-      <button class="action close" id="pClose">Закрыть</button>
+    <div class="grid" id="pkCards"></div>
+
+    <div class="choiceWrap">
+      <div class="choiceTitle" id="pkMainTitle">Основное: блюда на компанию</div>
+      <div class="choiceGrid" id="pkCompanyChoices"></div>
+
+      <div class="choiceTitle" id="pkPreTitle" style="display:none">Дополнительно: блюда по предзаказу</div>
+      <div class="choiceGrid" id="pkPreChoices" style="display:none"></div>
     </div>
 
-    <div class="partySmall" id="pHint"></div>
-    <pre id="pText" style="display:none;margin-top:10px"></pre>
+    <div class="hint" id="pkHint"></div>
+
+    <div class="m-actions">
+      <button class="action copy" id="pkShow">Показать</button>
+      <button class="action copy" id="pkCopy">Скопировать</button>
+      <button class="action send" id="pkSend">Отправить на WhatsApp</button>
+      <button class="action close" id="pkClose">Закрыть</button>
+    </div>
+
+    <pre id="pkText" style="display:none;margin-top:10px"></pre>
+  </div>
+</div>
+
+<!-- ✅ PARTY MODAL (Dubai Congrats) -->
+<div class="mb" id="partyMb">
+  <div class="modal">
+    <h3 id="ptTitle">Праздник</h3>
+
+    <div class="row">
+      <div>
+        <label id="ptVipLabel">VIP</label><br>
+        <select id="ptVip"></select>
+      </div>
+
+      <div>
+        <label id="ptTypeLabel">Повод</label><br>
+        <select id="ptType"></select>
+      </div>
+
+      <div>
+        <label id="ptGuestsLabel">Гостей</label><br>
+        <div class="num">
+          <button id="ptMinus" type="button">−</button>
+          <span id="ptGuests">10</span>
+          <button id="ptPlus" type="button">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="ptWarn" class="warn" style="display:none"></div>
+
+    <div class="card active">
+      <h4 id="ptName">Dubai-Поздравление</h4>
+      <div class="desc" id="ptDesc">Заход “как в Дубае”: Martini Asti + торт + фейерверк/свечи + поздравление в VIP.</div>
+      <div class="price" id="ptPrice">30 000 ₸</div>
+      <div class="mini" id="ptInc">Включено: Martini Asti (1 бут) • Торт (подача) • Фейерверк/свечи • Поздравление в VIP</div>
+      <div class="mini" id="ptNote">* Время подачи согласовать с менеджером.</div>
+    </div>
+
+    <div class="m-actions">
+      <button class="action copy" id="ptCopy">Скопировать</button>
+      <button class="action send" id="ptSend">Отправить на WhatsApp</button>
+      <button class="action close" id="ptClose">Закрыть</button>
+    </div>
+
+    <pre id="ptText" style="display:none;margin-top:10px"></pre>
   </div>
 </div>
 
 <script>
-  // === WhatsApp phone ===
-  // Меняй только эту строку (можно с 8 или +7 — код сам исправит):
+  // ========= SETTINGS =========
+  // Меняй только эту строку (можно 8... или +7... — код сам нормализует)
   const WA_PHONE_RAW = '77777785757';
   const WA_PHONE = WA_PHONE_RAW.replace(/^\+/, '').replace(/^8/, '7').replace(/\D/g,'');
 
   const VIPS = [
-    {ru:'VIP Boss', kz:'VIP Boss', en:'VIP Boss', val:'Boss'},
-    {ru:'VIP Author', kz:'VIP Author', en:'VIP Author', val:'Author'},
-    {ru:'VIP Green', kz:'VIP Green', en:'VIP Green', val:'Green'},
-    {ru:'VIP Luxor', kz:'VIP Luxor', en:'VIP Luxor', val:'Luxor'},
-    {ru:'VIP Panorama', kz:'VIP Panorama', en:'VIP Panorama', val:'Panorama'},
+    {ru:'VIP Boss', kz:'VIP Boss', en:'VIP Boss', val:'Boss', cap:8},
+    {ru:'VIP Author', kz:'VIP Author', en:'VIP Author', val:'Author', cap:12},
+    {ru:'VIP Green', kz:'VIP Green', en:'VIP Green', val:'Green', cap:12},
+    {ru:'VIP Panorama', kz:'VIP Panorama', en:'VIP Panorama', val:'Panorama', cap:20},
+    {ru:'VIP Luxor', kz:'VIP Luxor', en:'VIP Luxor', val:'Luxor', cap:35},
   ];
 
-  // ====== MENU DATA (RU/KZ/EN) ======
+  // ========= MENU DATA =========
   const DATA = {
     ru: {
       ui: {
@@ -231,22 +299,7 @@
         svc:'Сервис 10%', clear:'Очистить', show:'Показать заказ', send:'Отправить на WhatsApp',
         sum:'Сумма', svcLine:'сервис 10%', svcOff:'сервис выключен',
         modal:'Заказ', copied:'Скопировано ✅',
-        vipLabel:'VIP',
-
-        // Party
-        partyBtn:'Праздник 🎉',
-        partyTitle:'Праздник',
-        partyVip:'VIP',
-        partyType:'Повод',
-        partyGuests:'Гостей',
-        partyShow:'Показать',
-        partyCopy:'Скопировать',
-        partySend:'Отправить в WhatsApp',
-        partyClose:'Закрыть',
-        partyHint:'Выбери пакет, гостей и VIP — и отправь заявку менеджеру. (Состав можно уточнить на месте.)',
-        partyEst:'Ориентир по сумме',
-        partyIncludes:'Включено',
-        partyExtra:'Дополнительно'
+        vipLabel:'VIP'
       },
       food: [
         { name:'Супы', items:[
@@ -285,62 +338,11 @@
           ['Бараньи семечки',5990],
           ['Пивной сет',9990],
         ]},
-        { name:'Выпечка', items:[
-          ['Мини чебуреки',2990],
-          ['Самса',2990],
-          ['Хлебная корзина',1990],
-          ['Бауырсаки',1990],
-        ]},
-        { name:'Шашлыки', items:[
-          ['Шашлык утка',3800],
-          ['Шашлык шампиньоны',2500],
-          ['Шашлык из куриного филе',3500],
-          ['Шашлык баранина',4500],
-          ['Овощи на гриле',2500],
-          ['Люля куриный',3500],
-          ['Люля баранина',3800],
-          ['Крылышки',3500],
-        ]},
         { name:'Блюда на компанию', items:[
           ['Мясное плато на гриле',49990],
           ['Рыбное плато',59990],
           ['Ассорти шашлыков Hard',60000],
           ['Ассорти шашлыков Lite',35000],
-        ]},
-        { name:'Паста', items:[
-          ['Паста болоньезе',4990],
-          ['Паста карбонара',4790],
-          ['Паста с морепродуктами',5790],
-          ['Фетучини альфредо',4790],
-        ]},
-        { name:'Вторые блюда', items:[
-          ['Печень с грибами',4400],
-          ['Бефстроганов из телятины',8660],
-          ['Филе миньон',11990],
-          ['Стейк Рибай',12660],
-          ['Стейк Ти-Бон',12990],
-          ['Стейк из лосося по-аргентински',15660],
-          ['Стейк из цветной капусты',3490],
-        ]},
-        { name:'Гарниры', items:[
-          ['Рис',1290],
-          ['Пюре',1290],
-          ['Картофель фри',1690],
-          ['Брокколи с цветной капустой',1690],
-          ['Картофельные дольки',1790],
-          ['Овощи на гриле',2590],
-          ['Картофель по-домашнему',2890],
-        ]},
-        { name:'Соусы', items:[
-          ['Демигласс',690],
-          ['Сырный',690],
-          ['Кетчуп',690],
-          ['Барбекю',690],
-          ['Сливочно-грибной',690],
-        ]},
-        { name:'Десерты', items:[
-          ['Чизкейк',3490],
-          ['Сникерс',3490],
         ]},
         { name:'Блюда по предзаказу', items:[
           ['Запечённая сёмга целиком',139990],
@@ -352,102 +354,13 @@
         ]},
       ],
       bar: [
-        { name:'Безалкогольные напитки', items:[
-          ['ASSU 0.5',1990],
-          ['Cola 0.25',1690],
-          ['Schweppes',2590],
-          ['Red Bull 0.25',2590],
-          ['Сок в ассортименте',2990],
-        ]},
-        { name:'Авторские чаи', items:[
-          ['Black tea',2490],
-          ['Green tea',2490],
-          ['Tashkent’s tea',3490],
-          ['Moroccan tea',3490],
-          ['Tea of wild berries',3490],
-        ]},
         { name:'Лимонады', items:[
           ['Mango – Passion Fruit',3990],
           ['Raspberry',3990],
           ['Pomegranate',3990],
           ['Kiwi – Lime',3990],
           ['Watermelon – Melon',3990],
-        ]},
-        { name:'Коктейли', items:[
-          ['Long Island Ice Tea',4000],
-          ['Aperol Sprite',3800],
-          ['Gin Tonic',3900],
-          ['Autograph Special',3800],
-        ]},
-        { name:'Пиво бутылочное', items:[
-          ['Corona Extra',2990],
-          ['Miller',2590],
-        ]},
-        { name:'Пиво разливное', items:[
-          ['Bud (разлив)',2990],
-        ]},
-        { name:'Водка', items:[
-          ['Absolute Blue',2690],
-          ['Gray Goose',3290],
-          ['Beluga',3290],
-          ['Belvedere',3490],
-        ]},
-        { name:'Настойка', items:[
-          ['Jägermeister',2990],
-        ]},
-        { name:'Вермуты', items:[
-          ['Martini Bianco',2290],
-          ['Martini Rosso',2290],
-          ['Martini Extra Dry',2290],
-        ]},
-        { name:'Купажированный виски', items:[
-          ['Jameson Original',2990],
-          ['Jameson IPA',2990],
-          ['Jameson Black Barrel',2990],
-          ['Jack Daniel’s',2990],
-          ['Jim Beam',2990],
-          ['Chivas Regal 12 y.o',3990],
-          ['Chivas Regal 18 y.o',7690],
-          ['Ballantine’s Finest',2390],
-        ]},
-        { name:'Виски односолодовые', items:[
-          ['The Glenlivet 12 y.o',4990],
-          ['The Glenlivet 18 y.o',6990],
-          ['Glenfiddich 12 y.o',4790],
-          ['Macallan 12 y.o',7990],
-        ]},
-        { name:'Ром', items:[
-          ['Bacardi Oakheart',2890],
-          ['Bacardi Carta Blanca',2890],
-          ['Bacardi Carta Negra',2890],
-          ['Bacardi Spiced',2890],
-        ]},
-        { name:'Джин', items:[
-          ['Beefeater',2990],
-        ]},
-        { name:'Текила', items:[
-          ['Olmeca Blanco',2590],
-          ['Olmeca Gold',2590],
-          ['Avion',2990],
-        ]},
-        { name:'Коньяк', items:[
-          ['Ararat 5 y.o',2290],
-          ['Ararat 10 y.o',4190],
-          ['Hennessy VS',3990],
-          ['Hennessy VSOP',5890],
-          ['Hennessy XO',11990],
-        ]},
-        { name:'Вино', items:[
-          ['Casasole',19990],
-          ['San Valentin',23990],
-          ['Nuala',33990],
-        ]},
-        { name:'Игристые вина', items:[
-          ['Santo Stefano',17000],
-          ['Martini Asti',19000],
-          ['Moët & Chandon Imperial',116000],
-          ['Bottega Prosecco',29000],
-        ]},
+        ]}
       ],
       hookah: [
         { name:'Кальяны', items:[
@@ -465,133 +378,11 @@
         svc:'Қызмет 10%', clear:'Тазалау', show:'Тапсырысты көрсету', send:'WhatsApp-қа жіберу',
         sum:'Сома', svcLine:'қызмет 10%', svcOff:'қызмет өшірулі',
         modal:'Тапсырыс', copied:'Көшірілді ✅',
-        vipLabel:'VIP',
-
-        partyBtn:'Мереке 🎉',
-        partyTitle:'Мереке',
-        partyVip:'VIP',
-        partyType:'Себеп',
-        partyGuests:'Қонақ',
-        partyShow:'Көрсету',
-        partyCopy:'Көшіру',
-        partySend:'WhatsApp-қа жіберу',
-        partyClose:'Жабу',
-        partyHint:'Пакетті, қонақ санын және VIP таңдаңыз — менеджерге өтінім жіберіңіз. (Құрамын нақтылауға болады.)',
-        partyEst:'Шамамен сома',
-        partyIncludes:'Кіреді',
-        partyExtra:'Қосымша'
+        vipLabel:'VIP'
       },
-      food: [
-        { name:'Сорпалар', items:[
-          ['Жасымық крем-сорпасы',2260],
-          ['Тауық қосылған рамен',4660],
-          ['Сиыр еті қосылған рамен',5990],
-          ['Теңіз өнімдерімен том ям',5990],
-          ['Қой етінен шорпа',4290],
-          ['Қонина қосылған кеспе',4290],
-        ]},
-        { name:'Салаттар', items:[
-          ['«Бавариялық» салат',4960],
-          ['Қытырлақ баклажан',4990],
-          ['Тауық қосылған Цезарь',5690],
-          ['Асшаян қосылған Цезарь',5690],
-          ['Албырт қосылған Цезарь',5690],
-          ['Жылы албырт салаты',5990],
-          ['Руккола және асшаян салаты',6290],
-          ['Ростбиф салаты',5290],
-          ['Албырт қосылған оливье',4400],
-        ]},
-        { name:'Суық тіскебасарлар', items:[
-          ['Брускетта ассорти',4800],
-          ['Балық тілімі',12960],
-          ['Кавказша тілім',12960],
-          ['Ет тілімі',12960],
-          ['Тұздалған көкөніс ассорти',4900],
-          ['Үйше сельдь',3600],
-          ['Ірімшік табақ',12960],
-          ['Жеміс ассорти',12960],
-        ]},
-        { name:'Ыстық тіскебасарлар', items:[
-          ['Бұқтырылған баклажан',4990],
-          ['Баклажан соте',5990],
-          ['Сыралық асшаян',6990],
-          ['Қойдың “семечки”',5990],
-          ['Сыралық сет',9990],
-        ]},
-        { name:'Пісіру', items:[
-          ['Мини чебурек',2990],
-          ['Самса',2990],
-          ['Нан себеті',1990],
-          ['Бауырсақ',1990],
-        ]},
-        { name:'Шашлықтар', items:[
-          ['Үйрек шашлығы',3800],
-          ['Шампиньон шашлығы',2500],
-          ['Тауық филесі шашлығы',3500],
-          ['Қой еті шашлығы',4500],
-          ['Гриль көкөністер',2500],
-          ['Тауық люля-кебаб',3500],
-          ['Қой люля-кебаб',3800],
-          ['Қанатшалар',3500],
-        ]},
-        { name:'Компанияға арналған', items:[
-          ['Грильдегі ет плато',49990],
-          ['Балық плато',59990],
-          ['Шашлық ассорти Hard',60000],
-          ['Шашлық ассорти Lite',35000],
-        ]},
-        { name:'Паста', items:[
-          ['Болоньезе пастасы',4990],
-          ['Карбонара пастасы',4790],
-          ['Теңіз өнімдерімен паста',5790],
-          ['Фетучини Альфредо',4790],
-        ]},
-        { name:'Негізгі тағамдар', items:[
-          ['Саңырауқұлақ қосылған бауыр',4400],
-          ['Бұзау етінен бефстроганов',8660],
-          ['Филе-миньон',11990],
-          ['Рибай стейк',12660],
-          ['Ти-Бон стейк',12990],
-          ['Аргентиналық албырт стейк',15660],
-          ['Түсті қырыққабат стейкі',3490],
-        ]},
-        { name:'Гарнирлер', items:[
-          ['Күріш',1290],
-          ['Картоп пюресі',1290],
-          ['Картоп фри',1690],
-          ['Брокколи және гүлді қырыққабат',1690],
-          ['Картоп тілімдері',1790],
-          ['Гриль көкөністер',2590],
-          ['Үйше картоп',2890],
-        ]},
-        { name:'Тұздықтар', items:[
-          ['Демиглас',690],
-          ['Ірімшік тұздығы',690],
-          ['Кетчуп',690],
-          ['Барбекю',690],
-          ['Кілегейлі-саңырауқұлақ',690],
-        ]},
-        { name:'Десерттер', items:[
-          ['Чизкейк',3490],
-          ['Сникерс',3490],
-        ]},
-        { name:'Алдын ала тапсырыс тағамдары', items:[
-          ['Тұтас пісірілген албырт',139990],
-          ['Бұқтырылған сиыр қабырғасы',44990],
-          ['Пісірілген қозы жамбасы (15 адамға дейін)',48990],
-          ['Қуырдақ',49990],
-          ['Бешбармақ',65000],
-          ['Қазан кебаб',44990],
-        ]},
-      ],
+      food: [],
       bar: null,
-      hookah: [
-        { name:'Кальян', items:[
-          ['Lite',10000],
-          ['Hard',15000],
-          ['Тостаған ауыстыру',7500],
-        ]}
-      ]
+      hookah: []
     },
 
     en: {
@@ -601,234 +392,95 @@
         svc:'Service 10%', clear:'Clear', show:'Show order', send:'Send to WhatsApp',
         sum:'Subtotal', svcLine:'service 10%', svcOff:'service off',
         modal:'Order', copied:'Copied ✅',
-        vipLabel:'VIP',
-
-        partyBtn:'Party 🎉',
-        partyTitle:'Party',
-        partyVip:'VIP',
-        partyType:'Occasion',
-        partyGuests:'Guests',
-        partyShow:'Show',
-        partyCopy:'Copy',
-        partySend:'Send to WhatsApp',
-        partyClose:'Close',
-        partyHint:'Pick a package, guest count and VIP — then send a request to the manager. (Details can be уточнены on-site.)',
-        partyEst:'Estimated total',
-        partyIncludes:'Included',
-        partyExtra:'Extra'
+        vipLabel:'VIP'
       },
-      food: [
-        { name:'Soups', items:[
-          ['Lentil cream soup',2260],
-          ['Chicken ramen',4660],
-          ['Beef ramen',5990],
-          ['Tom yum (seafood)',5990],
-          ['Lamb shorpa',4290],
-          ['Kespе (horse meat)',4290],
-        ]},
-        { name:'Salads', items:[
-          ['Bavarian salad',4960],
-          ['Crispy eggplant',4990],
-          ['Caesar (chicken)',5690],
-          ['Caesar (shrimp)',5690],
-          ['Caesar (salmon)',5690],
-          ['Warm salmon salad',5990],
-          ['Arugula & shrimp salad',6290],
-          ['Roast beef salad',5290],
-          ['Olivier with salmon',4400],
-        ]},
-        { name:'Cold appetizers', items:[
-          ['Bruschetta assortment',4800],
-          ['Fish platter (sliced)',12960],
-          ['Caucasian platter (sliced)',12960],
-          ['Meat platter (sliced)',12960],
-          ['Pickles assortment',4900],
-          ['Homestyle herring',3600],
-          ['Cheese platter',12960],
-          ['Fruit assortment',12960],
-        ]},
-        { name:'Hot appetizers', items:[
-          ['Braised eggplant',4990],
-          ['Eggplant sauté',5990],
-          ['Beer shrimps',6990],
-          ['Lamb “seeds”',5990],
-          ['Beer set',9990],
-        ]},
-        { name:'Bakery', items:[
-          ['Mini chebureki',2990],
-          ['Samsa',2990],
-          ['Bread basket',1990],
-          ['Baursak',1990],
-        ]},
-        { name:'Kebabs', items:[
-          ['Duck kebab',3800],
-          ['Mushroom kebab',2500],
-          ['Chicken fillet kebab',3500],
-          ['Lamb kebab',4500],
-          ['Grilled vegetables',2500],
-          ['Chicken lula',3500],
-          ['Lamb lula',3800],
-          ['Chicken wings',3500],
-        ]},
-        { name:'Sharing dishes', items:[
-          ['Grilled meat platter',49990],
-          ['Fish platter',59990],
-          ['Kebab assortment Hard',60000],
-          ['Kebab assortment Lite',35000],
-        ]},
-        { name:'Pasta', items:[
-          ['Bolognese',4990],
-          ['Carbonara',4790],
-          ['Seafood pasta',5790],
-          ['Fettuccine Alfredo',4790],
-        ]},
-        { name:'Main courses', items:[
-          ['Liver with mushrooms',4400],
-          ['Veal beef stroganoff',8660],
-          ['Filet mignon',11990],
-          ['Ribeye steak',12660],
-          ['T-bone steak',12990],
-          ['Salmon steak (Argentinian)',15660],
-          ['Cauliflower steak',3490],
-        ]},
-        { name:'Sides', items:[
-          ['Rice',1290],
-          ['Mashed potatoes',1290],
-          ['French fries',1690],
-          ['Broccoli & cauliflower',1690],
-          ['Potato wedges',1790],
-          ['Grilled vegetables',2590],
-          ['Homestyle potatoes',2890],
-        ]},
-        { name:'Sauces', items:[
-          ['Demi-glace',690],
-          ['Cheese sauce',690],
-          ['Ketchup',690],
-          ['BBQ sauce',690],
-          ['Creamy mushroom',690],
-        ]},
-        { name:'Desserts', items:[
-          ['Cheesecake',3490],
-          ['Snickers dessert',3490],
-        ]},
-        { name:'Pre-order dishes', items:[
-          ['Whole baked salmon',139990],
-          ['Braised beef ribs',44990],
-          ['Baked lamb leg (up to 15)',48990],
-          ['Kuirdak',49990],
-          ['Beshbarmak',65000],
-          ['Kazan kebab',44990],
-        ]},
-      ],
+      food: [],
       bar: null,
-      hookah: [
-        { name:'Hookah', items:[
-          ['Lite',10000],
-          ['Hard',15000],
-          ['Bowl replacement',7500],
-        ]}
-      ]
+      hookah: []
     }
   };
 
-  // Use RU bar for KZ/EN too (so “полный бар” везде)
-  DATA.kz.bar = DATA.ru.bar;
-  DATA.en.bar = DATA.ru.bar;
+  // For KZ/EN reuse RU data (быстро и без потери функционала)
+  DATA.kz.food = DATA.ru.food; DATA.kz.bar = DATA.ru.bar; DATA.kz.hookah = DATA.ru.hookah;
+  DATA.en.food = DATA.ru.food; DATA.en.bar = DATA.ru.bar; DATA.en.hookah = DATA.ru.hookah;
 
-  // ===== PARTY DATA =====
-  const PARTY = {
-    types: {
-      ru: [
-        {val:'birthday', label:'День рождения'},
-        {val:'hen',      label:'Девичник'},
-        {val:'corp',     label:'Корпоратив'},
-        {val:'date',     label:'Романтик'}
-      ],
-      kz: [
-        {val:'birthday', label:'Туған күн'},
-        {val:'hen',      label:'Қыз-келіншек кеші'},
-        {val:'corp',     label:'Корпоратив'},
-        {val:'date',     label:'Романтика'}
-      ],
-      en: [
-        {val:'birthday', label:'Birthday'},
-        {val:'hen',      label:'Bachelorette'},
-        {val:'corp',     label:'Corporate'},
-        {val:'date',     label:'Date / Romantic'}
-      ]
-    },
-    packs: [
-      {
-        id:'lite',
-        name:{ru:'LITE', kz:'LITE', en:'LITE'},
-        desc:{
-          ru:'Лёгкий вариант для будней: кальян + напитки, без перегруза по кухне.',
-          kz:'Жеңіл нұсқа (апта ішінде): кальян + сусындар.',
-          en:'Light weekday option: hookah + drinks, minimal food.'
-        },
-        base: 15000, perGuest: 2500,
-        includes:{
-          ru:['1 кальян (Lite)', '2 лимонада', '1 закуска на стол'],
-          kz:['1 кальян (Lite)', '2 лимонад', '1 тіскебасар'],
-          en:['1 hookah (Lite)', '2 lemonades', '1 shared snack']
-        },
-        extra:{
-          ru:['Можно добавить блюда из QR-меню', 'Сервис 10% по чеку'],
-          kz:['QR мәзірінен тағам қосуға болады', 'Чекке қызмет 10%'],
-          en:['Add dishes from QR menu', 'Service 10% on check']
-        }
-      },
-      {
-        id:'standard',
-        name:{ru:'STANDARD', kz:'STANDARD', en:'STANDARD'},
-        desc:{
-          ru:'Самый популярный: стол “под компанию” + кальян, комфортно по бюджету.',
-          kz:'Ең танымал: компанияға арналған үстел + кальян.',
-          en:'Most popular: sharing table + hookah, balanced budget.'
-        },
-        base: 25000, perGuest: 4500,
-        includes:{
-          ru:['2 кальяна (Lite)', 'Сет закусок (или 2 горячие закуски)', '2 лимонада / чай'],
-          kz:['2 кальян (Lite)', 'Тіскебасар сеті (немесе 2 ыстық тіскебасар)', '2 лимонад / шай'],
-          en:['2 hookahs (Lite)', 'Appetizer set (or 2 hot snacks)', '2 lemonades / tea']
-        },
-        extra:{
-          ru:['Можно апгрейднуть кальян до Hard (+5 000)', 'Сервис 10% по чеку'],
-          kz:['Hard-қа ауыстыруға болады (+5 000)', 'Чекке қызмет 10%'],
-          en:['Upgrade hookah to Hard (+5 000)', 'Service 10% on check']
-        }
-      },
-      {
-        id:'premium',
-        name:{ru:'PREMIUM', kz:'PREMIUM', en:'PREMIUM'},
-        desc:{
-          ru:'Праздник “под ключ”: больше кухни, 2–3 кальяна и красиво по подаче.',
-          kz:'“Под ключ” мереке: көбірек ас, 2–3 кальян.',
-          en:'Turn-key vibe: more food, 2–3 hookahs, nicer serving.'
-        },
-        base: 40000, perGuest: 7500,
-        includes:{
-          ru:['3 кальяна (2 Lite + 1 Hard)', 'Блюдо на компанию (Lite)', 'Сеты закусок + салаты', 'Напитки на стол'],
-          kz:['3 кальян (2 Lite + 1 Hard)', 'Компанияға арналған тағам (Lite)', 'Тіскебасар + салаттар', 'Сусындар'],
-          en:['3 hookahs (2 Lite + 1 Hard)', 'Sharing dish (Lite)', 'Appetizers + salads', 'Table drinks']
-        },
-        extra:{
-          ru:['Можно собрать под бюджет', 'Сервис 10% по чеку'],
-          kz:['Бюджетке қарай жинауға болады', 'Чекке қызмет 10%'],
-          en:['Can be tailored to budget', 'Service 10% on check']
-        }
-      }
+  // ========= PACKAGES (2 пакета) =========
+  const EVENTS = {
+    ru:[
+      {val:'birthday', label:'День рождения'},
+      {val:'hen', label:'Девичник'},
+      {val:'corp', label:'Корпоратив'},
+      {val:'date', label:'Романтик'}
+    ],
+    kz:[
+      {val:'birthday', label:'Туған күн'},
+      {val:'hen', label:'Девичник'},
+      {val:'corp', label:'Корпоратив'},
+      {val:'date', label:'Романтик'}
+    ],
+    en:[
+      {val:'birthday', label:'Birthday'},
+      {val:'hen', label:'Bachelorette'},
+      {val:'corp', label:'Corporate'},
+      {val:'date', label:'Date / Romantic'}
     ]
   };
 
+  // Автосостав пакета (под ключ) — гость выбирает только основное
+  // Кол-ва зависят от гостей:
+  // company dishes = ceil(guests/9)
+  // salads fixed picks, qty by ranges: 2/3/4/5
+  // cold apps: 1/2/3/4
+  // hot apps: 1/2/2/3
+  // lemonades: 2/3/5/8
+  // hookah: 1 (<=12) / 2 (13-20) / 3 (21-35) — умеренно
+  const PACKS = [
+    {
+      id:'standard',
+      name:{ru:'STANDARD', kz:'STANDARD', en:'STANDARD'},
+      desc:{
+        ru:'Под ключ: салаты + закуски + лимонады + кальян(ы) + основное на компанию. Вы выбираете только “блюда на компанию”.',
+        kz:'“Под ключ”: салаттар + тіскебасар + лимонад + кальян + компанияға арналған негізгі тағам.',
+        en:'Turn-key: salads + appetizers + lemonades + hookah(s) + main sharing dishes.'
+      },
+      note:{
+        ru:'* Сервис 10% по чеку отдельно. Состав закусок/салатов можно заменить на аналогичные позиции из меню.',
+        kz:'* Қызмет 10% бөлек. Құрамын ұқсас позицияларға ауыстыруға болады.',
+        en:'* Service 10% is separate. Items can be swapped for similar menu options.'
+      },
+      host:false
+    },
+    {
+      id:'premium',
+      name:{ru:'PREMIUM', kz:'PREMIUM', en:'PREMIUM'},
+      desc:{
+        ru:'Максимум: усиленный стол + блюда по предзаказу + 🎤 ведущий (до 30 мин). Вы выбираете “блюда на компанию” и “предзаказ”.',
+        kz:'Максимум: күшейтілген үстел + алдын ала тапсырыс + 🎤 жүргізуші (30 мин дейін).',
+        en:'Maximum: enhanced table + pre-order dishes + 🎤 host (up to 30 min).'
+      },
+      note:{
+        ru:'🎤 Ведущий — только по предварительному бронированию минимум за 24 часа (при подтверждении менеджером). Сервис 10% отдельно.',
+        kz:'🎤 Жүргізуші — кемінде 24 сағат бұрын бронь (менеджер растаған жағдайда).',
+        en:'🎤 Host requires booking at least 24h in advance (manager confirmation).'
+      },
+      host:true
+    }
+  ];
+
+  // ========= STATE =========
   let lang='ru', section='all';
   let cart = {};
 
-  // party state
-  let partyGuests = 10;
-  let partyType = 'birthday';
-  let partyPack = 'standard';
+  let pkGuests = 10;
+  let pkType = 'birthday';
+  let pkPack = 'standard';
+  let pkCompany = []; // chosen company dishes (names)
+  let pkPre = [];     // chosen pre-order dishes (names) for premium
 
+  let ptGuests = 10;
+  let ptType = 'birthday';
+
+  // ========= HELPERS =========
   const $ = (id)=>document.getElementById(id);
   const fmt = (n)=>String(n||0).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
   const ui = ()=>DATA[lang].ui;
@@ -843,6 +495,19 @@
       sel.appendChild(o);
     }
   }
+
+  function fillEvents(selectId){
+    const sel = $(selectId);
+    sel.innerHTML = '';
+    for(const t of EVENTS[lang]){
+      const o = document.createElement('option');
+      o.value = t.val;
+      o.textContent = t.label;
+      sel.appendChild(o);
+    }
+  }
+
+  function getVip(val){ return VIPS.find(v=>v.val===val) || VIPS[0]; }
 
   function setLang(l){
     lang=l;
@@ -861,24 +526,7 @@
     $('sendBtn').textContent = ui().send;
     $('mTitle').textContent = ui().modal;
 
-    // party ui labels
-    $('partyBtn').textContent = ui().partyBtn;
-    $('pTitle').textContent = ui().partyTitle;
-    $('pVipLabel').textContent = ui().partyVip;
-    $('pTypeLabel').textContent = ui().partyType;
-    $('pGuestsLabel').textContent = ui().partyGuests;
-    $('pShow').textContent = ui().partyShow;
-    $('pCopy').textContent = ui().partyCopy;
-    $('pSend').textContent = ui().partySend;
-    $('pClose').textContent = ui().partyClose;
-    $('pHint').textContent = ui().partyHint;
-
     fillVip('vip');
-    fillVip('pVip');
-
-    fillPartyTypes();
-    renderPartyPacks();
-
     render();
     updateCart();
   }
@@ -902,7 +550,6 @@
   }
   function clearCart(){ cart={}; updateCart(); refreshQty(); }
 
-  // safe blocks() to avoid crashes if some section is null
   function blocks(){
     const d = DATA[lang];
     const out=[];
@@ -1010,7 +657,7 @@
     if(!entries.length) return '';
 
     const vipVal = $('vip').value || '';
-    const vipText = VIPS.find(v=>v.val===vipVal) || VIPS[0];
+    const vipText = getVip(vipVal);
     const vipLabel = (lang==='ru'?vipText.ru:(lang==='kz'?vipText.kz:vipText.en));
 
     const svcOn=$('svc').checked;
@@ -1038,6 +685,7 @@
     const t=orderText(); if(!t) return;
     $('orderText').textContent=t;
     $('mb').style.display='flex';
+    $('mb').scrollTop = 0;
   }
   function hideModal(){ $('mb').style.display='none'; }
 
@@ -1068,58 +716,178 @@
     window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(t)}`, '_blank');
   }
 
-  // ===== PARTY LOGIC =====
-  function fillPartyTypes(){
-    const sel = $('pType');
-    sel.innerHTML = '';
-    for(const t of PARTY.types[lang]){
-      const o = document.createElement('option');
-      o.value = t.val;
-      o.textContent = t.label;
-      sel.appendChild(o);
+  // ========= PACKAGE BUILDING =========
+  function getCategoryItems(catNameRu){
+    // ищем категорию по RU названиям (потому что DATA.kz/en = RU)
+    for(const c of DATA.ru.food){
+      if(c.name === catNameRu) return c.items.slice();
     }
-    sel.value = partyType;
+    for(const c of DATA.ru.bar){
+      if(c.name === catNameRu) return c.items.slice();
+    }
+    for(const c of DATA.ru.hookah){
+      if(c.name === catNameRu) return c.items.slice();
+    }
+    return [];
   }
 
-  function partyPackPrice(pack){
-    const g = partyGuests;
-    return Math.max(0, pack.base + pack.perGuest * g);
+  const SALAD_POOL = [
+    'Цезарь с цыплёнком',
+    'Салат «Баварский»',
+    'Тёплый салат с лососем',
+    'Салат с ростбифом',
+    'Салат с рукколой и креветками'
+  ];
+  const COLD_POOL = [
+    'Ассорти брускетт',
+    'Ассорти из солений',
+    'Сырное плато',
+    'Мясная нарезка',
+    'Фруктовое ассорти'
+  ];
+  const HOT_POOL = [
+    'Томлённые баклажаны',
+    'Соте из баклажан',
+    'Пивные креветки',
+    'Бараньи семечки',
+    'Пивной сет'
+  ];
+  const LEM_POOL = [
+    'Mango – Passion Fruit',
+    'Raspberry',
+    'Pomegranate',
+    'Kiwi – Lime',
+    'Watermelon – Melon'
+  ];
+
+  function qtyByGuests(g, a,b,c,d){
+    // ranges: 4-8, 9-12, 13-20, 21-35
+    if(g<=8) return a;
+    if(g<=12) return b;
+    if(g<=20) return c;
+    return d;
   }
 
-  function renderPartyPacks(){
-    $('gVal').textContent = String(partyGuests);
+  function companyCount(g){ return Math.ceil(g/9); }
+  function preorderCount(g){ return (g<=15?1:2); }
 
-    const root = $('pPacks');
+  function hookahCount(g){
+    if(g<=12) return 1;
+    if(g<=20) return 2;
+    return 3;
+  }
+
+  function priceOf(name){
+    // search in RU food/bar/hookah
+    const all = [].concat(...DATA.ru.food.map(c=>c.items), ...DATA.ru.bar.map(c=>c.items), ...DATA.ru.hookah.map(c=>c.items));
+    const found = all.find(([n])=>n===name);
+    return found ? Number(found[1]||0) : 0;
+  }
+
+  function buildAutoIncluded(g, packId){
+    // fixed auto items (guest doesn't choose these)
+    const saladsN = qtyByGuests(g,2,3,4,5);
+    const coldN   = qtyByGuests(g,1,2,3,4);
+    const hotN    = qtyByGuests(g,1,2,2,3);
+    const lemN    = qtyByGuests(g,2,3,5,8);
+    const hookN   = hookahCount(g);
+
+    const included = [];
+
+    for(let i=0;i<saladsN;i++){
+      included.push({name:SALAD_POOL[i % SALAD_POOL.length], qty:1, group:'salad'});
+    }
+    for(let i=0;i<coldN;i++){
+      included.push({name:COLD_POOL[i % COLD_POOL.length], qty:1, group:'cold'});
+    }
+    for(let i=0;i<hotN;i++){
+      included.push({name:HOT_POOL[i % HOT_POOL.length], qty:1, group:'hot'});
+    }
+    for(let i=0;i<lemN;i++){
+      included.push({name:LEM_POOL[i % LEM_POOL.length], qty:1, group:'lem'});
+    }
+
+    // hookah (Lite) — умеренно
+    included.push({name:'Lite', qty:hookN, group:'hookah'});
+
+    // Premium slightly stronger: +1 lemonade and +1 hot app on big groups
+    if(packId==='premium'){
+      if(g>=13) included.push({name:LEM_POOL[(lemN) % LEM_POOL.length], qty:1, group:'lem'});
+      if(g>=21) included.push({name:HOT_POOL[(hotN) % HOT_POOL.length], qty:1, group:'hot'});
+    }
+
+    return included;
+  }
+
+  function validateVipGuests(vipVal, g){
+    const vip = getVip(vipVal);
+    if(g<=vip.cap) return {ok:true, msg:''};
+
+    // suggest VIPs that fit
+    const fits = VIPS.filter(v=>g<=v.cap).map(v=>v.val).join(', ');
+    const name = (lang==='ru'?vip.ru:(lang==='kz'?vip.kz:vip.en));
+    const msg = (lang==='ru'
+      ? `⚠️ В ${name} максимум ${vip.cap} гостей. Для ${g} гостей выберите: ${fits || 'другой VIP'}.`
+      : (lang==='kz'
+        ? `⚠️ ${name} үшін максимум ${vip.cap}. ${g} қонаққа: ${fits || 'басқа VIP'}.`
+        : `⚠️ ${name} max is ${vip.cap} guests. For ${g} guests choose: ${fits || 'another VIP'}.`
+      )
+    );
+    return {ok:false, msg};
+  }
+
+  function renderPackCards(){
+    const root = $('pkCards');
     root.innerHTML = '';
-    const packs = PARTY.packs;
 
-    for(const p of packs){
+    for(const p of PACKS){
       const card = document.createElement('div');
-      card.className = 'pack' + (p.id===partyPack ? ' active' : '');
+      card.className = 'card' + (p.id===pkPack ? ' active' : '');
 
       const h = document.createElement('h4');
       h.textContent = p.name[lang];
       card.appendChild(h);
 
       const d = document.createElement('div');
-      d.className = 'pdesc';
+      d.className = 'desc';
       d.textContent = p.desc[lang];
       card.appendChild(d);
 
-      const est = partyPackPrice(p);
-      const price = document.createElement('div');
-      price.className = 'pprice';
-      price.textContent = `${ui().partyEst}: ${fmt(est)} ₸`;
-      card.appendChild(price);
+      const auto = buildAutoIncluded(pkGuests, p.id);
+      const est = estimatePackTotal(p.id, pkGuests, pkCompany, pkPre);
+
+      const pr = document.createElement('div');
+      pr.className='price';
+      pr.textContent = `${fmt(est)} ₸`;
+      card.appendChild(pr);
 
       const mini = document.createElement('div');
-      mini.className = 'pmini';
-      mini.textContent = `${ui().partyIncludes}: ${p.includes[lang].join(' • ')}`;
+      mini.className = 'mini';
+      mini.textContent = (lang==='ru'
+        ? `Авто-включено: салаты ${qtyByGuests(pkGuests,2,3,4,5)} • закуски ${qtyByGuests(pkGuests,1,2,3,4)}+${qtyByGuests(pkGuests,1,2,2,3)} • лимонады ${qtyByGuests(pkGuests,2,3,5,8)} • кальян Lite ×${hookahCount(pkGuests)}`
+        : (lang==='kz'
+          ? `Авто: салат ${qtyByGuests(pkGuests,2,3,4,5)} • тіскебасар ${qtyByGuests(pkGuests,1,2,3,4)}+${qtyByGuests(pkGuests,1,2,2,3)} • лимонад ${qtyByGuests(pkGuests,2,3,5,8)} • кальян Lite ×${hookahCount(pkGuests)}`
+          : `Auto: salads ${qtyByGuests(pkGuests,2,3,4,5)} • apps ${qtyByGuests(pkGuests,1,2,3,4)}+${qtyByGuests(pkGuests,1,2,2,3)} • lemonades ${qtyByGuests(pkGuests,2,3,5,8)} • hookah Lite ×${hookahCount(pkGuests)}`
+        )
+      );
       card.appendChild(mini);
 
+      if(p.host){
+        const host = document.createElement('div');
+        host.className='mini';
+        host.textContent = (lang==='ru'
+          ? `🎤 Ведущий: до 30 минут (бронь минимум за 24 часа)`
+          : (lang==='kz'
+            ? `🎤 Жүргізуші: 30 мин дейін (24 сағат бұрын)`
+            : `🎤 Host: up to 30 min (book 24h in advance)`
+          )
+        );
+        card.appendChild(host);
+      }
+
       const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = (lang==='ru'?'Выбрать':'Select');
+      btn.type='button';
+      btn.textContent = (lang==='ru' ? 'Выбрать' : 'Select');
       btn.dataset.pack = p.id;
       card.appendChild(btn);
 
@@ -1127,46 +895,283 @@
     }
   }
 
-  function partyText(){
-    const vipVal = $('pVip').value || $('vip').value || '';
-    const vipText = VIPS.find(v=>v.val===vipVal) || VIPS[0];
-    const vipLabel = (lang==='ru'?vipText.ru:(lang==='kz'?vipText.kz:vipText.en));
+  function renderCompanyChoices(){
+    const root = $('pkCompanyChoices');
+    root.innerHTML = '';
 
-    const typeLabel = (PARTY.types[lang].find(x=>x.val===partyType)?.label) || '';
-    const pack = PARTY.packs.find(x=>x.id===partyPack) || PARTY.packs[0];
-    const est = partyPackPrice(pack);
+    const need = companyCount(pkGuests);
+    const options = getCategoryItems('Блюда на компанию');
+    if(pkCompany.length !== need){
+      pkCompany = Array.from({length:need}, (_,i)=> options[i % options.length]?.[0] || options[0]?.[0] || '');
+    }
+
+    for(let i=0;i<need;i++){
+      const sel = document.createElement('select');
+      sel.dataset.companyIndex = String(i);
+      for(const [name, price] of options){
+        const o = document.createElement('option');
+        o.value = name;
+        o.textContent = `${name} — ${fmt(price)} ₸`;
+        sel.appendChild(o);
+      }
+      sel.value = pkCompany[i] || (options[0]?.[0] || '');
+      root.appendChild(sel);
+    }
+  }
+
+  function renderPreChoices(){
+    const title = $('pkPreTitle');
+    const root = $('pkPreChoices');
+
+    if(pkPack !== 'premium'){
+      title.style.display='none';
+      root.style.display='none';
+      pkPre = [];
+      return;
+    }
+
+    title.style.display='';
+    root.style.display='';
+    root.innerHTML = '';
+
+    const need = preorderCount(pkGuests);
+    const options = getCategoryItems('Блюда по предзаказу');
+    if(pkPre.length !== need){
+      pkPre = Array.from({length:need}, (_,i)=> options[i % options.length]?.[0] || options[0]?.[0] || '');
+    }
+
+    for(let i=0;i<need;i++){
+      const sel = document.createElement('select');
+      sel.dataset.preIndex = String(i);
+      for(const [name, price] of options){
+        const o = document.createElement('option');
+        o.value = name;
+        o.textContent = `${name} — ${fmt(price)} ₸`;
+        sel.appendChild(o);
+      }
+      sel.value = pkPre[i] || (options[0]?.[0] || '');
+      root.appendChild(sel);
+    }
+  }
+
+  function estimatePackTotal(packId, guests, companySel, preSel){
+    let sum = 0;
+
+    // auto-included
+    const auto = buildAutoIncluded(guests, packId);
+    for(const it of auto){
+      sum += priceOf(it.name) * it.qty;
+    }
+
+    // company dishes chosen
+    for(const nm of (companySel||[])){
+      sum += priceOf(nm);
+    }
+
+    // pre-order chosen (premium only)
+    if(packId==='premium'){
+      for(const nm of (preSel||[])){
+        sum += priceOf(nm);
+      }
+    }
+
+    return sum;
+  }
+
+  function packText(){
+    const vipVal = $('pkVip').value || $('vip').value || VIPS[0].val;
+    const vipObj = getVip(vipVal);
+    const vipLabel = (lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
+    const typeLabel = EVENTS[lang].find(x=>x.val===pkType)?.label || '';
+    const pack = PACKS.find(x=>x.id===pkPack) || PACKS[0];
+
+    const auto = buildAutoIncluded(pkGuests, pkPack);
+    const total = estimatePackTotal(pkPack, pkGuests, pkCompany, pkPre);
 
     const lines = [];
-    lines.push(`AUTOGRAPH GOLD — ${ui().partyTitle}`);
-    lines.push(`${ui().partyVip}: ${vipLabel}`);
-    lines.push(`${ui().partyType}: ${typeLabel}`);
-    lines.push(`${ui().partyGuests}: ${partyGuests}`);
+    lines.push(`AUTOGRAPH GOLD — ПАКЕТ`);
+    lines.push(`VIP: ${vipLabel}`);
+    lines.push(`Повод: ${typeLabel}`);
+    lines.push(`Гостей: ${pkGuests}`);
     lines.push(`Пакет: ${pack.name[lang]}`);
     lines.push('');
-    lines.push(`${ui().partyIncludes}:`);
-    for(const s of pack.includes[lang]) lines.push(`• ${s}`);
+
+    lines.push('Основное (выбор гостя):');
+    const cc = companyCount(pkGuests);
+    lines.push(`• Блюда на компанию: ${cc} шт`);
+    pkCompany.forEach((x,i)=> lines.push(`   ${i+1}) ${x}`));
+    if(pkPack==='premium'){
+      const pc = preorderCount(pkGuests);
+      lines.push(`• Блюда по предзаказу: ${pc} шт`);
+      pkPre.forEach((x,i)=> lines.push(`   ${i+1}) ${x}`));
+    }
     lines.push('');
-    lines.push(`${ui().partyExtra}:`);
-    for(const s of pack.extra[lang]) lines.push(`• ${s}`);
+
+    lines.push('Авто-включено (под ключ):');
+    // group by type
+    const grouped = {};
+    for(const it of auto){
+      const key = it.group;
+      if(!grouped[key]) grouped[key]=[];
+      grouped[key].push(it);
+    }
+    function emitGroup(title, arr){
+      if(!arr || !arr.length) return;
+      lines.push(`• ${title}:`);
+      for(const it of arr){
+        lines.push(`   - ${it.name}${it.qty>1 ? ` ×${it.qty}`:''}`);
+      }
+    }
+    emitGroup('Салаты', grouped.salad);
+    emitGroup('Холодные закуски', grouped.cold);
+    emitGroup('Горячие закуски', grouped.hot);
+    emitGroup('Лимонады', grouped.lem);
+    emitGroup('Кальян', grouped.hookah);
+
+    if(pkPack==='premium'){
+      lines.push('');
+      lines.push('🎤 Ведущий: программа до 30 минут');
+      lines.push('Условие: бронирование ведущего минимум за 24 часа (при подтверждении менеджером).');
+    }
+
     lines.push('');
-    lines.push(`${ui().partyEst}: ${fmt(est)} ₸`);
+    lines.push(`Ориентир по сумме: ${fmt(total)} ₸`);
+    lines.push('Сервис 10% по чеку отдельно.');
+    lines.push(pack.note[lang] || '');
     lines.push('');
-    lines.push(lang==='ru'
-      ? 'Напишите удобное время и дату — менеджер подтвердит бронирование.'
-      : (lang==='kz'
-          ? 'Күні мен уақытын жазыңыз — менеджер бронды растайды.'
-          : 'Send date/time — manager will confirm the booking.'
-        )
-    );
+    lines.push('Напишите дату/время — менеджер подтвердит бронирование.');
 
     return lines.join('\n');
   }
 
-  function showParty(){
-    const t = partyText();
-    $('pText').style.display = 'block';
-    $('pText').textContent = t;
+  function renderPacksUI(){
+    $('pkGuests').textContent = String(pkGuests);
+
+    // VIP validation
+    const vipVal = $('pkVip').value || $('vip').value || VIPS[0].val;
+    const check = validateVipGuests(vipVal, pkGuests);
+    const warn = $('pkWarn');
+    const sendBtn = $('pkSend');
+
+    if(check.ok){
+      warn.style.display='none';
+      warn.textContent='';
+      sendBtn.classList.remove('disabled');
+    } else {
+      warn.style.display='';
+      warn.textContent=check.msg;
+      sendBtn.classList.add('disabled');
+    }
+
+    // cards & choices
+    renderPackCards();
+    renderCompanyChoices();
+    renderPreChoices();
+
+    // hint
+    $('pkHint').textContent = (lang==='ru'
+      ? 'Выберите пакет и основное. Салаты/закуски/лимонады/кальяны подставляются автоматически — чтобы всем хватило.'
+      : (lang==='kz'
+        ? 'Пакет пен негізгі тағамды таңдаңыз. Қалғаны автоматты түрде қосылады — бәріне жетеді.'
+        : 'Pick a package and main dishes. The rest is auto-included so everyone has enough.'
+      )
+    );
   }
+
+  function openPacks(){
+    fillVip('pkVip');
+    fillEvents('pkType');
+
+    $('pkVip').value = $('vip').value || VIPS[0].val;
+    $('pkType').value = pkType;
+
+    $('pkText').style.display='none';
+    $('packsMb').style.display='flex';
+    $('packsMb').scrollTop = 0;
+
+    renderPacksUI();
+  }
+  function closePacks(){ $('packsMb').style.display='none'; }
+
+  async function copyPack(){
+    const t = packText();
+    try{
+      if(navigator.clipboard?.writeText){
+        await navigator.clipboard.writeText(t);
+        alert(ui().copied);
+        return;
+      }
+    }catch(e){}
+    $('pkText').style.display='block';
+    $('pkText').textContent = t;
+    try{
+      const range=document.createRange();
+      range.selectNodeContents($('pkText'));
+      const sel=window.getSelection();
+      sel.removeAllRanges(); sel.addRange(range);
+      document.execCommand('copy');
+      sel.removeAllRanges();
+      alert(ui().copied);
+    }catch(e){}
+  }
+
+  function showPack(){
+    const t = packText();
+    $('pkText').style.display='block';
+    $('pkText').textContent = t;
+  }
+
+  // ========= PARTY (Dubai Congrats) =========
+  function partyText(){
+    const vipVal = $('ptVip').value || $('vip').value || VIPS[0].val;
+    const vipObj = getVip(vipVal);
+    const vipLabel = (lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
+    const typeLabel = EVENTS[lang].find(x=>x.val===ptType)?.label || '';
+
+    const lines = [];
+    lines.push('AUTOGRAPH GOLD — ПРАЗДНИК 🎉');
+    lines.push(`VIP: ${vipLabel}`);
+    lines.push(`Повод: ${typeLabel}`);
+    lines.push(`Гостей: ${ptGuests}`);
+    lines.push('');
+    lines.push('Dubai-Поздравление — 30 000 ₸');
+    lines.push('Включено:');
+    lines.push('• Martini Asti (1 бутылка)');
+    lines.push('• Торт (подача)');
+    lines.push('• Фейерверк/свечи (подача)');
+    lines.push('• Поздравление в VIP');
+    lines.push('');
+    lines.push('* Время подачи согласовать с менеджером.');
+    lines.push('Напишите дату/время и имя — менеджер подтвердит.');
+    return lines.join('\n');
+  }
+
+  function renderPartyWarn(){
+    $('ptGuests').textContent = String(ptGuests);
+    const vipVal = $('ptVip').value || $('vip').value || VIPS[0].val;
+    const check = validateVipGuests(vipVal, ptGuests);
+    const warn = $('ptWarn');
+
+    if(check.ok){
+      warn.style.display='none';
+      warn.textContent='';
+    } else {
+      warn.style.display='';
+      warn.textContent=check.msg;
+    }
+  }
+
+  function openParty(){
+    fillVip('ptVip');
+    fillEvents('ptType');
+    $('ptVip').value = $('vip').value || VIPS[0].val;
+    $('ptType').value = ptType;
+    $('ptText').style.display='none';
+    $('partyMb').style.display='flex';
+    $('partyMb').scrollTop = 0;
+    renderPartyWarn();
+  }
+  function closeParty(){ $('partyMb').style.display='none'; }
 
   async function copyParty(){
     const t = partyText();
@@ -1177,45 +1182,26 @@
         return;
       }
     }catch(e){}
-    showParty();
-    try{
-      const range=document.createRange();
-      range.selectNodeContents($('pText'));
-      const sel=window.getSelection();
-      sel.removeAllRanges(); sel.addRange(range);
-      document.execCommand('copy');
-      sel.removeAllRanges();
-      alert(ui().copied);
-    }catch(e){}
+    $('ptText').style.display='block';
+    $('ptText').textContent = t;
   }
 
-  function openParty(){
-    fillVip('pVip');
-    fillPartyTypes();
-    $('pVip').value = $('vip').value || VIPS[0].val;
-    $('pType').value = partyType;
-    $('gVal').textContent = String(partyGuests);
-    renderPartyPacks();
-    $('pText').style.display = 'none';
-    $('partyMb').style.display = 'flex';
-  }
-  function closeParty(){
-    $('partyMb').style.display = 'none';
-  }
-
-  // ===== EVENTS =====
+  // ========= EVENTS =========
   document.addEventListener('click',(e)=>{
     const t=e.target;
 
+    // language / menu tabs
     if(t.matches('[data-lang]')) return setLang(t.dataset.lang);
     if(t.matches('[data-section]')) return setSection(t.dataset.section);
 
+    // add/sub cart
     if(t.dataset.action){
       const name=t.dataset.name;
       if(t.dataset.action==='add') return add(name, Number(t.dataset.price||0));
       return sub(name);
     }
 
+    // cart buttons
     if(t.id==='clearBtn') return clearCart();
     if(t.id==='copyBtn') return showModal();
     if(t.id==='sendBtn') return sendWA();
@@ -1223,42 +1209,68 @@
     if(t.id==='mCopy') return copyOrder();
     if(t.id==='mClose' || t.id==='mb') return hideModal();
 
-    // party open/close
+    // open modals
+    if(t.id==='packsBtn') return openPacks();
     if(t.id==='partyBtn') return openParty();
-    if(t.id==='pClose') return closeParty();
+
+    // close modals by overlay click
+    if(t.id==='packsMb') return closePacks();
     if(t.id==='partyMb') return closeParty();
 
-    // guests +/-
-    if(t.id==='gMinus'){
-      partyGuests = Math.max(1, partyGuests - 1);
-      renderPartyPacks();
-      return;
-    }
-    if(t.id==='gPlus'){
-      partyGuests = Math.min(80, partyGuests + 1);
-      renderPartyPacks();
-      return;
+    // packages modal buttons
+    if(t.id==='pkClose') return closePacks();
+    if(t.id==='pkShow') return showPack();
+    if(t.id==='pkCopy') return copyPack();
+    if(t.id==='pkSend'){
+      if(t.classList.contains('disabled')) return;
+      return sendWA(packText());
     }
 
-    // pick pack
+    // party modal
+    if(t.id==='ptClose') return closeParty();
+    if(t.id==='ptCopy') return copyParty();
+    if(t.id==='ptSend') return sendWA(partyText());
+
+    // guests +/- (packages)
+    if(t.id==='pkMinus'){ pkGuests = Math.max(4, pkGuests-1); renderPacksUI(); return; }
+    if(t.id==='pkPlus'){ pkGuests = Math.min(35, pkGuests+1); renderPacksUI(); return; }
+
+    // guests +/- (party)
+    if(t.id==='ptMinus'){ ptGuests = Math.max(1, ptGuests-1); renderPartyWarn(); return; }
+    if(t.id==='ptPlus'){ ptGuests = Math.min(60, ptGuests+1); renderPartyWarn(); return; }
+
+    // select pack
     if(t.dataset.pack){
-      partyPack = t.dataset.pack;
-      renderPartyPacks();
+      pkPack = t.dataset.pack;
+      renderPacksUI();
       return;
     }
-
-    if(t.id==='pShow') return showParty();
-    if(t.id==='pCopy') return copyParty();
-    if(t.id==='pSend') return sendWA(partyText());
   });
 
+  // packages selects
   $('q').addEventListener('input', render);
   $('svc').addEventListener('change', updateCart);
 
-  $('pVip').addEventListener('change', ()=>{ /* keep state in UI */ });
-  $('pType').addEventListener('change', (e)=>{
-    partyType = e.target.value;
+  $('pkVip').addEventListener('change', renderPacksUI);
+  $('pkType').addEventListener('change', (e)=>{ pkType = e.target.value; });
+
+  $('pkCompanyChoices').addEventListener('change', (e)=>{
+    const idx = e.target?.dataset?.companyIndex;
+    if(idx==null) return;
+    pkCompany[Number(idx)] = e.target.value;
+    renderPackCards(); // update estimate
   });
+
+  $('pkPreChoices').addEventListener('change', (e)=>{
+    const idx = e.target?.dataset?.preIndex;
+    if(idx==null) return;
+    pkPre[Number(idx)] = e.target.value;
+    renderPackCards();
+  });
+
+  // party selects
+  $('ptVip').addEventListener('change', renderPartyWarn);
+  $('ptType').addEventListener('change', (e)=>{ ptType = e.target.value; });
 
   // init
   setLang('ru');
