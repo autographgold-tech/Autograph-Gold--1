@@ -300,7 +300,7 @@
     {ru:'VIP Luxor', kz:'VIP Luxor', en:'VIP Luxor', val:'Luxor', cap:35},
   ];
 
-  // ========= MENU DATA =========
+  // ========= FULL MENU DATA (RU/KZ/EN) =========
   const DATA = {
     ru: {
       ui: {
@@ -348,29 +348,169 @@
           ['Бараньи семечки',5990],
           ['Пивной сет',9990],
         ]},
+        { name:'Выпечка', items:[
+          ['Мини чебуреки',2990],
+          ['Самса',2990],
+          ['Хлебная корзина',1990],
+          ['Бауырсаки',1990],
+        ]},
+        { name:'Шашлыки', items:[
+          ['Шашлык утка',3800],
+          ['Шашлык шампиньоны',2500],
+          ['Шашлык из куриного филе',3500],
+          ['Шашлык баранина',4500],
+          ['Овощи на гриле',2500],
+          ['Люля куриный',3500],
+          ['Люля баранина',3800],
+          ['Крылышки',3500],
+        ]},
         { name:'Блюда на компанию', items:[
           ['Мясное плато на гриле',49990],
           ['Рыбное плато',59990],
           ['Ассорти шашлыков Hard',60000],
           ['Ассорти шашлыков Lite',35000],
         ]},
+        { name:'Паста', items:[
+          ['Паста болоньезе',4990],
+          ['Паста карбонара',4790],
+          ['Паста с морепродуктами',5790],
+          ['Фетучини альфредо',4790],
+        ]},
+        { name:'Вторые блюда', items:[
+          ['Печень с грибами',4400],
+          ['Бефстроганов из телятины',8660],
+          ['Филе миньон',11990],
+          ['Стейк Рибай',12660],
+          ['Стейк Ти-Бон',12990],
+          ['Стейк из лосося по-аргентински',15660],
+          ['Стейк из цветной капусты',3490],
+        ]},
+        { name:'Гарниры', items:[
+          ['Рис',1290],
+          ['Пюре',1290],
+          ['Картофель фри',1690],
+          ['Брокколи с цветной капустой',1690],
+          ['Картофельные дольки',1790],
+          ['Овощи на гриле',2590],
+          ['Картофель по-домашнему',2890],
+        ]},
+        { name:'Соусы', items:[
+          ['Демигласс',690],
+          ['Сырный',690],
+          ['Кетчуп',690],
+          ['Барбекю',690],
+          ['Сливочно-грибной',690],
+        ]},
+        { name:'Десерты', items:[
+          ['Чизкейк',3490],
+          ['Сникерс',3490],
+        ]},
         { name:'Блюда по предзаказу', items:[
           ['Запечённая сёмга целиком',139990],
           ['Томлёные рёбра говядины',44990],
-          ['Запечённая ножка ягнёнка (до 15 чел)',48990],
+          ['Запечённая ножка ягнёнка',48990],
           ['Куырдак',49990],
           ['Бешбармак',65000],
           ['Казан кебаб',44990],
         ]},
       ],
       bar: [
+        { name:'Безалкогольные напитки', items:[
+          ['ASSU 0.5',1990],
+          ['Cola 0.25',1690],
+          ['Schweppes',2590],
+          ['Red Bull 0.25',2590],
+          ['Сок в ассортименте',2990],
+        ]},
+        { name:'Авторские чаи', items:[
+          ['Black tea',2490],
+          ['Green tea',2490],
+          ['Tashkent’s tea',3490],
+          ['Moroccan tea',3490],
+          ['Tea of wild berries',3490],
+        ]},
         { name:'Лимонады', items:[
           ['Mango – Passion Fruit',3990],
           ['Raspberry',3990],
           ['Pomegranate',3990],
           ['Kiwi – Lime',3990],
           ['Watermelon – Melon',3990],
-        ]}
+        ]},
+        { name:'Коктейли', items:[
+          ['Long Island Ice Tea',4000],
+          ['Aperol Sprite',3800],
+          ['Gin Tonic',3900],
+          ['Autograph Special',3800],
+        ]},
+        { name:'Пиво бутылочное', items:[
+          ['Corona Extra',2990],
+          ['Miller',2590],
+        ]},
+        { name:'Пиво разливное', items:[
+          ['Bud (разлив)',2990],
+        ]},
+        { name:'Водка', items:[
+          ['Absolute Blue',2690],
+          ['Gray Goose',3290],
+          ['Beluga',3290],
+          ['Belvedere',3490],
+        ]},
+        { name:'Настойка', items:[
+          ['Jägermeister',2990],
+        ]},
+        { name:'Вермуты', items:[
+          ['Martini Bianco',2290],
+          ['Martini Rosso',2290],
+          ['Martini Extra Dry',2290],
+        ]},
+        { name:'Купажированный виски', items:[
+          ['Jameson Original',2990],
+          ['Jameson IPA',2990],
+          ['Jameson Black Barrel',2990],
+          ['Jack Daniel’s',2990],
+          ['Jim Beam',2990],
+          ['Chivas Regal 12 y.o',3990],
+          ['Chivas Regal 18 y.o',7690],
+          ['Ballantine’s Finest',2390],
+        ]},
+        { name:'Виски односолодовые', items:[
+          ['The Glenlivet 12 y.o',4990],
+          ['The Glenlivet 18 y.o',6990],
+          ['Glenfiddich 12 y.o',4790],
+          ['Macallan 12 y.o',7990],
+        ]},
+        { name:'Ром', items:[
+          ['Bacardi Oakheart',2890],
+          ['Bacardi Carta Blanca',2890],
+          ['Bacardi Carta Negra',2890],
+          ['Bacardi Spiced',2890],
+        ]},
+        { name:'Джин', items:[
+          ['Beefeater',2990],
+        ]},
+        { name:'Текила', items:[
+          ['Olmeca Blanco',2590],
+          ['Olmeca Gold',2590],
+          ['Avion',2990],
+        ]},
+        { name:'Коньяк', items:[
+          ['Ararat 5 y.o',2290],
+          ['Ararat 10 y.o',4190],
+          ['Hennessy VS',3990],
+          ['Hennessy VSOP',5890],
+          ['Hennessy XO',11990],
+        ]},
+        { name:'Вино', items:[
+          ['Casasole',19990],
+          ['San Valentin',23990],
+          ['Nuala',33990],
+        ]},
+        { name:'Игристые вина', items:[
+          ['Santo Stefano',17000],
+          ['Martini Asti',19000],
+          ['Moët & Chandon Imperial',116000],
+          ['Bottega Prosecco',29000],
+        ]},
       ],
       hookah: [
         { name:'Кальяны', items:[
@@ -390,9 +530,117 @@
         modal:'Тапсырыс', copied:'Көшірілді ✅',
         vipLabel:'VIP'
       },
-      food: [],
+      food: [
+        { name:'Сорпалар', items:[
+          ['Жасымық крем-сорпасы',2260],
+          ['Тауық қосылған рамен',4660],
+          ['Сиыр еті қосылған рамен',5990],
+          ['Теңіз өнімдерімен том ям',5990],
+          ['Қой етінен шорпа',4290],
+          ['Қонина қосылған кеспе',4290],
+        ]},
+        { name:'Салаттар', items:[
+          ['«Бавариялық» салат',4960],
+          ['Қытырлақ баклажан',4990],
+          ['Тауық қосылған Цезарь',5690],
+          ['Асшаян қосылған Цезарь',5690],
+          ['Албырт қосылған Цезарь',5690],
+          ['Жылы албырт салаты',5990],
+          ['Руккола және асшаян салаты',6290],
+          ['Ростбиф салаты',5290],
+          ['Албырт қосылған оливье',4400],
+        ]},
+        { name:'Суық тіскебасарлар', items:[
+          ['Брускетта ассорти',4800],
+          ['Балық тілімі',12960],
+          ['Кавказша тілім',12960],
+          ['Ет тілімі',12960],
+          ['Тұздалған көкөніс ассорти',4900],
+          ['Үйше сельдь',3600],
+          ['Ірімшік табақ',12960],
+          ['Жеміс ассорти',12960],
+        ]},
+        { name:'Ыстық тіскебасарлар', items:[
+          ['Бұқтырылған баклажан',4990],
+          ['Баклажан соте',5990],
+          ['Сыралық асшаян',6990],
+          ['Қойдың “семечки”',5990],
+          ['Сыралық сет',9990],
+        ]},
+        { name:'Пісіру', items:[
+          ['Мини чебурек',2990],
+          ['Самса',2990],
+          ['Нан себеті',1990],
+          ['Бауырсақ',1990],
+        ]},
+        { name:'Шашлықтар', items:[
+          ['Үйрек шашлығы',3800],
+          ['Шампиньон шашлығы',2500],
+          ['Тауық филесі шашлығы',3500],
+          ['Қой еті шашлығы',4500],
+          ['Гриль көкөністер',2500],
+          ['Тауық люля-кебаб',3500],
+          ['Қой люля-кебаб',3800],
+          ['Қанатшалар',3500],
+        ]},
+        { name:'Компанияға арналған', items:[
+          ['Грильдегі ет плато',49990],
+          ['Балық плато',59990],
+          ['Шашлық ассорти Hard',60000],
+          ['Шашлық ассорти Lite',35000],
+        ]},
+        { name:'Паста', items:[
+          ['Болоньезе пастасы',4990],
+          ['Карбонара пастасы',4790],
+          ['Теңіз өнімдерімен паста',5790],
+          ['Фетучини Альфредо',4790],
+        ]},
+        { name:'Негізгі тағамдар', items:[
+          ['Саңырауқұлақ қосылған бауыр',4400],
+          ['Бұзау етінен бефстроганов',8660],
+          ['Филе-миньон',11990],
+          ['Рибай стейк',12660],
+          ['Ти-Бон стейк',12990],
+          ['Аргентиналық албырт стейк',15660],
+          ['Түсті қырыққабат стейкі',3490],
+        ]},
+        { name:'Гарнирлер', items:[
+          ['Күріш',1290],
+          ['Картоп пюресі',1290],
+          ['Картоп фри',1690],
+          ['Брокколи және гүлді қырыққабат',1690],
+          ['Картоп тілімдері',1790],
+          ['Гриль көкөністер',2590],
+          ['Үйше картоп',2890],
+        ]},
+        { name:'Тұздықтар', items:[
+          ['Демиглас',690],
+          ['Ірімшік тұздығы',690],
+          ['Кетчуп',690],
+          ['Барбекю',690],
+          ['Кілегейлі-саңырауқұлақ',690],
+        ]},
+        { name:'Десерттер', items:[
+          ['Чизкейк',3490],
+          ['Сникерс',3490],
+        ]},
+        { name:'Алдын ала тапсырыс тағамдары', items:[
+          ['Тұтас пісірілген албырт',139990],
+          ['Бұқтырылған сиыр қабырғасы',44990],
+          ['Пісірілген қозы жамбасы',48990],
+          ['Қуырдақ',49990],
+          ['Бешбармақ',65000],
+          ['Қазан кебаб',44990],
+        ]},
+      ],
       bar: null,
-      hookah: []
+      hookah: [
+        { name:'Кальян', items:[
+          ['Lite',10000],
+          ['Hard',15000],
+          ['Тостаған ауыстыру',7500],
+        ]}
+      ]
     },
 
     en: {
@@ -404,15 +652,123 @@
         modal:'Order', copied:'Copied ✅',
         vipLabel:'VIP'
       },
-      food: [],
+      food: [
+        { name:'Soups', items:[
+          ['Lentil cream soup',2260],
+          ['Chicken ramen',4660],
+          ['Beef ramen',5990],
+          ['Tom yum (seafood)',5990],
+          ['Lamb shorpa',4290],
+          ['Kespе (horse meat)',4290],
+        ]},
+        { name:'Salads', items:[
+          ['Bavarian salad',4960],
+          ['Crispy eggplant',4990],
+          ['Caesar (chicken)',5690],
+          ['Caesar (shrimp)',5690],
+          ['Caesar (salmon)',5690],
+          ['Warm salmon salad',5990],
+          ['Arugula & shrimp salad',6290],
+          ['Roast beef salad',5290],
+          ['Olivier with salmon',4400],
+        ]},
+        { name:'Cold appetizers', items:[
+          ['Bruschetta assortment',4800],
+          ['Fish platter (sliced)',12960],
+          ['Caucasian platter (sliced)',12960],
+          ['Meat platter (sliced)',12960],
+          ['Pickles assortment',4900],
+          ['Homestyle herring',3600],
+          ['Cheese platter',12960],
+          ['Fruit assortment',12960],
+        ]},
+        { name:'Hot appetizers', items:[
+          ['Braised eggplant',4990],
+          ['Eggplant sauté',5990],
+          ['Beer shrimps',6990],
+          ['Lamb “seeds”',5990],
+          ['Beer set',9990],
+        ]},
+        { name:'Bakery', items:[
+          ['Mini chebureki',2990],
+          ['Samsa',2990],
+          ['Bread basket',1990],
+          ['Baursak',1990],
+        ]},
+        { name:'Kebabs', items:[
+          ['Duck kebab',3800],
+          ['Mushroom kebab',2500],
+          ['Chicken fillet kebab',3500],
+          ['Lamb kebab',4500],
+          ['Grilled vegetables',2500],
+          ['Chicken lula',3500],
+          ['Lamb lula',3800],
+          ['Chicken wings',3500],
+        ]},
+        { name:'Sharing dishes', items:[
+          ['Grilled meat platter',49990],
+          ['Fish platter',59990],
+          ['Kebab assortment Hard',60000],
+          ['Kebab assortment Lite',35000],
+        ]},
+        { name:'Pasta', items:[
+          ['Bolognese',4990],
+          ['Carbonara',4790],
+          ['Seafood pasta',5790],
+          ['Fettuccine Alfredo',4790],
+        ]},
+        { name:'Main courses', items:[
+          ['Liver with mushrooms',4400],
+          ['Veal beef stroganoff',8660],
+          ['Filet mignon',11990],
+          ['Ribeye steak',12660],
+          ['T-bone steak',12990],
+          ['Salmon steak (Argentinian)',15660],
+          ['Cauliflower steak',3490],
+        ]},
+        { name:'Sides', items:[
+          ['Rice',1290],
+          ['Mashed potatoes',1290],
+          ['French fries',1690],
+          ['Broccoli & cauliflower',1690],
+          ['Potato wedges',1790],
+          ['Grilled vegetables',2590],
+          ['Homestyle potatoes',2890],
+        ]},
+        { name:'Sauces', items:[
+          ['Demi-glace',690],
+          ['Cheese sauce',690],
+          ['Ketchup',690],
+          ['BBQ sauce',690],
+          ['Creamy mushroom',690],
+        ]},
+        { name:'Desserts', items:[
+          ['Cheesecake',3490],
+          ['Snickers dessert',3490],
+        ]},
+        { name:'Pre-order dishes', items:[
+          ['Whole baked salmon',139990],
+          ['Braised beef ribs',44990],
+          ['Baked lamb leg',48990],
+          ['Kuirdak',49990],
+          ['Beshbarmak',65000],
+          ['Kazan kebab',44990],
+        ]},
+      ],
       bar: null,
-      hookah: []
+      hookah: [
+        { name:'Hookah', items:[
+          ['Lite',10000],
+          ['Hard',15000],
+          ['Bowl replacement',7500],
+        ]}
+      ]
     }
   };
 
-  // For KZ/EN reuse RU data
-  DATA.kz.food = DATA.ru.food; DATA.kz.bar = DATA.ru.bar; DATA.kz.hookah = DATA.ru.hookah;
-  DATA.en.food = DATA.ru.food; DATA.en.bar = DATA.ru.bar; DATA.en.hookah = DATA.ru.hookah;
+  // ✅ Full bar everywhere (so KZ/EN also show full bar)
+  DATA.kz.bar = DATA.ru.bar;
+  DATA.en.bar = DATA.ru.bar;
 
   // ========= PACKAGES =========
   const EVENTS = {
@@ -708,73 +1064,26 @@
     window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(t)}`, '_blank');
   }
 
-  // ========= PACKAGE BUILDING =========
-  function getCategoryItems(catNameRu){
-    for(const c of DATA.ru.food){
-      if(c.name === catNameRu) return c.items.slice();
-    }
-    for(const c of DATA.ru.bar){
-      if(c.name === catNameRu) return c.items.slice();
-    }
-    for(const c of DATA.ru.hookah){
-      if(c.name === catNameRu) return c.items.slice();
-    }
-    return [];
-  }
-
-  const SALAD_POOL = [
-    'Цезарь с цыплёнком',
-    'Салат «Баварский»',
-    'Тёплый салат с лососем',
-    'Салат с ростбифом',
-    'Салат с рукколой и креветками'
-  ];
-  const COLD_POOL = [
-    'Ассорти брускетт',
-    'Ассорти из солений',
-    'Сырное плато',
-    'Мясная нарезка',
-    'Фруктовое ассорти'
-  ];
-  const HOT_POOL = [
-    'Томлённые баклажаны',
-    'Соте из баклажан',
-    'Пивные креветки',
-    'Бараньи семечки',
-    'Пивной сет'
-  ];
-  const LEM_POOL = [
-    'Mango – Passion Fruit',
-    'Raspberry',
-    'Pomegranate',
-    'Kiwi – Lime',
-    'Watermelon – Melon'
-  ];
-
-  function qtyByGuests(g, a,b,c,d){
-    if(g<=8) return a;
-    if(g<=12) return b;
-    if(g<=20) return c;
-    return d;
-  }
-
-  // ✅ Основное на 8–10 человек: 1 позиция примерно на 9 гостей
-  function mainCount(g){
-    return Math.ceil(g/9);
-  }
-
-  function hookahCount(g){
-    // умеренно
-    if(g<=12) return 1;
-    if(g<=20) return 2;
-    return 3;
-  }
+  // ========= PACKAGES LOGIC =========
+  function qtyByGuests(g, a,b,c,d){ if(g<=8) return a; if(g<=12) return b; if(g<=20) return c; return d; }
+  function mainCount(g){ return Math.ceil(g/9); }
+  function hookahCount(g){ if(g<=12) return 1; if(g<=20) return 2; return 3; }
 
   function priceOf(name){
-    const all = [].concat(...DATA.ru.food.map(c=>c.items), ...DATA.ru.bar.map(c=>c.items), ...DATA.ru.hookah.map(c=>c.items));
+    const all = [].concat(
+      ...DATA.ru.food.map(c=>c.items),
+      ...DATA.ru.bar.map(c=>c.items),
+      ...DATA.ru.hookah.map(c=>c.items)
+    );
     const found = all.find(([n])=>n===name);
     return found ? Number(found[1]||0) : 0;
   }
+
+  // pools in RU names (для автокомплекта)
+  const SALAD_POOL = ['Цезарь с цыплёнком','Салат «Баварский»','Тёплый салат с лососем','Салат с ростбифом','Салат с рукколой и креветками'];
+  const COLD_POOL  = ['Ассорти брускетт','Ассорти из солений','Сырное плато','Мясная нарезка','Фруктовое ассорти'];
+  const HOT_POOL   = ['Томлённые баклажаны','Соте из баклажан','Пивные креветки','Бараньи семечки','Пивной сет'];
+  const LEM_POOL   = ['Mango – Passion Fruit','Raspberry','Pomegranate','Kiwi – Lime','Watermelon – Melon'];
 
   function buildAutoIncluded(g, packId){
     const saladsN = qtyByGuests(g,2,3,4,5);
@@ -784,27 +1093,22 @@
     const hookN   = hookahCount(g);
 
     const included = [];
-
     for(let i=0;i<saladsN;i++) included.push({name:SALAD_POOL[i % SALAD_POOL.length], qty:1, group:'salad'});
     for(let i=0;i<coldN;i++)   included.push({name:COLD_POOL[i % COLD_POOL.length], qty:1, group:'cold'});
     for(let i=0;i<hotN;i++)    included.push({name:HOT_POOL[i % HOT_POOL.length], qty:1, group:'hot'});
     for(let i=0;i<lemN;i++)    included.push({name:LEM_POOL[i % LEM_POOL.length], qty:1, group:'lem'});
-
     included.push({name:'Lite', qty:hookN, group:'hookah'});
 
-    // Premium чуть богаче (без перегиба): +1 лимонад на 13+ гостей, +1 горячая закуска на 21+ гостей
     if(packId==='premium'){
       if(g>=13) included.push({name:LEM_POOL[(lemN) % LEM_POOL.length], qty:1, group:'lem'});
       if(g>=21) included.push({name:HOT_POOL[(hotN) % HOT_POOL.length], qty:1, group:'hot'});
     }
-
     return included;
   }
 
   function validateVipGuests(vipVal, g){
     const vip = getVip(vipVal);
     if(g<=vip.cap) return {ok:true, msg:''};
-
     const fits = VIPS.filter(v=>g<=v.cap).map(v=>v.val).join(', ');
     const name = (lang==='ru'?vip.ru:(lang==='kz'?vip.kz:vip.en));
     const msg = (lang==='ru'
@@ -817,13 +1121,18 @@
     return {ok:false, msg};
   }
 
-  // ✅ Основное — общий список из 2 разделов (оба на 8–10 человек)
+  // MAIN options = company + preorder (оба считаем на 8–10)
+  function getCategoryItemsRu(catNameRu){
+    for(const c of DATA.ru.food){ if(c.name===catNameRu) return c.items.slice(); }
+    for(const c of DATA.ru.bar){ if(c.name===catNameRu) return c.items.slice(); }
+    for(const c of DATA.ru.hookah){ if(c.name===catNameRu) return c.items.slice(); }
+    return [];
+  }
   function mainOptions(){
-    const company = getCategoryItems('Блюда на компанию').map(([n,p])=>({name:n, price:p, group:'company'}));
-    const pre     = getCategoryItems('Блюда по предзаказу').map(([n,p])=>({name:n, price:p, group:'pre'}));
+    const company = getCategoryItemsRu('Блюда на компанию').map(([n,p])=>({name:n, price:p, group:'company'}));
+    const pre     = getCategoryItemsRu('Блюда по предзаказу').map(([n,p])=>({name:n, price:p, group:'pre'}));
     return [...company, ...pre];
   }
-
   function labelOption(opt){
     const g = opt.group==='company'
       ? (lang==='ru'?'(на компанию)':(lang==='kz'?'(компанияға)': '(sharing)'))
@@ -831,23 +1140,30 @@
     return `${opt.name} ${g} — ${fmt(opt.price)} ₸`;
   }
 
+  function ensureMainSelections(){
+    const need = mainCount(pkGuests);
+    const opts = mainOptions();
+    if(!opts.length){ pkMain=[]; return; }
+    if(pkMain.length !== need){
+      pkMain = Array.from({length:need}, (_,i)=> opts[i % opts.length].name);
+    }else{
+      const names = new Set(opts.map(o=>o.name));
+      pkMain = pkMain.map(x => names.has(x) ? x : opts[0].name);
+    }
+  }
+
   function estimatePackTotal(packId, guests, mainSel, addCongrats){
     let sum = 0;
-
     const auto = buildAutoIncluded(guests, packId);
     for(const it of auto) sum += priceOf(it.name) * it.qty;
-
     for(const nm of (mainSel||[])) sum += priceOf(nm);
-
     if(addCongrats) sum += 30000;
-
     return sum;
   }
 
   function renderPackCards(){
     const root = $('pkCards');
     root.innerHTML = '';
-
     for(const p of PACKS){
       const card = document.createElement('div');
       card.className = 'card' + (p.id===pkPack ? ' active' : '');
@@ -901,22 +1217,6 @@
     }
   }
 
-  function ensureMainSelections(){
-    const need = mainCount(pkGuests);
-    const opts = mainOptions();
-    if(!opts.length){
-      pkMain = [];
-      return;
-    }
-    if(pkMain.length !== need){
-      pkMain = Array.from({length:need}, (_,i)=> opts[i % opts.length].name);
-    } else {
-      // если вдруг выбранного нет в списке — заменим на первый
-      const names = new Set(opts.map(o=>o.name));
-      pkMain = pkMain.map(x => names.has(x) ? x : opts[0].name);
-    }
-  }
-
   function renderMainChoices(){
     ensureMainSelections();
     const root = $('pkMainChoices');
@@ -928,19 +1228,16 @@
     for(let i=0;i<need;i++){
       const sel = document.createElement('select');
       sel.dataset.mainIndex = String(i);
-
       for(const opt of opts){
         const o = document.createElement('option');
         o.value = opt.name;
         o.textContent = labelOption(opt);
         sel.appendChild(o);
       }
-
       sel.value = pkMain[i] || (opts[0]?.name || '');
       root.appendChild(sel);
     }
 
-    // Titles
     $('pkMainTitle').textContent = (lang==='ru'
       ? `Основное (на 8–10 человек): выберите ${need} шт`
       : (lang==='kz'
@@ -1042,10 +1339,19 @@
     return lines.join('\n');
   }
 
+  function showPack(scrollToChoices){
+    const t = packText();
+    $('pkText').style.display='block';
+    $('pkText').textContent = t;
+    if(scrollToChoices){
+      const el = $('pkChoices');
+      el?.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
   function renderPacksUI(){
     $('pkGuests').textContent = String(pkGuests);
 
-    // VIP validation
     const vipVal = $('pkVip').value || $('vip').value || VIPS[0].val;
     const check = validateVipGuests(vipVal, pkGuests);
     const warn = $('pkWarn');
@@ -1077,7 +1383,6 @@
   function openPacks(){
     fillVip('pkVip');
     fillEvents('pkType');
-
     $('pkVip').value = $('vip').value || VIPS[0].val;
     $('pkType').value = pkType;
 
@@ -1086,7 +1391,6 @@
     $('packsMb').scrollTop = 0;
 
     renderPacksUI();
-    // сразу покажем превью, чтобы было видно что “происходит”
     showPack(true);
   }
   function closePacks(){ $('packsMb').style.display='none'; }
@@ -1102,18 +1406,6 @@
     }catch(e){}
     $('pkText').style.display='block';
     $('pkText').textContent = t;
-  }
-
-  function showPack(scrollToChoices){
-    const t = packText();
-    $('pkText').style.display='block';
-    $('pkText').textContent = t;
-
-    if(scrollToChoices){
-      // мягко прокрутим к выбору основного
-      const el = $('pkChoices');
-      el?.scrollIntoView({behavior:'smooth', block:'start'});
-    }
   }
 
   // ========= AUTOGRAPH CONGRATS =========
@@ -1207,9 +1499,7 @@
 
     if(t.dataset.pack){
       pkPack = t.dataset.pack;
-      // при смене пакета не теряем выбор основного, просто обновим UI
       renderPacksUI();
-      // покажем превью сразу (чтобы было видно, что “произошло”)
       showPack(true);
       return;
     }
@@ -1235,7 +1525,7 @@
     showPack(false);
   });
 
-  $('ptVip').addEventListener('change', ()=>{/* nothing else */});
+  $('ptVip').addEventListener('change', ()=>{});
   $('ptType').addEventListener('change', (e)=>{ ptType = e.target.value; });
 
   // init
