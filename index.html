@@ -14,7 +14,7 @@
     .chip{border:1px solid var(--gold);background:#000;color:var(--gold);padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:700}
     .chip.active{background:var(--gold);color:#000}
 
-    .wrap{max-width:980px;margin:0 auto;padding:16px 14px 210px}
+    .wrap{max-width:980px;margin:0 auto;padding:16px 14px calc(210px + env(safe-area-inset-bottom,0px))}
     .toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:8px 0 14px}
     .search{flex:1;min-width:220px;max-width:520px;background:#0f0f0f;border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px;outline:none}
     .vipSel{min-width:200px;background:#0f0f0f;border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px;outline:none}
@@ -33,7 +33,7 @@
     .btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--gold);background:#000;color:var(--gold);font-size:18px;cursor:pointer}
     .qty{min-width:18px;text-align:center;font-weight:900}
 
-    .cart{position:fixed;left:0;right:0;bottom:0;background:rgba(17,17,17,.96);border-top:2px solid var(--gold);padding:12px 14px;backdrop-filter:blur(6px)}
+    .cart{position:fixed;left:0;right:0;bottom:0;background:rgba(17,17,17,.96);border-top:2px solid var(--gold);padding:12px 14px;backdrop-filter:blur(6px);padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
     .cart-inner{max-width:980px;margin:0 auto;display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
     .cart-left{min-width:240px;flex:1}
     .cart-title{color:var(--muted);font-size:12px;margin-bottom:6px}
@@ -49,11 +49,63 @@
     .send{background:var(--gold);color:#000}
 
     .mb{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:14px}
-    .modal{max-width:620px;width:100%;background:#0f0f0f;border:1px solid var(--gold);border-radius:16px;padding:14px}
+    .modal{max-width:720px;width:100%;background:#0f0f0f;border:1px solid var(--gold);border-radius:16px;padding:14px}
     .modal h3{margin:0 0 10px;color:var(--gold);letter-spacing:1px}
     .modal pre{white-space:pre-wrap;word-break:break-word;background:#0b0b0b;border:1px solid var(--line);border-radius:12px;padding:10px;color:var(--text);font-size:13px}
     .m-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}
     .close{background:#222;color:#fff;border:1px solid #444}
+
+    /* ===== PARTY UI ===== */
+    .partyBtn{
+      border:1px solid var(--gold);
+      background:#000;
+      color:var(--gold);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .partyBtn:hover{filter:brightness(1.08)}
+
+    .partyRow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;margin:10px 0}
+    .partyRow label{color:var(--muted);font-size:12px}
+    .partyRow select{
+      min-width:190px;background:#0f0f0f;border:1px solid var(--line);color:var(--text);
+      padding:10px 12px;border-radius:12px;outline:none
+    }
+    .partyNum{display:flex;gap:8px;align-items:center}
+    .partyNum button{
+      width:36px;height:36px;border-radius:10px;border:1px solid var(--gold);
+      background:#000;color:var(--gold);font-size:18px;cursor:pointer
+    }
+    .partyNum span{min-width:34px;text-align:center;font-weight:900}
+
+    .packGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    @media (max-width:560px){ .packGrid{grid-template-columns:1fr} }
+    .pack{
+      border:1px solid var(--line);
+      background:#0b0b0b;
+      border-radius:14px;
+      padding:12px;
+    }
+    .pack.active{border:1px solid var(--gold); box-shadow:0 0 0 1px rgba(201,178,124,.25) inset}
+    .pack h4{margin:0 0 6px;color:var(--gold)}
+    .pack .pdesc{color:var(--muted);font-size:12px;line-height:1.35;margin:0 0 10px}
+    .pack .pprice{color:var(--gold);font-weight:900}
+    .pack .pmini{color:var(--muted);font-size:12px;margin-top:6px}
+    .pack button{
+      margin-top:10px;
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--gold);
+      background:#000;
+      color:var(--gold);
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .pack button:hover{filter:brightness(1.08)}
+    .partySmall{color:var(--muted);font-size:12px;line-height:1.35;margin-top:10px}
   </style>
 </head>
 
@@ -71,13 +123,17 @@
   <div class="toolbar">
     <input id="q" class="search" placeholder="Поиск по меню..." />
     <select id="vip" class="vipSel"></select>
+
     <div class="tabs">
       <button class="tab active" data-section="all">Всё</button>
       <button class="tab" data-section="food">Кухня</button>
       <button class="tab" data-section="bar">Бар</button>
       <button class="tab" data-section="hookah">Кальян</button>
     </div>
+
+    <button class="partyBtn" id="partyBtn">Праздник 🎉</button>
   </div>
+
   <div id="menu"></div>
 </div>
 
@@ -100,6 +156,7 @@
   </div>
 </div>
 
+<!-- Order modal -->
 <div class="mb" id="mb">
   <div class="modal">
     <h3 id="mTitle">Заказ</h3>
@@ -111,8 +168,51 @@
   </div>
 </div>
 
+<!-- Party modal -->
+<div class="mb" id="partyMb">
+  <div class="modal">
+    <h3 id="pTitle">Праздник</h3>
+
+    <div class="partyRow">
+      <div>
+        <label id="pVipLabel">VIP</label><br>
+        <select id="pVip"></select>
+      </div>
+
+      <div>
+        <label id="pTypeLabel">Повод</label><br>
+        <select id="pType"></select>
+      </div>
+
+      <div>
+        <label id="pGuestsLabel">Гостей</label><br>
+        <div class="partyNum">
+          <button id="gMinus" type="button">−</button>
+          <span id="gVal">10</span>
+          <button id="gPlus" type="button">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="packGrid" id="pPacks"></div>
+
+    <div class="m-actions">
+      <button class="action copy" id="pShow">Показать</button>
+      <button class="action copy" id="pCopy">Скопировать</button>
+      <button class="action send" id="pSend">Отправить в WhatsApp</button>
+      <button class="action close" id="pClose">Закрыть</button>
+    </div>
+
+    <div class="partySmall" id="pHint"></div>
+    <pre id="pText" style="display:none;margin-top:10px"></pre>
+  </div>
+</div>
+
 <script>
-  const WA_PHONE = '77777785757';
+  // === WhatsApp phone ===
+  // Меняй только эту строку (можно с 8 или +7 — код сам исправит):
+  const WA_PHONE_RAW = '77777785757';
+  const WA_PHONE = WA_PHONE_RAW.replace(/^\+/, '').replace(/^8/, '7').replace(/\D/g,'');
 
   const VIPS = [
     {ru:'VIP Boss', kz:'VIP Boss', en:'VIP Boss', val:'Boss'},
@@ -131,7 +231,22 @@
         svc:'Сервис 10%', clear:'Очистить', show:'Показать заказ', send:'Отправить на WhatsApp',
         sum:'Сумма', svcLine:'сервис 10%', svcOff:'сервис выключен',
         modal:'Заказ', copied:'Скопировано ✅',
-        vipLabel:'VIP'
+        vipLabel:'VIP',
+
+        // Party
+        partyBtn:'Праздник 🎉',
+        partyTitle:'Праздник',
+        partyVip:'VIP',
+        partyType:'Повод',
+        partyGuests:'Гостей',
+        partyShow:'Показать',
+        partyCopy:'Скопировать',
+        partySend:'Отправить в WhatsApp',
+        partyClose:'Закрыть',
+        partyHint:'Выбери пакет, гостей и VIP — и отправь заявку менеджеру. (Состав можно уточнить на месте.)',
+        partyEst:'Ориентир по сумме',
+        partyIncludes:'Включено',
+        partyExtra:'Дополнительно'
       },
       food: [
         { name:'Супы', items:[
@@ -164,7 +279,7 @@
           ['Фруктовое ассорти',12960],
         ]},
         { name:'Горячие закуски', items:[
-          ['Томлённые баклажаны',4990],        // бывш. баклажан с куртом
+          ['Томлённые баклажаны',4990],
           ['Соте из баклажан',5990],
           ['Пивные креветки',6990],
           ['Бараньи семечки',5990],
@@ -269,7 +384,7 @@
           ['Miller',2590],
         ]},
         { name:'Пиво разливное', items:[
-          ['Bud (разлив)',2990], // Heineken разлив удалён
+          ['Bud (разлив)',2990],
         ]},
         { name:'Водка', items:[
           ['Absolute Blue',2690],
@@ -299,7 +414,7 @@
           ['The Glenlivet 12 y.o',4990],
           ['The Glenlivet 18 y.o',6990],
           ['Glenfiddich 12 y.o',4790],
-          ['Macallan 12 y.o',7990], // Macallan 18 удалён
+          ['Macallan 12 y.o',7990],
         ]},
         { name:'Ром', items:[
           ['Bacardi Oakheart',2890],
@@ -308,16 +423,16 @@
           ['Bacardi Spiced',2890],
         ]},
         { name:'Джин', items:[
-          ['Beefeater',2990], // Blackberry/Blood Orange удалены
+          ['Beefeater',2990],
         ]},
         { name:'Текила', items:[
           ['Olmeca Blanco',2590],
           ['Olmeca Gold',2590],
-          ['Avion',2990], // Bombey удалён
+          ['Avion',2990],
         ]},
         { name:'Коньяк', items:[
           ['Ararat 5 y.o',2290],
-          ['Ararat 10 y.o',4190], // было “Ахтамар”, теперь Ararat 10
+          ['Ararat 10 y.o',4190],
           ['Hennessy VS',3990],
           ['Hennessy VSOP',5890],
           ['Hennessy XO',11990],
@@ -326,14 +441,11 @@
           ['Casasole',19990],
           ['San Valentin',23990],
           ['Nuala',33990],
-          // Jacobs Creek удалён
         ]},
         { name:'Игристые вина', items:[
           ['Santo Stefano',17000],
           ['Martini Asti',19000],
-          // Martini Prosecco удалён
           ['Moët & Chandon Imperial',116000],
-          // Moët Rosé удалён
           ['Bottega Prosecco',29000],
         ]},
       ],
@@ -353,9 +465,22 @@
         svc:'Қызмет 10%', clear:'Тазалау', show:'Тапсырысты көрсету', send:'WhatsApp-қа жіберу',
         sum:'Сома', svcLine:'қызмет 10%', svcOff:'қызмет өшірулі',
         modal:'Тапсырыс', copied:'Көшірілді ✅',
-        vipLabel:'VIP'
+        vipLabel:'VIP',
+
+        partyBtn:'Мереке 🎉',
+        partyTitle:'Мереке',
+        partyVip:'VIP',
+        partyType:'Себеп',
+        partyGuests:'Қонақ',
+        partyShow:'Көрсету',
+        partyCopy:'Көшіру',
+        partySend:'WhatsApp-қа жіберу',
+        partyClose:'Жабу',
+        partyHint:'Пакетті, қонақ санын және VIP таңдаңыз — менеджерге өтінім жіберіңіз. (Құрамын нақтылауға болады.)',
+        partyEst:'Шамамен сома',
+        partyIncludes:'Кіреді',
+        partyExtra:'Қосымша'
       },
-      // Для KZ/EN — те же цены, названия максимально близко (чтобы быстро запустить)
       food: [
         { name:'Сорпалар', items:[
           ['Жасымық крем-сорпасы',2260],
@@ -476,7 +601,21 @@
         svc:'Service 10%', clear:'Clear', show:'Show order', send:'Send to WhatsApp',
         sum:'Subtotal', svcLine:'service 10%', svcOff:'service off',
         modal:'Order', copied:'Copied ✅',
-        vipLabel:'VIP'
+        vipLabel:'VIP',
+
+        partyBtn:'Party 🎉',
+        partyTitle:'Party',
+        partyVip:'VIP',
+        partyType:'Occasion',
+        partyGuests:'Guests',
+        partyShow:'Show',
+        partyCopy:'Copy',
+        partySend:'Send to WhatsApp',
+        partyClose:'Close',
+        partyHint:'Pick a package, guest count and VIP — then send a request to the manager. (Details can be уточнены on-site.)',
+        partyEst:'Estimated total',
+        partyIncludes:'Included',
+        partyExtra:'Extra'
       },
       food: [
         { name:'Soups', items:[
@@ -596,15 +735,106 @@
   DATA.kz.bar = DATA.ru.bar;
   DATA.en.bar = DATA.ru.bar;
 
+  // ===== PARTY DATA =====
+  const PARTY = {
+    types: {
+      ru: [
+        {val:'birthday', label:'День рождения'},
+        {val:'hen',      label:'Девичник'},
+        {val:'corp',     label:'Корпоратив'},
+        {val:'date',     label:'Романтик'}
+      ],
+      kz: [
+        {val:'birthday', label:'Туған күн'},
+        {val:'hen',      label:'Қыз-келіншек кеші'},
+        {val:'corp',     label:'Корпоратив'},
+        {val:'date',     label:'Романтика'}
+      ],
+      en: [
+        {val:'birthday', label:'Birthday'},
+        {val:'hen',      label:'Bachelorette'},
+        {val:'corp',     label:'Corporate'},
+        {val:'date',     label:'Date / Romantic'}
+      ]
+    },
+    packs: [
+      {
+        id:'lite',
+        name:{ru:'LITE', kz:'LITE', en:'LITE'},
+        desc:{
+          ru:'Лёгкий вариант для будней: кальян + напитки, без перегруза по кухне.',
+          kz:'Жеңіл нұсқа (апта ішінде): кальян + сусындар.',
+          en:'Light weekday option: hookah + drinks, minimal food.'
+        },
+        base: 15000, perGuest: 2500,
+        includes:{
+          ru:['1 кальян (Lite)', '2 лимонада', '1 закуска на стол'],
+          kz:['1 кальян (Lite)', '2 лимонад', '1 тіскебасар'],
+          en:['1 hookah (Lite)', '2 lemonades', '1 shared snack']
+        },
+        extra:{
+          ru:['Можно добавить блюда из QR-меню', 'Сервис 10% по чеку'],
+          kz:['QR мәзірінен тағам қосуға болады', 'Чекке қызмет 10%'],
+          en:['Add dishes from QR menu', 'Service 10% on check']
+        }
+      },
+      {
+        id:'standard',
+        name:{ru:'STANDARD', kz:'STANDARD', en:'STANDARD'},
+        desc:{
+          ru:'Самый популярный: стол “под компанию” + кальян, комфортно по бюджету.',
+          kz:'Ең танымал: компанияға арналған үстел + кальян.',
+          en:'Most popular: sharing table + hookah, balanced budget.'
+        },
+        base: 25000, perGuest: 4500,
+        includes:{
+          ru:['2 кальяна (Lite)', 'Сет закусок (или 2 горячие закуски)', '2 лимонада / чай'],
+          kz:['2 кальян (Lite)', 'Тіскебасар сеті (немесе 2 ыстық тіскебасар)', '2 лимонад / шай'],
+          en:['2 hookahs (Lite)', 'Appetizer set (or 2 hot snacks)', '2 lemonades / tea']
+        },
+        extra:{
+          ru:['Можно апгрейднуть кальян до Hard (+5 000)', 'Сервис 10% по чеку'],
+          kz:['Hard-қа ауыстыруға болады (+5 000)', 'Чекке қызмет 10%'],
+          en:['Upgrade hookah to Hard (+5 000)', 'Service 10% on check']
+        }
+      },
+      {
+        id:'premium',
+        name:{ru:'PREMIUM', kz:'PREMIUM', en:'PREMIUM'},
+        desc:{
+          ru:'Праздник “под ключ”: больше кухни, 2–3 кальяна и красиво по подаче.',
+          kz:'“Под ключ” мереке: көбірек ас, 2–3 кальян.',
+          en:'Turn-key vibe: more food, 2–3 hookahs, nicer serving.'
+        },
+        base: 40000, perGuest: 7500,
+        includes:{
+          ru:['3 кальяна (2 Lite + 1 Hard)', 'Блюдо на компанию (Lite)', 'Сеты закусок + салаты', 'Напитки на стол'],
+          kz:['3 кальян (2 Lite + 1 Hard)', 'Компанияға арналған тағам (Lite)', 'Тіскебасар + салаттар', 'Сусындар'],
+          en:['3 hookahs (2 Lite + 1 Hard)', 'Sharing dish (Lite)', 'Appetizers + salads', 'Table drinks']
+        },
+        extra:{
+          ru:['Можно собрать под бюджет', 'Сервис 10% по чеку'],
+          kz:['Бюджетке қарай жинауға болады', 'Чекке қызмет 10%'],
+          en:['Can be tailored to budget', 'Service 10% on check']
+        }
+      }
+    ]
+  };
+
   let lang='ru', section='all';
   let cart = {};
+
+  // party state
+  let partyGuests = 10;
+  let partyType = 'birthday';
+  let partyPack = 'standard';
 
   const $ = (id)=>document.getElementById(id);
   const fmt = (n)=>String(n||0).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
   const ui = ()=>DATA[lang].ui;
 
-  function fillVip(){
-    const sel = $('vip');
+  function fillVip(selectId){
+    const sel = $(selectId);
     sel.innerHTML = '';
     for(const v of VIPS){
       const o = document.createElement('option');
@@ -631,7 +861,24 @@
     $('sendBtn').textContent = ui().send;
     $('mTitle').textContent = ui().modal;
 
-    fillVip();
+    // party ui labels
+    $('partyBtn').textContent = ui().partyBtn;
+    $('pTitle').textContent = ui().partyTitle;
+    $('pVipLabel').textContent = ui().partyVip;
+    $('pTypeLabel').textContent = ui().partyType;
+    $('pGuestsLabel').textContent = ui().partyGuests;
+    $('pShow').textContent = ui().partyShow;
+    $('pCopy').textContent = ui().partyCopy;
+    $('pSend').textContent = ui().partySend;
+    $('pClose').textContent = ui().partyClose;
+    $('pHint').textContent = ui().partyHint;
+
+    fillVip('vip');
+    fillVip('pVip');
+
+    fillPartyTypes();
+    renderPartyPacks();
+
     render();
     updateCart();
   }
@@ -655,12 +902,17 @@
   }
   function clearCart(){ cart={}; updateCart(); refreshQty(); }
 
+  // safe blocks() to avoid crashes if some section is null
   function blocks(){
     const d = DATA[lang];
     const out=[];
-    if(section==='all'||section==='food') out.push(...d.food);
-    if(section==='all'||section==='bar') out.push(...d.bar);
-    if(section==='all'||section==='hookah') out.push(...d.hookah);
+    const food = Array.isArray(d.food) ? d.food : [];
+    const bar  = Array.isArray(d.bar) ? d.bar : [];
+    const hook = Array.isArray(d.hookah) ? d.hookah : [];
+
+    if(section==='all'||section==='food') out.push(...food);
+    if(section==='all'||section==='bar') out.push(...bar);
+    if(section==='all'||section==='hookah') out.push(...hook);
     return out;
   }
 
@@ -782,12 +1034,6 @@
     return t;
   }
 
-  async function copyOrder(){
-    const t=orderText(); if(!t) return;
-    try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
-    catch{ $('orderText').textContent=t; showModal(); }
-  }
-
   function showModal(){
     const t=orderText(); if(!t) return;
     $('orderText').textContent=t;
@@ -795,13 +1041,172 @@
   }
   function hideModal(){ $('mb').style.display='none'; }
 
-  function sendWA(){
+  async function copyOrder(){
     const t=orderText(); if(!t) return;
+    try{
+      if(navigator.clipboard?.writeText){
+        await navigator.clipboard.writeText(t);
+        alert(ui().copied);
+        return;
+      }
+    }catch(e){}
+    $('orderText').textContent=t;
+    showModal();
+    try{
+      const range=document.createRange();
+      range.selectNodeContents($('orderText'));
+      const sel=window.getSelection();
+      sel.removeAllRanges(); sel.addRange(range);
+      document.execCommand('copy');
+      sel.removeAllRanges();
+      alert(ui().copied);
+    }catch(e){}
+  }
+
+  function sendWA(text){
+    const t = text || orderText(); if(!t) return;
     window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(t)}`, '_blank');
   }
 
+  // ===== PARTY LOGIC =====
+  function fillPartyTypes(){
+    const sel = $('pType');
+    sel.innerHTML = '';
+    for(const t of PARTY.types[lang]){
+      const o = document.createElement('option');
+      o.value = t.val;
+      o.textContent = t.label;
+      sel.appendChild(o);
+    }
+    sel.value = partyType;
+  }
+
+  function partyPackPrice(pack){
+    const g = partyGuests;
+    return Math.max(0, pack.base + pack.perGuest * g);
+  }
+
+  function renderPartyPacks(){
+    $('gVal').textContent = String(partyGuests);
+
+    const root = $('pPacks');
+    root.innerHTML = '';
+    const packs = PARTY.packs;
+
+    for(const p of packs){
+      const card = document.createElement('div');
+      card.className = 'pack' + (p.id===partyPack ? ' active' : '');
+
+      const h = document.createElement('h4');
+      h.textContent = p.name[lang];
+      card.appendChild(h);
+
+      const d = document.createElement('div');
+      d.className = 'pdesc';
+      d.textContent = p.desc[lang];
+      card.appendChild(d);
+
+      const est = partyPackPrice(p);
+      const price = document.createElement('div');
+      price.className = 'pprice';
+      price.textContent = `${ui().partyEst}: ${fmt(est)} ₸`;
+      card.appendChild(price);
+
+      const mini = document.createElement('div');
+      mini.className = 'pmini';
+      mini.textContent = `${ui().partyIncludes}: ${p.includes[lang].join(' • ')}`;
+      card.appendChild(mini);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = (lang==='ru'?'Выбрать':'Select');
+      btn.dataset.pack = p.id;
+      card.appendChild(btn);
+
+      root.appendChild(card);
+    }
+  }
+
+  function partyText(){
+    const vipVal = $('pVip').value || $('vip').value || '';
+    const vipText = VIPS.find(v=>v.val===vipVal) || VIPS[0];
+    const vipLabel = (lang==='ru'?vipText.ru:(lang==='kz'?vipText.kz:vipText.en));
+
+    const typeLabel = (PARTY.types[lang].find(x=>x.val===partyType)?.label) || '';
+    const pack = PARTY.packs.find(x=>x.id===partyPack) || PARTY.packs[0];
+    const est = partyPackPrice(pack);
+
+    const lines = [];
+    lines.push(`AUTOGRAPH GOLD — ${ui().partyTitle}`);
+    lines.push(`${ui().partyVip}: ${vipLabel}`);
+    lines.push(`${ui().partyType}: ${typeLabel}`);
+    lines.push(`${ui().partyGuests}: ${partyGuests}`);
+    lines.push(`Пакет: ${pack.name[lang]}`);
+    lines.push('');
+    lines.push(`${ui().partyIncludes}:`);
+    for(const s of pack.includes[lang]) lines.push(`• ${s}`);
+    lines.push('');
+    lines.push(`${ui().partyExtra}:`);
+    for(const s of pack.extra[lang]) lines.push(`• ${s}`);
+    lines.push('');
+    lines.push(`${ui().partyEst}: ${fmt(est)} ₸`);
+    lines.push('');
+    lines.push(lang==='ru'
+      ? 'Напишите удобное время и дату — менеджер подтвердит бронирование.'
+      : (lang==='kz'
+          ? 'Күні мен уақытын жазыңыз — менеджер бронды растайды.'
+          : 'Send date/time — manager will confirm the booking.'
+        )
+    );
+
+    return lines.join('\n');
+  }
+
+  function showParty(){
+    const t = partyText();
+    $('pText').style.display = 'block';
+    $('pText').textContent = t;
+  }
+
+  async function copyParty(){
+    const t = partyText();
+    try{
+      if(navigator.clipboard?.writeText){
+        await navigator.clipboard.writeText(t);
+        alert(ui().copied);
+        return;
+      }
+    }catch(e){}
+    showParty();
+    try{
+      const range=document.createRange();
+      range.selectNodeContents($('pText'));
+      const sel=window.getSelection();
+      sel.removeAllRanges(); sel.addRange(range);
+      document.execCommand('copy');
+      sel.removeAllRanges();
+      alert(ui().copied);
+    }catch(e){}
+  }
+
+  function openParty(){
+    fillVip('pVip');
+    fillPartyTypes();
+    $('pVip').value = $('vip').value || VIPS[0].val;
+    $('pType').value = partyType;
+    $('gVal').textContent = String(partyGuests);
+    renderPartyPacks();
+    $('pText').style.display = 'none';
+    $('partyMb').style.display = 'flex';
+  }
+  function closeParty(){
+    $('partyMb').style.display = 'none';
+  }
+
+  // ===== EVENTS =====
   document.addEventListener('click',(e)=>{
     const t=e.target;
+
     if(t.matches('[data-lang]')) return setLang(t.dataset.lang);
     if(t.matches('[data-section]')) return setSection(t.dataset.section);
 
@@ -817,10 +1222,43 @@
 
     if(t.id==='mCopy') return copyOrder();
     if(t.id==='mClose' || t.id==='mb') return hideModal();
+
+    // party open/close
+    if(t.id==='partyBtn') return openParty();
+    if(t.id==='pClose') return closeParty();
+    if(t.id==='partyMb') return closeParty();
+
+    // guests +/-
+    if(t.id==='gMinus'){
+      partyGuests = Math.max(1, partyGuests - 1);
+      renderPartyPacks();
+      return;
+    }
+    if(t.id==='gPlus'){
+      partyGuests = Math.min(80, partyGuests + 1);
+      renderPartyPacks();
+      return;
+    }
+
+    // pick pack
+    if(t.dataset.pack){
+      partyPack = t.dataset.pack;
+      renderPartyPacks();
+      return;
+    }
+
+    if(t.id==='pShow') return showParty();
+    if(t.id==='pCopy') return copyParty();
+    if(t.id==='pSend') return sendWA(partyText());
   });
 
   $('q').addEventListener('input', render);
   $('svc').addEventListener('change', updateCart);
+
+  $('pVip').addEventListener('change', ()=>{ /* keep state in UI */ });
+  $('pType').addEventListener('change', (e)=>{
+    partyType = e.target.value;
+  });
 
   // init
   setLang('ru');
