@@ -333,12 +333,12 @@
 
     <div>
       <label>Комментарий</label><br>
-      <input id="bComment" class="search" placeholder="Например: депозит 120 000 / предзаказ..." style="max-width:100%" />
+      <input id="bComment" class="search" placeholder="Например: депозит / предзаказ..." style="max-width:100%" />
     </div>
 
     <div class="optLine" style="margin-top:12px">
       <div id="bStatus">Статус: выберите VIP/дату/время и нажмите “Проверить”</div>
-      <button class="action copy" id="bCheck">Проверить</button>
+      <button class="action copy" id="bCheck" type="button">Проверить</button>
     </div>
 
     <div class="qrBox">
@@ -355,13 +355,13 @@
     </div>
 
     <div class="m-actions">
-      <button class="action send disabled" id="bSend">Отправить заявку</button>
-      <button class="action close" id="bookClose">Закрыть</button>
+      <button class="action send disabled" id="bSend" type="button">Отправить заявку</button>
+      <button class="action close" id="bookClose" type="button">Закрыть</button>
     </div>
   </div>
 </div>
 
-<!-- Payment modal (simple) -->
+<!-- Payment modal -->
 <div class="mb" id="payMb">
   <div class="modal">
     <h3>Оплата Kaspi</h3>
@@ -377,7 +377,7 @@
       </div>
     </div>
     <div class="m-actions">
-      <button class="action close" id="payClose">Закрыть</button>
+      <button class="action close" id="payClose" type="button">Закрыть</button>
     </div>
   </div>
 </div>
@@ -387,10 +387,10 @@
   const WA_PHONE_RAW = '77777785757';
   const WA_PHONE = WA_PHONE_RAW.replace(/^\+/, '').replace(/^8/, '7').replace(/\D/g,'');
 
-  // ✅ твой Apps Script /exec
-  const BOOKING_API = 'https://script.google.com/macros/s/AKfycbzxtUHe7jzAnS2J_WBbzbbTahiH1xGA6UzcxcCVfN-fle3LUz-yY6op91tjaDJ4nYA6tQ/exec';
+  // ✅ твой Apps Script (НОВЫЙ)
+  const BOOKING_API = 'https://script.google.com/macros/s/AKfycbzvnyw06CiQZ5pIIobZ8c5BrEnVoJ_yzlmy5nDfFaU1FJGr7iPuUsQgUIEsY9gknEiEwg/exec';
 
-  // ✅ Kaspi pay link
+  // ✅ Kaspi pay link (если у тебя другая — просто замени тут)
   const KASPI_PAY_LINK = 'https://pay.kaspi.kz/pay/4ockubhx';
 
   // ====== VIP + вместимость ======
@@ -625,85 +625,39 @@
       ]
     },
 
-    kz: {
-      ui: {
+    kz: { ui:{
         search:'Мәзірден іздеу...', all:'Барлығы', food:'Ас мәзірі', bar:'Бар мәзірі', hookah:'Кальян',
         picked:'Таңдалғаны:', empty:'Себет бос', total:'Барлығы',
         svc:'Қызмет 10%', clear:'Тазалау', show:'Тапсырысты көрсету', send:'WhatsApp-қа жіберу',
         sum:'Сома', svcLine:'қызмет 10%', svcOff:'қызмет өшірулі',
-        modal:'Тапсырыс', copied:'Көшірілді ✅',
-        vipLabel:'VIP',
-        packs:'Пакеттер 🎁',
-        congrats:'Autograph құттықтауы 🎉'
+        modal:'Тапсырыс', copied:'Көшірілді ✅', vipLabel:'VIP',
+        packs:'Пакеттер 🎁', congrats:'Autograph құттықтауы 🎉'
       },
-      food: [
-        { name:'Сорпалар', items:[
-          ['Жасымық крем-сорпасы',2260],
-          ['Тауық қосылған рамен',4660],
-          ['Сиыр еті қосылған рамен',5990],
-          ['Теңіз өнімдерімен том ям',5990],
-          ['Қой етінен шорпа',4290],
-          ['Қонина қосылған кеспе',4290],
-        ]},
-        { name:'Салаттар', items:[
-          ['«Бавариялық» салат',4960],
-          ['Қытырлақ баклажан',4990],
-          ['Тауық қосылған Цезарь',5690],
-          ['Асшаян қосылған Цезарь',5690],
-          ['Албырт қосылған Цезарь',5690],
-          ['Жылы албырт салаты',5990],
-          ['Руккола және асшаян салаты',6290],
-          ['Ростбиф салаты',5290],
-          ['Албырт қосылған оливье',4400],
-        ]},
-      ],
+      food: [],
       bar: null,
-      hookah: [
-        { name:'Кальян', items:[
-          ['Lite',10000],
-          ['Hard',15000],
-          ['Тостаған ауыстыру',7500],
-        ]}
-      ]
+      hookah: [{ name:'Кальян', items:[['Lite',10000],['Hard',15000],['Тостаған ауыстыру',7500]] }]
     },
 
-    en: {
-      ui: {
+    en: { ui:{
         search:'Search menu...', all:'All', food:'Food', bar:'Bar', hookah:'Hookah',
         picked:'Selected:', empty:'Cart is empty', total:'Total',
         svc:'Service 10%', clear:'Clear', show:'Show order', send:'Send to WhatsApp',
         sum:'Subtotal', svcLine:'service 10%', svcOff:'service off',
-        modal:'Order', copied:'Copied ✅',
-        vipLabel:'VIP',
-        packs:'Packages 🎁',
-        congrats:'Autograph congratulations 🎉'
+        modal:'Order', copied:'Copied ✅', vipLabel:'VIP',
+        packs:'Packages 🎁', congrats:'Autograph congratulations 🎉'
       },
-      food: [
-        { name:'Soups', items:[
-          ['Lentil cream soup',2260],
-          ['Chicken ramen',4660],
-          ['Beef ramen',5990],
-          ['Tom yum (seafood)',5990],
-          ['Lamb shorpa',4290],
-          ['Kespе (horse meat)',4290],
-        ]},
-      ],
+      food: [],
       bar: null,
-      hookah: [
-        { name:'Hookah', items:[
-          ['Lite',10000],
-          ['Hard',15000],
-          ['Bowl replacement',7500],
-        ]}
-      ]
+      hookah: [{ name:'Hookah', items:[['Lite',10000],['Hard',15000],['Bowl replacement',7500]] }]
     }
   };
 
-  // Use RU bar for KZ/EN too
-  DATA.kz.bar = DATA.ru.bar;
-  DATA.en.bar = DATA.ru.bar;
+  // Быстрый запуск: KZ/EN берут RU меню целиком
+  DATA.kz.food = DATA.ru.food; DATA.en.food = DATA.ru.food;
+  DATA.kz.bar = DATA.ru.bar;   DATA.en.bar = DATA.ru.bar;
+  DATA.kz.hookah = DATA.ru.hookah; DATA.en.hookah = DATA.ru.hookah;
 
-  // ====== events / packs ======
+  // ====== пакеты / поводы ======
   const EVENTS = {
     ru:[{val:'birthday', label:'День рождения'},{val:'hen', label:'Девичник'},{val:'corp', label:'Корпоратив'},{val:'date', label:'Романтик'}],
     kz:[{val:'birthday', label:'Туған күн'},{val:'hen', label:'Девичник'},{val:'corp', label:'Корпоратив'},{val:'date', label:'Романтик'}],
@@ -711,22 +665,30 @@
   };
 
   const PACKS = [
-    { id:'standard',
+    {
+      id:'standard',
       name:{ru:'STANDARD', kz:'STANDARD', en:'STANDARD'},
-      desc:{ru:'Под ключ: салаты + закуски + лимонады + кальян(ы). Вы выбираете только “основное” (на 8–10 человек).',
-            kz:'“Под ключ”: салаттар + тіскебасар + лимонад + кальян. Тек “негізгі” таңдайсыз.',
-            en:'Turn-key: salads + appetizers + lemonades + hookah(s). You choose only “main” (sharing).'},
+      desc:{
+        ru:'Под ключ: салаты + закуски + лимонады + кальян(ы). Вы выбираете только “основное” (на 8–10 человек).',
+        kz:'“Под ключ”: салаттар + тіскебасар + лимонад + кальян. Тек “негізгі” таңдайсыз.',
+        en:'Turn-key: salads + appetizers + lemonades + hookah(s). You choose only “main” (sharing).'
+      },
       note:{ru:'* Сервис 10% по чеку отдельно.', kz:'* Қызмет 10% бөлек.', en:'* Service 10% is separate.'},
       host:false
     },
-    { id:'premium',
+    {
+      id:'premium',
       name:{ru:'PREMIUM', kz:'PREMIUM', en:'PREMIUM'},
-      desc:{ru:'Максимум: усиленный стол + 🎤 ведущий (до 30 мин). Вы выбираете только “основное” (на 8–10 человек).',
-            kz:'Максимум: күшейтілген үстел + 🎤 жүргізуші (30 мин дейін).',
-            en:'Maximum: enhanced table + 🎤 host (up to 30 min). You choose only main sharing dishes.'},
-      note:{ru:'🎤 Ведущий — бронь минимум за 24 часа (при подтверждении менеджером). Сервис 10% отдельно.',
-            kz:'🎤 Жүргізуші — 24 сағат бұрын (менеджер растауы). Қызмет 10% бөлек.',
-            en:'🎤 Host requires booking at least 24h in advance (manager confirmation). Service 10% is separate.'},
+      desc:{
+        ru:'Максимум: усиленный стол + 🎤 ведущий (до 30 мин). Вы выбираете только “основное” (на 8–10 человек).',
+        kz:'Максимум: күшейтілген үстел + 🎤 жүргізуші (30 мин дейін).',
+        en:'Maximum: enhanced table + 🎤 host (up to 30 min). You choose only main sharing dishes.'
+      },
+      note:{
+        ru:'🎤 Ведущий — по предварительному бронированию минимум за 24 часа (при подтверждении менеджером). Сервис 10% отдельно.',
+        kz:'🎤 Жүргізуші — кемінде 24 сағат бұрын (менеджер растауы). Қызмет 10% бөлек.',
+        en:'🎤 Host requires booking at least 24h in advance (manager confirmation). Service 10% is separate.'
+      },
       host:true
     }
   ];
@@ -739,7 +701,6 @@
   let pkPack = 'standard';
   let pkMain = [];
   let pkAddCongrats = false;
-
   let ptType = 'birthday';
 
   const $ = (id)=>document.getElementById(id);
@@ -925,7 +886,7 @@
 
     const vipVal = $('vip').value || '';
     const vipText = getVip(vipVal);
-    const vipLabel = (lang==='ru'?vipText.ru:(lang==='kz'?vipText.kz:v.en));
+    const vipLabel = (lang==='ru'?vipText.ru:(lang==='kz'?vipText.kz:vipText.en));
 
     const svcOn=$('svc').checked;
     let sum=0;
@@ -951,7 +912,7 @@
   async function copyOrder(){
     const t=orderText(); if(!t) return;
     try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
-    catch{ $('orderText').textContent=t; $('mb').style.display='flex'; $('mb').scrollTop=0; }
+    catch{ $('orderText').textContent=t; showModal(); }
   }
 
   function showModal(){
@@ -967,18 +928,361 @@
     window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(t)}`, '_blank');
   }
 
-  // ========= PAYMENT =========
-  async function copyPay(){
-    try{ await navigator.clipboard.writeText(KASPI_PAY_LINK); alert(ui().copied); } catch {}
+  // ========= PACKS =========
+  function qtyByGuests(g, a,b,c,d){ if(g<=8) return a; if(g<=12) return b; if(g<=20) return c; return d; }
+  function mainCount(g){ return Math.ceil(g/9); }
+  function hookahCount(g){ if(g<=12) return 1; if(g<=20) return 2; return 3; }
+
+  function getCategoryItemsRu(catNameRu){
+    for(const c of DATA.ru.food){ if(c.name===catNameRu) return c.items.slice(); }
+    return [];
   }
-  function openKaspiLink(){ window.open(KASPI_PAY_LINK, '_blank'); }
+
+  const SALAD_POOL = ['Цезарь с цыплёнком','Салат «Баварский»','Тёплый салат с лососем','Салат с ростбифом','Салат с рукколой и креветками'];
+  const COLD_POOL  = ['Ассорти брускетт','Ассорти из солений','Сырное плато','Мясная нарезка','Фруктовое ассорти'];
+  const HOT_POOL   = ['Томлённые баклажаны','Соте из баклажан','Пивные креветки','Бараньи семечки','Пивной сет'];
+  const LEM_POOL   = ['Mango – Passion Fruit','Raspberry','Pomegranate','Kiwi – Lime','Watermelon – Melon'];
+
+  function priceOfRu(name){
+    const all = [].concat(
+      ...DATA.ru.food.map(c=>c.items),
+      ...DATA.ru.bar.map(c=>c.items),
+      ...DATA.ru.hookah.map(c=>c.items)
+    );
+    const found = all.find(([n])=>n===name);
+    return found ? Number(found[1]||0) : 0;
+  }
+
+  function buildAutoIncluded(g, packId){
+    const saladsN = qtyByGuests(g,2,3,4,5);
+    const coldN   = qtyByGuests(g,1,2,3,4);
+    const hotN    = qtyByGuests(g,1,2,2,3);
+    const lemN    = qtyByGuests(g,2,3,5,8);
+    const hookN   = hookahCount(g);
+
+    const included = [];
+    for(let i=0;i<saladsN;i++) included.push({name:SALAD_POOL[i % SALAD_POOL.length], qty:1, group:'salad'});
+    for(let i=0;i<coldN;i++)   included.push({name:COLD_POOL[i % COLD_POOL.length], qty:1, group:'cold'});
+    for(let i=0;i<hotN;i++)    included.push({name:HOT_POOL[i % HOT_POOL.length], qty:1, group:'hot'});
+    for(let i=0;i<lemN;i++)    included.push({name:LEM_POOL[i % LEM_POOL.length], qty:1, group:'lem'});
+    included.push({name:'Lite', qty:hookN, group:'hookah'});
+
+    if(packId==='premium'){
+      if(g>=13) included.push({name:LEM_POOL[(lemN) % LEM_POOL.length], qty:1, group:'lem'});
+      if(g>=21) included.push({name:HOT_POOL[(hotN) % HOT_POOL.length], qty:1, group:'hot'});
+    }
+    return included;
+  }
+
+  function validateVipGuests(vipVal, g){
+    const vip = getVip(vipVal);
+    if(g<=vip.cap) return {ok:true, msg:''};
+    const fits = VIPS.filter(v=>g<=v.cap).map(v=> (lang==='ru'?v.ru:(lang==='kz'?v.kz:v.en)) ).join(', ');
+    const name = (lang==='ru'?vip.ru:(lang==='kz'?vip.kz:v.en));
+    const msg = (lang==='ru'
+      ? `⚠️ В ${name} максимум ${vip.cap} гостей. Для ${g} гостей выберите: ${fits || 'другой VIP'}.`
+      : (lang==='kz'
+        ? `⚠️ ${name} үшін максимум ${vip.cap}. ${g} қонаққа: ${fits || 'басқа VIP'}.`
+        : `⚠️ ${name} max is ${vip.cap} guests. For ${g} guests choose: ${fits || 'another VIP'}.`
+      )
+    );
+    return {ok:false, msg};
+  }
+
+  function mainOptionsRu(){
+    const company = getCategoryItemsRu('Блюда на компанию').map(([n,p])=>({name:n, price:p, group:'company'}));
+    const pre     = getCategoryItemsRu('Блюда по предзаказу').map(([n,p])=>({name:n, price:p, group:'pre'}));
+    return [...company, ...pre];
+  }
+
+  function labelOption(opt){
+    const g = opt.group==='company'
+      ? (lang==='ru'?'(на компанию)':(lang==='kz'?'(компанияға)':'(sharing)'))
+      : (lang==='ru'?'(предзаказ)':(lang==='kz'?'(алдын ала)':'(pre-order)'));
+    return `${opt.name} ${g} — ${fmt(opt.price)} ₸`;
+  }
+
+  function ensureMainSelections(){
+    const need = mainCount(pkGuests);
+    const opts = mainOptionsRu();
+    if(!opts.length){ pkMain=[]; return; }
+    if(pkMain.length !== need){
+      pkMain = Array.from({length:need}, (_,i)=> opts[i % opts.length].name);
+    }else{
+      const names = new Set(opts.map(o=>o.name));
+      pkMain = pkMain.map(x => names.has(x) ? x : opts[0].name);
+    }
+  }
+
+  function estimatePackTotal(packId, guests, mainSel, addCongrats){
+    let sum = 0;
+    const auto = buildAutoIncluded(guests, packId);
+    for(const it of auto) sum += priceOfRu(it.name) * it.qty;
+    for(const nm of (mainSel||[])) sum += priceOfRu(nm);
+    if(addCongrats) sum += 30000;
+    return sum;
+  }
+
+  function renderPackCards(){
+    const root = $('pkCards');
+    root.innerHTML = '';
+    for(const p of PACKS){
+      const card = document.createElement('div');
+      card.className = 'card' + (p.id===pkPack ? ' active' : '');
+
+      const h = document.createElement('h4');
+      h.textContent = p.name[lang];
+      card.appendChild(h);
+
+      const d = document.createElement('div');
+      d.className = 'desc';
+      d.textContent = p.desc[lang];
+      card.appendChild(d);
+
+      const est = estimatePackTotal(p.id, pkGuests, pkMain, (p.id==='premium' && pkAddCongrats));
+      const pr = document.createElement('div');
+      pr.className='price';
+      pr.textContent = `${fmt(est)} ₸`;
+      card.appendChild(pr);
+
+      const mini = document.createElement('div');
+      mini.className='mini';
+      mini.textContent = (lang==='ru'
+        ? `Авто-включено: салаты ${qtyByGuests(pkGuests,2,3,4,5)} • закуски ${qtyByGuests(pkGuests,1,2,3,4)}+${qtyByGuests(pkGuests,1,2,2,3)} • лимонады ${qtyByGuests(pkGuests,2,3,5,8)} • кальян Lite ×${hookahCount(pkGuests)}`
+        : (lang==='kz'
+          ? `Авто: салат ${qtyByGuests(pkGuests,2,3,4,5)} • тіскебасар ${qtyByGuests(pkGuests,1,2,3,4)}+${qtyByGuests(pkGuests,1,2,2,3)} • лимонад ${qtyByGuests(pkGuests,2,3,5,8)} • кальян Lite ×${hookahCount(pkGuests)}`
+          : `Auto: salads ${qtyByGuests(pkGuests,2,3,4,5)} • apps ${qtyByGuests(pkGuests,1,2,3,4)}+${qtyByGuests(pkGuests,1,2,2,3)} • lemonades ${qtyByGuests(pkGuests,2,3,5,8)} • hookah Lite ×${hookahCount(pkGuests)}`
+        )
+      );
+      card.appendChild(mini);
+
+      if(p.host){
+        const host = document.createElement('div');
+        host.className='mini';
+        host.textContent = (lang==='ru'
+          ? `🎤 Ведущий: до 30 минут (бронь минимум за 24 часа)`
+          : (lang==='kz'
+            ? `🎤 Жүргізуші: 30 мин дейін (24 сағат бұрын)`
+            : `🎤 Host: up to 30 min (book 24h in advance)`
+          )
+        );
+        card.appendChild(host);
+      }
+
+      const btn = document.createElement('button');
+      btn.type='button';
+      btn.textContent = (lang==='ru' ? 'Выбрать' : (lang==='kz' ? 'Таңдау' : 'Select'));
+      btn.dataset.pack = p.id;
+      card.appendChild(btn);
+
+      root.appendChild(card);
+    }
+  }
+
+  function renderMainChoices(){
+    ensureMainSelections();
+    const root = $('pkMainChoices');
+    root.innerHTML = '';
+
+    const opts = mainOptionsRu();
+    const need = mainCount(pkGuests);
+
+    for(let i=0;i<need;i++){
+      const sel = document.createElement('select');
+      sel.dataset.mainIndex = String(i);
+      for(const opt of opts){
+        const o = document.createElement('option');
+        o.value = opt.name;
+        o.textContent = labelOption(opt);
+        sel.appendChild(o);
+      }
+      sel.value = pkMain[i] || (opts[0]?.name || '');
+      root.appendChild(sel);
+    }
+
+    $('pkMainTitle').textContent = (lang==='ru'
+      ? `Основное (на 8–10 человек): выберите ${need} шт`
+      : (lang==='kz'
+        ? `Негізгі (8–10 адамға): ${need} дана таңдаңыз`
+        : `Main (8–10 people): choose ${need}`
+      )
+    );
+  }
+
+  function renderCongratsOption(){
+    const line = $('pkCongratsLine');
+    if(pkPack !== 'premium'){
+      line.style.display = 'none';
+      pkAddCongrats = false;
+      $('pkAddCongrats').checked = false;
+      return;
+    }
+    line.style.display = '';
+  }
+
+  function packText(){
+    const vipVal = $('pkVip').value || $('vip').value || VIPS[0].val;
+    const vipObj = getVip(vipVal);
+    const vipLabel = (lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
+    const typeLabel = EVENTS[lang].find(x=>x.val===pkType)?.label || '';
+    const pack = PACKS.find(x=>x.id===pkPack) || PACKS[0];
+
+    const auto = buildAutoIncluded(pkGuests, pkPack);
+    const total = estimatePackTotal(pkPack, pkGuests, pkMain, (pkPack==='premium' && pkAddCongrats));
+
+    const lines = [];
+    lines.push(`AUTOGRAPH GOLD — ПАКЕТ`);
+    lines.push(`VIP: ${vipLabel}`);
+    lines.push(`${lang==='en'?'Occasion':'Повод'}: ${typeLabel}`);
+    lines.push(`${lang==='en'?'Guests':'Гостей'}: ${pkGuests}`);
+    lines.push(`${lang==='en'?'Package':'Пакет'}: ${pack.name[lang]}`);
+    lines.push('');
+
+    lines.push(`${lang==='en'?'Main (8–10 people):':'Основное (на 8–10 человек):'} ${pkMain.length} шт`);
+    pkMain.forEach((x,i)=> lines.push(`• ${i+1}) ${x}`));
+
+    lines.push('');
+    lines.push(lang==='en' ? 'Auto-included:' : 'Авто-включено (под ключ):');
+
+    function emit(title, list){
+      if(!list.length) return;
+      lines.push(`• ${title}:`);
+      for(const it of list) lines.push(`   - ${it.name}${it.qty>1 ? ` ×${it.qty}`:''}`);
+    }
+
+    emit(lang==='en'?'Salads':'Салаты', auto.filter(x=>x.group==='salad'));
+    emit(lang==='en'?'Cold appetizers':'Холодные закуски', auto.filter(x=>x.group==='cold'));
+    emit(lang==='en'?'Hot appetizers':'Горячие закуски', auto.filter(x=>x.group==='hot'));
+    emit(lang==='en'?'Lemonades':'Лимонады', auto.filter(x=>x.group==='lem'));
+    emit(lang==='en'?'Hookah':'Кальян', auto.filter(x=>x.group==='hookah'));
+
+    if(pkPack==='premium'){
+      lines.push('');
+      lines.push('🎤 ' + (lang==='en' ? 'Host: up to 30 min' : (lang==='kz' ? 'Жүргізуші: 30 мин дейін' : 'Ведущий: до 30 минут')));
+      if(pkAddCongrats){
+        lines.push('');
+        lines.push('🎉 Autograph поздравление: +30 000 ₸');
+        lines.push('Включено: Martini Asti (1 бутылка) • Торт (подача) • Фейерверк/свечи • Поздравление в VIP');
+      }
+    }
+
+    lines.push('');
+    lines.push(`${lang==='en'?'Estimated total':'Ориентир по сумме'}: ${fmt(total)} ₸`);
+    lines.push(lang==='en'?'Service 10% is separate.':'Сервис 10% по чеку отдельно.');
+    lines.push(pack.note[lang] || '');
+    lines.push('');
+    lines.push(lang==='en'?'Send date/time — manager will confirm.':'Напишите дату/время — менеджер подтвердит бронирование.');
+
+    return lines.join('\n');
+  }
+
+  function renderPacksUI(){
+    $('pkGuests').textContent = String(pkGuests);
+
+    const vipVal = $('pkVip').value || $('vip').value || VIPS[0].val;
+    const check = validateVipGuests(vipVal, pkGuests);
+    const warn = $('pkWarn');
+
+    if(check.ok){
+      warn.style.display='none';
+      warn.textContent='';
+      $('pkSend').classList.remove('disabled');
+    } else {
+      warn.style.display='';
+      warn.textContent=check.msg;
+      $('pkSend').classList.add('disabled');
+    }
+
+    renderPackCards();
+    renderMainChoices();
+    renderCongratsOption();
+
+    $('pkHint').textContent = (lang==='ru'
+      ? 'Выберите пакет и “основное”. Всё остальное подставляется автоматически — чтобы всем хватило.'
+      : (lang==='kz'
+        ? 'Пакет пен “негізгі” таңдаңыз. Қалғаны автоматты түрде қосылады — бәріне жетеді.'
+        : 'Pick a package and main dishes. The rest is auto-included so everyone has enough.'
+      )
+    );
+  }
+
+  function openPacks(){
+    fillVip('pkVip'); fillEvents('pkType');
+    $('pkVip').value = $('vip').value || VIPS[0].val;
+    $('pkType').value = pkType;
+
+    $('pkText').style.display='none';
+    $('packsMb').style.display='flex';
+    $('packsMb').scrollTop = 0;
+
+    renderPacksUI();
+    showPack(true);
+  }
+  function closePacks(){ $('packsMb').style.display='none'; }
+
+  function showPack(scrollToChoices){
+    const t = packText();
+    $('pkText').style.display='block';
+    $('pkText').textContent = t;
+    if(scrollToChoices){
+      $('pkChoices')?.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  async function copyPack(){
+    const t = packText();
+    try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
+    catch{ $('pkText').style.display='block'; $('pkText').textContent=t; }
+  }
+
+  // ========= CONGRATS =========
+  function congratsText(){
+    const vipVal = $('ptVip').value || $('vip').value || VIPS[0].val;
+    const vipObj = getVip(vipVal);
+    const vipLabel = (lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
+    const typeLabel = EVENTS[lang].find(x=>x.val===ptType)?.label || '';
+
+    const lines = [];
+    lines.push(`AUTOGRAPH GOLD — AUTOGRAPH ${lang==='en'?'CONGRATULATIONS':'ПОЗДРАВЛЕНИЕ'} 🎉`);
+    lines.push(`VIP: ${vipLabel}`);
+    lines.push(`${lang==='en'?'Occasion':'Повод'}: ${typeLabel}`);
+    lines.push('');
+    lines.push(`${lang==='en'?'Price':'Стоимость'}: 30 000 ₸`);
+    lines.push(lang==='en'?'Included:':'Включено:');
+    lines.push('• Martini Asti (1 бутылка)');
+    lines.push('• Торт (подача)');
+    lines.push('• Фейерверк/свечи (подача)');
+    lines.push('• Поздравление в VIP');
+    lines.push('');
+    lines.push(lang==='en'?'* Please confirm serving time with manager.':'* Время подачи согласовать с менеджером.');
+    lines.push(lang==='en'?'Send date/time & name — manager will confirm.':'Напишите дату/время и имя — менеджер подтвердит.');
+    return lines.join('\n');
+  }
+
+  function openCongrats(){
+    fillVip('ptVip'); fillEvents('ptType');
+    $('ptVip').value = $('vip').value || VIPS[0].val;
+    $('ptType').value = ptType;
+    $('partyMb').style.display='flex';
+    $('partyMb').scrollTop = 0;
+  }
+  function closeCongrats(){ $('partyMb').style.display='none'; }
+
+  async function copyCongrats(){
+    const t = congratsText();
+    try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
+    catch{ $('ptText').style.display='block'; $('ptText').textContent=t; }
+  }
 
   // ========= BOOKING =========
   function fillTimes(){
     const sel = $('bTime');
     sel.innerHTML = '';
     const slots = [];
-    for(let h=12; h<=23; h++){ slots.push(`${String(h).padStart(2,'0')}:00`, `${String(h).padStart(2,'0')}:30`); }
+    for(let h=12; h<=23; h++){
+      slots.push(`${String(h).padStart(2,'0')}:00`);
+      slots.push(`${String(h).padStart(2,'0')}:30`);
+    }
     slots.push('00:00','00:30','01:00','01:30','02:00','02:30','03:00');
     for(const t of slots){
       const o=document.createElement('option');
@@ -993,6 +1297,7 @@
 
     fillVip('bVip');
     fillTimes();
+
     $('bVip').value = $('vip').value || VIPS[0].val;
 
     const d = new Date();
@@ -1080,10 +1385,21 @@
     }
   }
 
-  function openPay(){ $('payMb').style.display='flex'; $('payMb').scrollTop=0; }
+  // ========= PAYMENT =========
+  function openPay(){
+    $('payMb').style.display='flex';
+    $('payMb').scrollTop=0;
+  }
   function closePay(){ $('payMb').style.display='none'; }
+  async function copyPay(){
+    try{ await navigator.clipboard.writeText(KASPI_PAY_LINK); alert(ui().copied); }
+    catch{}
+  }
+  function openKaspiLink(){
+    window.open(KASPI_PAY_LINK, '_blank');
+  }
 
-  // ====== init ======
+  // ========= EVENTS =========
   document.addEventListener('click',(e)=>{
     const t=e.target;
 
@@ -1103,14 +1419,45 @@
     if(t.id==='mCopy') return copyOrder();
     if(t.id==='mClose' || t.id==='mb') return hideModal();
 
+    if(t.id==='packsBtn') return openPacks();
+    if(t.id==='partyBtn') return openCongrats();
+
+    if(t.id==='pkClose') return closePacks();
+    if(t.id==='pkShow') return showPack(true);
+    if(t.id==='pkCopy') return copyPack();
+    if(t.id==='pkSend'){
+      if(t.classList.contains('disabled')) return;
+      return sendWA(packText());
+    }
+    if(t.id==='packsMb' && t === $('packsMb')) return closePacks();
+
+    if(t.id==='ptClose') return closeCongrats();
+    if(t.id==='ptCopy') return copyCongrats();
+    if(t.id==='ptSend') return sendWA(congratsText());
+    if(t.id==='partyMb' && t === $('partyMb')) return closeCongrats();
+
+    if(t.id==='pkMinus'){ pkGuests = Math.max(4, pkGuests-1); renderPacksUI(); showPack(false); return; }
+    if(t.id==='pkPlus'){ pkGuests = Math.min(35, pkGuests+1); renderPacksUI(); showPack(false); return; }
+
+    if(t.dataset.pack){
+      pkPack = t.dataset.pack;
+      renderPacksUI();
+      showPack(true);
+      return;
+    }
+
+    // Booking
     if(t.id==='bookBtn') return openBooking();
-    if(t.id==='bookClose' || t.id==='bookMb') return closeBooking();
+    if(t.id==='bookClose') return closeBooking();
+    if(t.id==='bookMb' && t === $('bookMb')) return closeBooking();
     if(t.id==='bCheck') return checkBusy();
     if(t.id==='bSend') return sendBooking();
     if(t.id==='bPayOpen') return openKaspiLink();
 
+    // Payment
     if(t.id==='payBtn') return openPay();
-    if(t.id==='payClose' || t.id==='payMb') return closePay();
+    if(t.id==='payClose') return closePay();
+    if(t.id==='payMb' && t === $('payMb')) return closePay();
     if(t.id==='payOpen') return openKaspiLink();
     if(t.id==='payCopy') return copyPay();
   });
@@ -1118,10 +1465,31 @@
   $('q').addEventListener('input', render);
   $('svc').addEventListener('change', updateCart);
 
+  $('pkVip').addEventListener('change', ()=>{ renderPacksUI(); showPack(false); });
+  $('pkType').addEventListener('change', (e)=>{ pkType = e.target.value; showPack(false); });
+
+  $('pkMainChoices').addEventListener('change', (e)=>{
+    const idx = e.target?.dataset?.mainIndex;
+    if(idx==null) return;
+    pkMain[Number(idx)] = e.target.value;
+    renderPackCards();
+    showPack(false);
+  });
+
+  $('pkAddCongrats').addEventListener('change', (e)=>{
+    pkAddCongrats = !!e.target.checked;
+    renderPackCards();
+    showPack(false);
+  });
+
+  $('ptType').addEventListener('change', (e)=>{ ptType = e.target.value; });
+
+  // ====== init ======
   fillVip('vip');
   setLang('ru');
   setSection('all');
 
+  // Kaspi QR images (generated from link)
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(KASPI_PAY_LINK)}`;
   $('kaspiQrImg').src = qrUrl;
   $('kaspiQrImg2').src = qrUrl;
