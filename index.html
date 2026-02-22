@@ -126,8 +126,9 @@
     .optLine label{display:flex;gap:8px;align-items:center;cursor:pointer}
     .optLine input{transform:scale(1.1)}
 
-    /* booking inputs reusing .search */
-    input.search{appearance:none}
+    /* Booking */
+    .qrBox{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}
+    .qrBox img{border-radius:12px;border:1px solid var(--line);background:#fff}
   </style>
 </head>
 
@@ -154,8 +155,8 @@
 
     <button class="btnTop" id="packsBtn">Пакеты 🎁</button>
     <button class="btnTop" id="partyBtn">Autograph поздравление 🎉</button>
-    <button class="btnTop" id="bookBtn">Бронь 📅</button>
-    <button class="btnTop" id="payBtn">Оплата 💳</button>
+    <button class="btnTop" id="bookBtn">Бронирование 📅</button>
+    <button class="btnTop" id="payBtn">Оплата Kaspi 💳</button>
   </div>
   <div id="menu"></div>
 </div>
@@ -285,69 +286,96 @@
 <!-- Booking modal -->
 <div class="mb" id="bookMb">
   <div class="modal">
-    <h3 id="bTitle">Бронирование</h3>
+    <h3>Бронирование VIP</h3>
 
     <div class="row">
-      <div style="flex:1;min-width:220px">
-        <label id="bNameL">Имя</label><br>
-        <input id="bName" class="search" placeholder="Имя" />
+      <div>
+        <label>VIP</label><br>
+        <select id="bVip"></select>
       </div>
 
-      <div style="flex:1;min-width:220px">
-        <label id="bPhoneL">Телефон</label><br>
-        <input id="bPhone" class="search" placeholder="+7..." />
+      <div>
+        <label>Дата</label><br>
+        <input id="bDate" class="search" type="date" style="max-width:220px" />
+      </div>
+
+      <div>
+        <label>Время</label><br>
+        <select id="bTime" class="vipSel" style="max-width:220px"></select>
+      </div>
+
+      <div>
+        <label>Длительность</label><br>
+        <select id="bDur" class="vipSel" style="max-width:220px">
+          <option value="2" selected>2 часа</option>
+          <option value="3">3 часа</option>
+          <option value="4">4 часа</option>
+        </select>
       </div>
     </div>
 
     <div class="row">
-      <div>
-        <label id="bDateL">Дата</label><br>
-        <input id="bDate" class="search" type="date" />
+      <div style="flex:1;min-width:220px">
+        <label>Имя</label><br>
+        <input id="bName" class="search" placeholder="Ваше имя" />
       </div>
 
-      <div>
-        <label id="bTimeL">Время</label><br>
-        <input id="bTime" class="search" type="time" />
+      <div style="flex:1;min-width:220px">
+        <label>Телефон</label><br>
+        <input id="bPhone" class="search" placeholder="+7 ..." />
       </div>
 
-      <div>
-        <label id="bVipL">VIP</label><br>
-        <select id="bVip" class="vipSel"></select>
-      </div>
-
-      <div>
-        <label id="bGuestsL">Гостей</label><br>
+      <div style="flex:1;min-width:220px">
+        <label>Гостей</label><br>
         <input id="bGuests" class="search" type="number" min="1" max="35" value="10" />
       </div>
     </div>
 
-    <div class="row">
-      <div style="flex:1;min-width:220px">
-        <label id="bCommentL">Комментарий</label><br>
-        <input id="bComment" class="search" placeholder="Например: день рождения, торт, время подачи..." />
+    <div>
+      <label>Комментарий</label><br>
+      <input id="bComment" class="search" placeholder="Например: депозит 120 000 / предзаказ..." style="max-width:100%" />
+    </div>
+
+    <div class="optLine" style="margin-top:12px">
+      <div id="bStatus">Статус: выберите VIP/дату/время и нажмите “Проверить”</div>
+      <button class="action copy" id="bCheck">Проверить</button>
+    </div>
+
+    <div class="qrBox">
+      <div class="card" style="padding:10px">
+        <div class="mini" style="margin:0 0 8px">Kaspi Pay ссылка:</div>
+        <button class="action send" id="bPayOpen" type="button">Оплатить в Kaspi</button>
+        <div class="mini" style="margin-top:8px">Или отсканируйте QR:</div>
+        <img id="kaspiQrImg" alt="Kaspi QR" width="180" height="180">
+      </div>
+      <div class="hint" style="max-width:420px">
+        Гости видят только “свободно/занято”. Детали брони видит менеджер.<br>
+        После оплаты отправьте чек менеджеру (или в WhatsApp).
       </div>
     </div>
 
-    <div class="hint" id="bStatus"></div>
-
     <div class="m-actions">
-      <button class="action send" id="bSubmit">Отправить бронь</button>
-      <button class="action close" id="bClose">Закрыть</button>
+      <button class="action send disabled" id="bSend">Отправить заявку</button>
+      <button class="action close" id="bookClose">Закрыть</button>
     </div>
   </div>
 </div>
 
-<!-- Payment modal (Kaspi QR image) -->
+<!-- Payment modal (simple) -->
 <div class="mb" id="payMb">
   <div class="modal">
-    <h3 id="payTitle">Оплата</h3>
-    <div class="hint" id="payHint">Kaspi QR — отсканируйте код в приложении Kaspi для оплаты.</div>
-
-    <!-- ✅ Положи файл kaspioq.jpg рядом с index.html в GitHub -->
-    <img src="kaspioq.jpg" alt="Kaspi QR" style="width:100%;max-width:420px;display:block;margin:12px auto;border-radius:14px;border:1px solid #2a2a2a" />
-
-    <div class="hint" id="payHint2">Если QR не открылся — попросите менеджера отправить Kaspi QR в WhatsApp.</div>
-
+    <h3>Оплата Kaspi</h3>
+    <div class="card">
+      <div class="mini">Ссылка для оплаты:</div>
+      <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="action send" id="payOpen" type="button">Открыть Kaspi Pay</button>
+        <button class="action copy" id="payCopy" type="button">Скопировать ссылку</button>
+      </div>
+      <div class="qrBox" style="margin-top:12px">
+        <img id="kaspiQrImg2" alt="Kaspi QR" width="220" height="220">
+        <div class="hint">Отсканируйте QR в приложении Kaspi.kz или откройте ссылку.</div>
+      </div>
+    </div>
     <div class="m-actions">
       <button class="action close" id="payClose">Закрыть</button>
     </div>
@@ -355,13 +383,17 @@
 </div>
 
 <script>
+  // ====== SETTINGS ======
   const WA_PHONE_RAW = '77777785757';
   const WA_PHONE = WA_PHONE_RAW.replace(/^\+/, '').replace(/^8/, '7').replace(/\D/g,'');
 
-  // ✅ Booking API (твоя ссылка)
-  const BOOKING_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycby_BF1MIWEPthz-Uvg4P6NSnwSodPo46XFLWk2ouQnnLWHnn5l6ZdZo4ARYOyz53J4ESg/exec';
+  // ✅ твой Apps Script (новый)
+  const BOOKING_API = 'https://script.google.com/macros/s/AKfycbxpbcuSnICJWp3geiqh8LQv4QwttavMcStRadugRP8Ckg3OFcPb7B5DdzkFhjlCLgVUFA/exec';
 
-  // ✅ VIP + вместимость
+  // ✅ Kaspi pay link
+  const KASPI_PAY_LINK = 'https://pay.kaspi.kz/pay/4ockubhx';
+
+  // ====== VIP + вместимость ======
   const VIPS = [
     {ru:'VIP Boss', kz:'VIP Boss', en:'VIP Boss', val:'Boss', cap:8},
     {ru:'VIP Author', kz:'VIP Author', en:'VIP Author', val:'Author', cap:12},
@@ -920,6 +952,7 @@
 
   function fillVip(selectId='vip'){
     const sel = $(selectId);
+    if(!sel) return;
     sel.innerHTML = '';
     for(const v of VIPS){
       const o = document.createElement('option');
@@ -930,6 +963,7 @@
   }
   function fillEvents(selectId){
     const sel = $(selectId);
+    if(!sel) return;
     sel.innerHTML = '';
     for(const t of EVENTS[lang]){
       const o = document.createElement('option');
@@ -1112,11 +1146,6 @@
     t += `\n${ui().sum}: ${fmt(sum)} ₸\n`;
     t += svcOn ? `${ui().svcLine}: ${fmt(svc)} ₸\n` : `${ui().svcOff}\n`;
     t += `${ui().total}: ${fmt(total)} ₸\n`;
-
-    // ✅ добавили подсказку по оплате
-    if(lang==='ru') t += `\nОплата: Kaspi QR (кнопка “Оплата 💳” на сайте)\n`;
-    if(lang==='kz') t += `\nТөлем: Kaspi QR (сайттағы “Оплата 💳”)\n`;
-    if(lang==='en') t += `\nPayment: Kaspi QR (“Pay 💳” button)\n`;
 
     return t;
   }
@@ -1403,12 +1432,6 @@
     lines.push('');
     lines.push(`${lang==='en'?'Estimated total':'Ориентир по сумме'}: ${fmt(total)} ₸`);
     lines.push(lang==='en'?'Service 10% is separate.':'Сервис 10% по чеку отдельно.');
-
-    // ✅ подсказка оплаты
-    if(lang==='ru') lines.push(`Оплата: Kaspi QR (кнопка “Оплата 💳” на сайте)`);
-    if(lang==='kz') lines.push(`Төлем: Kaspi QR (сайттағы “Оплата 💳”)`);
-    if(lang==='en') lines.push(`Payment: Kaspi QR (“Pay 💳” button)`);
-
     lines.push(pack.note[lang] || '');
     lines.push('');
     lines.push(lang==='en'?'Send date/time — manager will confirm.':'Напишите дату/время — менеджер подтвердит бронирование.');
@@ -1538,107 +1561,131 @@
   }
 
   // ========= BOOKING =========
+  function fillTimes(){
+    const sel = $('bTime');
+    sel.innerHTML = '';
+    const slots = [];
+    for(let h=12; h<=23; h++){
+      slots.push(`${String(h).padStart(2,'0')}:00`);
+      slots.push(`${String(h).padStart(2,'0')}:30`);
+    }
+    slots.push('00:00','00:30','01:00','01:30','02:00','02:30','03:00');
+    for(const t of slots){
+      const o=document.createElement('option');
+      o.value=t; o.textContent=t;
+      sel.appendChild(o);
+    }
+  }
+
   function openBooking(){
-    fillVip('bVip');
-    $('bVip').value = $('vip').value || VIPS[0].val;
-    $('bStatus').textContent = (lang==='ru'
-      ? 'Заполните данные — бронь упадет в Google таблицу и в календарь.'
-      : (lang==='kz'
-        ? 'Деректерді толтырыңыз — бронь Google кесте және күнтізбеге түседі.'
-        : 'Fill the form — booking will be saved to Google Sheet and Calendar.'
-      )
-    );
     $('bookMb').style.display='flex';
-    $('bookMb').scrollTop = 0;
+    $('bookMb').scrollTop=0;
+
+    fillVip('bVip');
+    fillTimes();
+
+    // default from current VIP
+    $('bVip').value = $('vip').value || VIPS[0].val;
+
+    // default date = today
+    const d = new Date();
+    const z=(n)=>String(n).padStart(2,'0');
+    $('bDate').value = `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
+
+    $('bStatus').textContent = 'Статус: выберите VIP/дату/время и нажмите “Проверить”';
+    $('bSend').classList.add('disabled');
   }
   function closeBooking(){ $('bookMb').style.display='none'; }
 
-  function bookingPayload(){
-    const vipObj = getVip($('bVip').value);
-    const vipLabel = (lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
-    return {
-      name: $('bName').value.trim(),
-      phone: $('bPhone').value.trim(),
-      date: $('bDate').value,
-      time: $('bTime').value,
-      vip: vipLabel,
-      guests: String($('bGuests').value || ''),
-      comment: $('bComment').value.trim()
-    };
-  }
+  async function checkBusy(){
+    const vip = $('bVip').value;
+    const date = $('bDate').value;
+    const time = $('bTime').value;
+    const dur = $('bDur').value;
 
-  function bookingTextFallback(p){
-    return [
-      'BRON AUTOGRAPH GOLD',
-      `Имя: ${p.name}`,
-      `Тел: ${p.phone}`,
-      `Дата: ${p.date}`,
-      `Время: ${p.time}`,
-      `VIP: ${p.vip}`,
-      `Гостей: ${p.guests}`,
-      `Комментарий: ${p.comment || '-'}`,
-      '',
-      'Оплата: Kaspi QR (кнопка “Оплата 💳” на сайте)'
-    ].join('\n');
-  }
-
-  function validBooking(p){
-    if(!p.name || !p.phone || !p.date || !p.time) return false;
-    return true;
-  }
-
-  async function submitBooking(){
-    const p = bookingPayload();
-    if(!validBooking(p)){
-      $('bStatus').textContent = (lang==='ru'
-        ? 'Заполни имя, телефон, дату и время.'
-        : (lang==='kz'
-          ? 'Аты, телефон, күн және уақытты толтырыңыз.'
-          : 'Please fill name, phone, date and time.'
-        )
-      );
+    if(!vip || !date || !time){
+      $('bStatus').textContent = 'Заполните VIP, дату и время';
+      $('bSend').classList.add('disabled');
       return;
     }
 
-    $('bStatus').textContent = (lang==='ru'
-      ? 'Отправляю бронь...'
-      : (lang==='kz' ? 'Жіберілуде...' : 'Sending booking...')
-    );
+    $('bStatus').textContent = 'Проверяю…';
 
     try{
-      const r = await fetch(BOOKING_WEBAPP_URL, {
+      const url = `${BOOKING_API}?action=check&vip=${encodeURIComponent(vip)}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&dur=${encodeURIComponent(dur)}`;
+      const r = await fetch(url, {method:'GET'});
+      const j = await r.json();
+      if(!j.ok) throw new Error(j.error || 'check error');
+
+      if(j.busy){
+        $('bStatus').textContent = `ЗАНЯТО ❌ (${vip} ${date} ${time})`;
+        $('bSend').classList.add('disabled');
+      } else {
+        $('bStatus').textContent = `СВОБОДНО ✅ (${vip} ${date} ${time})`;
+        $('bSend').classList.remove('disabled');
+      }
+    } catch(e){
+      $('bStatus').textContent = 'Ошибка проверки: ' + String(e);
+      $('bSend').classList.add('disabled');
+    }
+  }
+
+  async function sendBooking(){
+    if($('bSend').classList.contains('disabled')) return;
+
+    const payload = {
+      name: ($('bName').value||'').trim(),
+      phone: ($('bPhone').value||'').trim(),
+      vip: $('bVip').value,
+      guests: ($('bGuests').value||'').trim(),
+      date: $('bDate').value,
+      time: $('bTime').value,
+      durationHours: Number($('bDur').value||2),
+      comment: ($('bComment').value||'').trim()
+    };
+
+    if(!payload.name || !payload.phone){
+      $('bStatus').textContent = 'Введите имя и телефон';
+      return;
+    }
+
+    $('bStatus').textContent = 'Отправляю…';
+
+    try{
+      const r = await fetch(BOOKING_API, {
         method:'POST',
         headers:{'Content-Type':'text/plain;charset=utf-8'},
-        body: JSON.stringify(p)
+        body: JSON.stringify(payload)
       });
-      const res = await r.json().catch(()=>({}));
-      if(res && (res.ok === true || res.status === 'ok')){
-        $('bStatus').textContent = (lang==='ru'
-          ? 'Бронь принята ✅ Менеджер подтвердит.'
-          : (lang==='kz' ? 'Бронь қабылданды ✅ Менеджер растайды.' : 'Booked ✅ Manager will confirm.')
-        );
-        return;
+      const j = await r.json();
+      if(!j.ok){
+        if(String(j.error||'').toUpperCase().includes('BUSY')){
+          $('bStatus').textContent = 'Только что заняли этот слот ❌ Выберите другое время.';
+          $('bSend').classList.add('disabled');
+          return;
+        }
+        throw new Error(j.error || 'send error');
       }
-      $('bStatus').textContent = (lang==='ru'
-        ? 'Не получилось записать в систему. Отправляю в WhatsApp...'
-        : (lang==='kz' ? 'Жүйеге жазылмады. WhatsApp-қа жіберемін...' : 'Failed to save. Sending via WhatsApp...')
-      );
-      sendWA(bookingTextFallback(p));
-    }catch(err){
-      $('bStatus').textContent = (lang==='ru'
-        ? 'Связь/браузер блокирует запрос. Отправляю в WhatsApp...'
-        : (lang==='kz' ? 'Байланыс жоқ. WhatsApp-қа жіберемін...' : 'Network blocked. Sending via WhatsApp...')
-      );
-      sendWA(bookingTextFallback(p));
+      $('bStatus').textContent = 'Заявка отправлена ✅ Менеджер подтвердит.';
+      $('bSend').classList.add('disabled');
+    } catch(e){
+      $('bStatus').textContent = 'Ошибка отправки: ' + String(e);
     }
   }
 
   // ========= PAYMENT =========
   function openPay(){
     $('payMb').style.display='flex';
-    $('payMb').scrollTop = 0;
+    $('payMb').scrollTop=0;
   }
   function closePay(){ $('payMb').style.display='none'; }
+  async function copyPay(){
+    try{ await navigator.clipboard.writeText(KASPI_PAY_LINK); alert(ui().copied); }
+    catch{ /* ignore */ }
+  }
+  function openKaspiLink(){
+    window.open(KASPI_PAY_LINK, '_blank');
+  }
 
   // ========= EVENTS =========
   document.addEventListener('click',(e)=>{
@@ -1688,13 +1735,18 @@
       return;
     }
 
-    // booking/pay
+    // Booking
     if(t.id==='bookBtn') return openBooking();
-    if(t.id==='bClose' || t.id==='bookMb') return closeBooking();
-    if(t.id==='bSubmit') return submitBooking();
+    if(t.id==='bookClose' || t.id==='bookMb') return closeBooking();
+    if(t.id==='bCheck') return checkBusy();
+    if(t.id==='bSend') return sendBooking();
+    if(t.id==='bPayOpen') return openKaspiLink();
 
+    // Payment
     if(t.id==='payBtn') return openPay();
     if(t.id==='payClose' || t.id==='payMb') return closePay();
+    if(t.id==='payOpen') return openKaspiLink();
+    if(t.id==='payCopy') return copyPay();
   });
 
   $('q').addEventListener('input', render);
@@ -1719,11 +1771,15 @@
 
   $('ptType').addEventListener('change', (e)=>{ ptType = e.target.value; });
 
-  // init
+  // ====== init ======
   fillVip('vip');
-  fillVip('bVip');
   setLang('ru');
   setSection('all');
+
+  // Kaspi QR images (generated from link)
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(KASPI_PAY_LINK)}`;
+  $('kaspiQrImg').src = qrUrl;
+  $('kaspiQrImg2').src = qrUrl;
 </script>
 </body>
 </html>
