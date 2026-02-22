@@ -4,30 +4,104 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Autograph Gold — QR Menu</title>
+
   <style>
-    :root{--bg:#0b0b0b;--gold:#c9b27c;--text:#f5f5f5;--muted:#bdbdbd;--line:#2a2a2a;--bad:#ff5a5a}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-    header{
-      padding: calc(16px + env(safe-area-inset-top,0px)) 14px 16px;
-      text-align:center;border-bottom:2px solid var(--gold)
+    :root{
+      --bg:#0b0b0b;
+      --panel:#0f0f0f;
+      --gold:#c9b27c;
+      --text:#f5f5f5;
+      --muted:#bdbdbd;
+      --line:#2a2a2a;
+      --ok:#65d672;
+      --bad:#ff5a5a;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
     }
-    h1{margin:0;letter-spacing:3px;color:var(--gold);font-size:22px}
-    .top{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:10px}
-    .chip{border:1px solid var(--gold);background:#000;color:var(--gold);padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:700}
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    header{
+      position:sticky; top:0; z-index:50;
+      padding: calc(14px + env(safe-area-inset-top,0px)) 14px 12px;
+      text-align:center;
+      border-bottom:1px solid rgba(201,178,124,.55);
+      background:rgba(11,11,11,.92);
+      backdrop-filter: blur(10px);
+    }
+    h1{
+      margin:0;
+      letter-spacing:4px;
+      color:var(--gold);
+      font-size:20px;
+      font-weight:900;
+    }
+    .top{
+      display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .chip{
+      border:1px solid rgba(201,178,124,.75);
+      background:#000;
+      color:var(--gold);
+      padding:7px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:900;
+      transition:.15s transform ease;
+    }
+    .chip:active{transform:scale(.98)}
     .chip.active{background:var(--gold);color:#000}
 
-    .wrap{max-width:980px;margin:0 auto;padding:16px 14px calc(210px + env(safe-area-inset-bottom,0px))}
-    .toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:8px 0 14px}
-    .search{flex:1;min-width:220px;max-width:520px;background:#0f0f0f;border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px;outline:none}
-    .vipSel{min-width:200px;background:#0f0f0f;border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px;outline:none}
-
+    .wrap{max-width:1040px;margin:0 auto;padding:14px 14px calc(220px + env(safe-area-inset-bottom,0px))}
+    .toolbar{
+      position:sticky; top:78px; z-index:30;
+      display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+      margin:10px 0 14px;
+      padding:10px;
+      border:1px solid rgba(42,42,42,.9);
+      border-radius:16px;
+      background:rgba(15,15,15,.92);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+    .search{
+      flex:1; min-width:220px; max-width:520px;
+      background:#0b0b0b;
+      border:1px solid var(--line);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      outline:none;
+    }
+    .vipSel{
+      min-width:190px;
+      background:#0b0b0b;
+      border:1px solid var(--line);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      outline:none;
+    }
     .tabs{display:flex;gap:8px;flex-wrap:wrap}
-    .tab{border:1px solid var(--gold);background:transparent;color:var(--gold);padding:8px 10px;border-radius:12px;cursor:pointer;font-weight:700}
+    .tab{
+      border:1px solid rgba(201,178,124,.85);
+      background:transparent;
+      color:var(--gold);
+      padding:9px 10px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:900;
+      transition:.15s transform ease;
+    }
+    .tab:active{transform:scale(.98)}
     .tab.active{background:var(--gold);color:#000}
 
     .btnTop{
-      border:1px solid var(--gold);
+      border:1px solid rgba(201,178,124,.85);
       background:#000;
       color:var(--gold);
       padding:10px 12px;
@@ -35,27 +109,49 @@
       cursor:pointer;
       font-weight:900;
       white-space:nowrap;
+      transition:.15s transform ease;
+    }
+    .btnTop:active{transform:scale(.98)}
+
+    .category{margin:18px 0}
+    .category h2{
+      margin:0 0 10px;
+      color:var(--gold);
+      border-bottom:1px solid rgba(201,178,124,.6);
+      padding-bottom:8px;
+      font-size:16px;
+      letter-spacing:1px;
     }
 
-    .category{margin:22px 0}
-    .category h2{margin:0 0 10px;color:var(--gold);border-bottom:1px solid var(--gold);padding-bottom:6px;font-size:18px}
-
-    .item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+    .item{
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      padding:10px 0;
+      border-bottom:1px dashed var(--line);
+    }
     .iname{font-size:14px;line-height:1.25}
     .iprice{color:var(--muted);font-size:13px;margin-left:8px;white-space:nowrap}
     .controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
-    .btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--gold);background:#000;color:var(--gold);font-size:18px;cursor:pointer}
+    .btn{
+      width:34px;height:34px;border-radius:11px;
+      border:1px solid rgba(201,178,124,.85);
+      background:#000;color:var(--gold);font-size:18px;cursor:pointer;
+      transition:.12s transform ease;
+    }
+    .btn:active{transform:scale(.96)}
     .qty{min-width:18px;text-align:center;font-weight:900}
 
     .cart{
-      position:fixed;left:0;right:0;bottom:0;
+      position:fixed;left:0;right:0;bottom:0;z-index:60;
       background:rgba(17,17,17,.96);
-      border-top:2px solid var(--gold);
+      border-top:1px solid rgba(201,178,124,.6);
       padding:12px 14px;
-      backdrop-filter:blur(6px);
+      backdrop-filter:blur(8px);
       padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))
     }
-    .cart-inner{max-width:980px;margin:0 auto;display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+    .cart-inner{
+      max-width:1040px;margin:0 auto;
+      display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap
+    }
     .cart-left{min-width:240px;flex:1}
     .cart-title{color:var(--muted);font-size:12px;margin-bottom:6px}
     .cart-items{font-size:13px;line-height:1.35;max-height:90px;overflow:auto;padding-right:6px}
@@ -66,51 +162,64 @@
     .svc input{transform:scale(1.1)}
     .action{padding:10px 12px;border-radius:12px;border:none;font-weight:900;cursor:pointer}
     .clear{background:#3a0b0b;color:#fff}
-    .copy{background:#1a1a1a;color:var(--gold);border:1px solid var(--gold)}
+    .copy{background:#1a1a1a;color:var(--gold);border:1px solid rgba(201,178,124,.8)}
     .send{background:var(--gold);color:#000}
     .disabled{opacity:.45;pointer-events:none}
 
-    /* ✅ mobile-safe modal */
     .mb{
-      position:fixed;inset:0;background:rgba(0,0,0,.65);
+      position:fixed;inset:0;z-index:80;
+      background:rgba(0,0,0,.65);
       display:none;align-items:flex-start;justify-content:center;
-      padding: max(14px, env(safe-area-inset-top, 0px)) 14px max(14px, env(safe-area-inset-bottom, 0px));
+      padding:max(14px, env(safe-area-inset-top,0px)) 14px max(14px, env(safe-area-inset-bottom,0px));
       overflow:auto;-webkit-overflow-scrolling:touch;
     }
     .modal{
-      max-width:820px;width:100%;
-      background:#0f0f0f;border:1px solid var(--gold);border-radius:16px;padding:14px;
-      max-height: calc(100vh - 28px); overflow:auto; -webkit-overflow-scrolling:touch;
+      max-width:880px;width:100%;
+      background:var(--panel);
+      border:1px solid rgba(201,178,124,.7);
+      border-radius:18px;
+      padding:14px;
+      max-height: calc(100vh - 28px);
+      overflow:auto;-webkit-overflow-scrolling:touch;
+      box-shadow: var(--shadow);
     }
     .modal h3{margin:0 0 10px;color:var(--gold);letter-spacing:1px}
-    .modal pre{white-space:pre-wrap;word-break:break-word;background:#0b0b0b;border:1px solid var(--line);border-radius:12px;padding:10px;color:var(--text);font-size:13px}
+    .modal pre{
+      white-space:pre-wrap;word-break:break-word;
+      background:#0b0b0b;border:1px solid var(--line);
+      border-radius:12px;padding:10px;color:var(--text);font-size:13px
+    }
     .m-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}
     .close{background:#222;color:#fff;border:1px solid #444}
 
-    /* Packages UI */
+    /* packages */
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;margin:10px 0}
     .row label{color:var(--muted);font-size:12px}
-    .row select{
-      min-width:190px;background:#0f0f0f;border:1px solid var(--line);color:var(--text);
-      padding:10px 12px;border-radius:12px;outline:none
+    .row select, .row input{
+      min-width:190px;background:#0b0b0b;border:1px solid var(--line);
+      color:var(--text);padding:10px 12px;border-radius:12px;outline:none
     }
     .num{display:flex;gap:8px;align-items:center}
-    .num button{width:36px;height:36px;border-radius:10px;border:1px solid var(--gold);background:#000;color:var(--gold);font-size:18px;cursor:pointer}
-    .num span{min-width:34px;text-align:center;font-weight:900}
+    .num button{
+      width:36px;height:36px;border-radius:11px;border:1px solid rgba(201,178,124,.85);
+      background:#000;color:var(--gold);font-size:18px;cursor:pointer
+    }
+    .num span{min-width:36px;text-align:center;font-weight:900}
 
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
     @media (max-width:560px){ .grid{grid-template-columns:1fr} }
-    .card{border:1px solid var(--line);background:#0b0b0b;border-radius:14px;padding:12px}
-    .card.active{border:1px solid var(--gold);box-shadow:0 0 0 1px rgba(201,178,124,.25) inset}
-    .card h4{margin:0 0 6px;color:var(--gold)}
+
+    .card{
+      border:1px solid var(--line);
+      background:#0b0b0b;
+      border-radius:16px;
+      padding:12px;
+    }
+    .card.active{border:1px solid rgba(201,178,124,.9); box-shadow: 0 0 0 1px rgba(201,178,124,.18) inset;}
+    .card h4{margin:0 0 6px;color:var(--gold);letter-spacing:1px}
     .desc{color:var(--muted);font-size:12px;line-height:1.35;margin:0 0 10px}
     .price{color:var(--gold);font-weight:900}
     .mini{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.35}
-    .card button{
-      margin-top:10px;width:100%;
-      border-radius:12px;border:1px solid var(--gold);
-      background:#000;color:var(--gold);padding:10px 12px;cursor:pointer;font-weight:900
-    }
     .hint{color:var(--muted);font-size:12px;line-height:1.35;margin-top:10px}
     .warn{color:var(--bad);font-size:12px;line-height:1.35;margin-top:10px}
 
@@ -120,15 +229,19 @@
     @media (max-width:560px){ .choiceGrid{grid-template-columns:1fr} }
 
     .optLine{
-      margin-top:10px;padding:10px 12px;border:1px solid var(--line);background:#0b0b0b;border-radius:12px;
-      display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;color:var(--muted);font-size:12px;
+      margin-top:10px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      background:#0b0b0b;
+      border-radius:12px;
+      display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+      color:var(--muted);font-size:12px;
     }
     .optLine label{display:flex;gap:8px;align-items:center;cursor:pointer}
     .optLine input{transform:scale(1.1)}
 
-    /* Booking */
-    .qrBox{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}
-    .qrBox img{border-radius:12px;border:1px solid var(--line);background:#fff}
+    .tagOk{color:var(--ok);font-weight:900}
+    .tagBad{color:var(--bad);font-weight:900}
   </style>
 </head>
 
@@ -158,6 +271,7 @@
     <button class="btnTop" id="bookBtn">Бронирование 📅</button>
     <button class="btnTop" id="payBtn">Оплата Kaspi 💳</button>
   </div>
+
   <div id="menu"></div>
 </div>
 
@@ -180,7 +294,7 @@
   </div>
 </div>
 
-<!-- Base order modal -->
+<!-- Order modal -->
 <div class="mb" id="mb">
   <div class="modal">
     <h3 id="mTitle">Заказ</h3>
@@ -233,6 +347,11 @@
         </label>
         <span id="pkCongratsNote">Торт • Martini Asti • фейерверк/свечи • поздравление</span>
       </div>
+
+      <div class="optLine" id="pkMinLine">
+        <div id="pkMinText"></div>
+        <div id="pkMinStatus"></div>
+      </div>
     </div>
 
     <div class="hint" id="pkHint"></div>
@@ -248,7 +367,7 @@
   </div>
 </div>
 
-<!-- Autograph Congrats modal -->
+<!-- Congrats modal -->
 <div class="mb" id="partyMb">
   <div class="modal">
     <h3 id="ptTitle">Autograph поздравление</h3>
@@ -286,27 +405,27 @@
 <!-- Booking modal -->
 <div class="mb" id="bookMb">
   <div class="modal">
-    <h3>Бронирование VIP</h3>
+    <h3 id="bTitle">Бронирование VIP</h3>
 
     <div class="row">
       <div>
-        <label>VIP</label><br>
+        <label id="bVipLabel">VIP</label><br>
         <select id="bVip"></select>
       </div>
 
       <div>
-        <label>Дата</label><br>
-        <input id="bDate" class="search" type="date" style="max-width:220px" />
+        <label id="bDateLabel">Дата</label><br>
+        <input id="bDate" type="date" />
       </div>
 
       <div>
-        <label>Время</label><br>
-        <select id="bTime" class="vipSel" style="max-width:220px"></select>
+        <label id="bTimeLabel">Время</label><br>
+        <select id="bTime"></select>
       </div>
 
       <div>
-        <label>Длительность</label><br>
-        <select id="bDur" class="vipSel" style="max-width:220px">
+        <label id="bDurLabel">Длительность</label><br>
+        <select id="bDur">
           <option value="2" selected>2 часа</option>
           <option value="3">3 часа</option>
           <option value="4">4 часа</option>
@@ -316,47 +435,39 @@
 
     <div class="row">
       <div style="flex:1;min-width:220px">
-        <label>Имя</label><br>
-        <input id="bName" class="search" placeholder="Ваше имя" />
+        <label id="bNameLabel">Имя</label><br>
+        <input id="bName" placeholder="Ваше имя" />
       </div>
 
       <div style="flex:1;min-width:220px">
-        <label>Телефон</label><br>
-        <input id="bPhone" class="search" placeholder="+7 ..." />
+        <label id="bPhoneLabel">Телефон</label><br>
+        <input id="bPhone" placeholder="+7 ..." />
       </div>
 
       <div style="flex:1;min-width:220px">
-        <label>Гостей</label><br>
-        <input id="bGuests" class="search" type="number" min="1" max="35" value="10" />
+        <label id="bGuestsLabel">Гостей</label><br>
+        <input id="bGuests" type="number" min="1" max="35" value="10" />
       </div>
     </div>
 
     <div>
-      <label>Комментарий</label><br>
-      <input id="bComment" class="search" placeholder="Например: депозит / предзаказ..." style="max-width:100%" />
+      <label id="bCommentLabel">Комментарий</label><br>
+      <input id="bComment" placeholder="Например: депозит / предзаказ..." style="width:100%" />
     </div>
 
     <div class="optLine" style="margin-top:12px">
       <div id="bStatus">Статус: выберите VIP/дату/время и нажмите “Проверить”</div>
-      <button class="action copy" id="bCheck" type="button">Проверить</button>
+      <button class="action copy" id="bCheck">Проверить</button>
     </div>
 
-    <div class="qrBox">
-      <div class="card" style="padding:10px">
-        <div class="mini" style="margin:0 0 8px">Kaspi Pay ссылка:</div>
-        <button class="action send" id="bPayOpen" type="button">Оплатить в Kaspi</button>
-        <div class="mini" style="margin-top:8px">Или отсканируйте QR:</div>
-        <img id="kaspiQrImg" alt="Kaspi QR" width="180" height="180">
-      </div>
-      <div class="hint" style="max-width:420px">
-        Гости видят только “свободно/занято”. Детали брони видит менеджер.<br>
-        После оплаты отправьте чек менеджеру (или в WhatsApp).
-      </div>
+    <div class="optLine">
+      <div id="kaspiLineText">Kaspi Pay:</div>
+      <button class="action send" id="bPayOpen" type="button">Оплатить в Kaspi</button>
     </div>
 
     <div class="m-actions">
-      <button class="action send disabled" id="bSend" type="button">Отправить заявку</button>
-      <button class="action close" id="bookClose" type="button">Закрыть</button>
+      <button class="action send disabled" id="bSend">Отправить заявку</button>
+      <button class="action close" id="bookClose">Закрыть</button>
     </div>
   </div>
 </div>
@@ -364,1135 +475,1650 @@
 <!-- Payment modal -->
 <div class="mb" id="payMb">
   <div class="modal">
-    <h3>Оплата Kaspi</h3>
+    <h3 id="payTitle">Оплата Kaspi</h3>
     <div class="card">
-      <div class="mini">Ссылка для оплаты:</div>
+      <div class="mini" id="payDesc">Ссылка для оплаты:</div>
       <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
         <button class="action send" id="payOpen" type="button">Открыть Kaspi Pay</button>
         <button class="action copy" id="payCopy" type="button">Скопировать ссылку</button>
       </div>
-      <div class="qrBox" style="margin-top:12px">
-        <img id="kaspiQrImg2" alt="Kaspi QR" width="220" height="220">
-        <div class="hint">Отсканируйте QR в приложении Kaspi.kz или откройте ссылку.</div>
-      </div>
+      <pre id="payLinkBox" style="margin-top:10px"></pre>
     </div>
     <div class="m-actions">
-      <button class="action close" id="payClose" type="button">Закрыть</button>
+      <button class="action close" id="payClose">Закрыть</button>
     </div>
   </div>
 </div>
 
 <script>
-  // ====== SETTINGS ======
-  const WA_PHONE_RAW = '77777785757';
-  const WA_PHONE = WA_PHONE_RAW.replace(/^\+/, '').replace(/^8/, '7').replace(/\D/g,'');
+/* =========================================================
+   ✅ НАСТРОЙКИ (ПОМЕНЯЙ ЕСЛИ НАДО)
+========================================================= */
+const WA_PHONE_RAW = '77777785757';
+const WA_PHONE = WA_PHONE_RAW.replace(/^\+/, '').replace(/^8/, '7').replace(/\D/g,'');
 
-  // ✅ твой Apps Script (НОВЫЙ)
-  const BOOKING_API = 'https://script.google.com/macros/s/AKfycbzvnyw06CiQZ5pIIobZ8c5BrEnVoJ_yzlmy5nDfFaU1FJGr7iPuUsQgUIEsY9gknEiEwg/exec';
+// ✅ ТВОЙ Apps Script (тот, что ты скинул)
+const BOOKING_API = 'https://script.google.com/macros/s/AKfycbzvnyw06CiQZ5pIIobZ8c5BrEnVoJ_yzlmy5nDfFaU1FJGr7iPuUsQgUIEsY9gknEiEwg/exec';
 
-  // ✅ Kaspi pay link (если у тебя другая — просто замени тут)
-  const KASPI_PAY_LINK = 'https://pay.kaspi.kz/pay/4ockubhx';
+// ✅ Kaspi Pay
+const KASPI_PAY_LINK = 'https://pay.kaspi.kz/pay/4ockubhx';
 
-  // ====== VIP + вместимость ======
-  const VIPS = [
-    {ru:'VIP Boss', kz:'VIP Boss', en:'VIP Boss', val:'Boss', cap:8},
-    {ru:'VIP Author', kz:'VIP Author', en:'VIP Author', val:'Author', cap:12},
-    {ru:'VIP Green', kz:'VIP Green', en:'VIP Green', val:'Green', cap:12},
-    {ru:'VIP Panorama', kz:'VIP Panorama', en:'VIP Panorama', val:'Panorama', cap:20},
-    {ru:'VIP Luxor', kz:'VIP Luxor', en:'VIP Luxor', val:'Luxor', cap:35},
-  ];
+// ✅ VIP + вместимость
+const VIPS = [
+  {ru:'VIP Boss', kz:'VIP Boss', en:'VIP Boss', val:'Boss', cap:8},
+  {ru:'VIP Author', kz:'VIP Author', en:'VIP Author', val:'Author', cap:12},
+  {ru:'VIP Green', kz:'VIP Green', en:'VIP Green', val:'Green', cap:12},
+  {ru:'VIP Panorama', kz:'VIP Panorama', en:'VIP Panorama', val:'Panorama', cap:20},
+  {ru:'VIP Luxor', kz:'VIP Luxor', en:'VIP Luxor', val:'Luxor', cap:35},
+];
 
-  // ====== MENU DATA (RU/KZ/EN) ======
-  const DATA = {
-    ru: {
-      ui: {
-        search:'Поиск по меню...', all:'Всё', food:'Кухня', bar:'Бар', hookah:'Кальян',
-        picked:'Выбрано:', empty:'Корзина пуста', total:'Итого',
-        svc:'Сервис 10%', clear:'Очистить', show:'Показать заказ', send:'Отправить на WhatsApp',
-        sum:'Сумма', svcLine:'сервис 10%', svcOff:'сервис выключен',
-        modal:'Заказ', copied:'Скопировано ✅',
-        vipLabel:'VIP',
-        packs:'Пакеты 🎁',
-        congrats:'Autograph поздравление 🎉'
-      },
-      food: [
-        { name:'Супы', items:[
-          ['Крем-суп из чечевицы',2260],
-          ['Рамен с курицей',4660],
-          ['Рамен с говядиной',5990],
-          ['Том ям с морепродуктами',5990],
-          ['Шорпа с баранины',4290],
-          ['Кеспе с кониной',4290],
-        ]},
-        { name:'Салаты', items:[
-          ['Салат «Баварский»',4960],
-          ['Хрустящие баклажаны',4990],
-          ['Цезарь с цыплёнком',5690],
-          ['Цезарь с креветками',5690],
-          ['Цезарь с лососем',5690],
-          ['Тёплый салат с лососем',5990],
-          ['Салат с рукколой и креветками',6290],
-          ['Салат с ростбифом',5290],
-          ['Оливье с сёмгой',4400],
-        ]},
-        { name:'Холодные закуски', items:[
-          ['Ассорти брускетт',4800],
-          ['Рыбная нарезка',12960],
-          ['Кавказская нарезка',12960],
-          ['Мясная нарезка',12960],
-          ['Ассорти из солений',4900],
-          ['Сельдь по-домашнему',3600],
-          ['Сырное плато',12960],
-          ['Фруктовое ассорти',12960],
-        ]},
-        { name:'Горячие закуски', items:[
-          ['Томлённые баклажаны',4990],
-          ['Соте из баклажан',5990],
-          ['Пивные креветки',6990],
-          ['Бараньи семечки',5990],
-          ['Пивной сет',9990],
-        ]},
-        { name:'Выпечка', items:[
-          ['Мини чебуреки',2990],
-          ['Самса',2990],
-          ['Хлебная корзина',1990],
-          ['Бауырсаки',1990],
-        ]},
-        { name:'Шашлыки', items:[
-          ['Шашлык утка',3800],
-          ['Шашлык шампиньоны',2500],
-          ['Шашлык из куриного филе',3500],
-          ['Шашлык баранина',4500],
-          ['Овощи на гриле',2500],
-          ['Люля куриный',3500],
-          ['Люля баранина',3800],
-          ['Крылышки',3500],
-        ]},
-        { name:'Блюда на компанию', items:[
-          ['Мясное плато на гриле',49990],
-          ['Рыбное плато',59990],
-          ['Ассорти шашлыков Hard',60000],
-          ['Ассорти шашлыков Lite',35000],
-        ]},
-        { name:'Паста', items:[
-          ['Паста болоньезе',4990],
-          ['Паста карбонара',4790],
-          ['Паста с морепродуктами',5790],
-          ['Фетучини альфредо',4790],
-        ]},
-        { name:'Вторые блюда', items:[
-          ['Печень с грибами',4400],
-          ['Бефстроганов из телятины',8660],
-          ['Филе миньон',11990],
-          ['Стейк Рибай',12660],
-          ['Стейк Ти-Бон',12990],
-          ['Стейк из лосося по-аргентински',15660],
-          ['Стейк из цветной капусты',3490],
-        ]},
-        { name:'Гарниры', items:[
-          ['Рис',1290],
-          ['Пюре',1290],
-          ['Картофель фри',1690],
-          ['Брокколи с цветной капустой',1690],
-          ['Картофельные дольки',1790],
-          ['Овощи на гриле',2590],
-          ['Картофель по-домашнему',2890],
-        ]},
-        { name:'Соусы', items:[
-          ['Демигласс',690],
-          ['Сырный',690],
-          ['Кетчуп',690],
-          ['Барбекю',690],
-          ['Сливочно-грибной',690],
-        ]},
-        { name:'Десерты', items:[
-          ['Чизкейк',3490],
-          ['Сникерс',3490],
-        ]},
-        { name:'Блюда по предзаказу', items:[
-          ['Запечённая сёмга целиком',139990],
-          ['Томлёные рёбра говядины',44990],
-          ['Запечённая ножка ягнёнка',48990],
-          ['Куырдак',49990],
-          ['Бешбармак',65000],
-          ['Казан кебаб',44990],
-        ]},
-      ],
-      bar: [
-        { name:'Безалкогольные напитки', items:[
-          ['ASSU 0.5',1990],
-          ['Cola 0.25',1690],
-          ['Schweppes',2590],
-          ['Red Bull 0.25',2590],
-          ['Сок в ассортименте',2990],
-        ]},
-        { name:'Авторские чаи', items:[
-          ['Black tea',2490],
-          ['Green tea',2490],
-          ['Tashkent’s tea',3490],
-          ['Moroccan tea',3490],
-          ['Tea of wild berries',3490],
-        ]},
-        { name:'Лимонады', items:[
-          ['Mango – Passion Fruit',3990],
-          ['Raspberry',3990],
-          ['Pomegranate',3990],
-          ['Kiwi – Lime',3990],
-          ['Watermelon – Melon',3990],
-        ]},
-        { name:'Коктейли', items:[
-          ['Long Island Ice Tea',4000],
-          ['Aperol Sprite',3800],
-          ['Gin Tonic',3900],
-          ['Autograph Special',3800],
-        ]},
-        { name:'Пиво бутылочное', items:[
-          ['Corona Extra',2990],
-          ['Miller',2590],
-        ]},
-        { name:'Пиво разливное', items:[
-          ['Bud (разлив)',2990],
-        ]},
-        { name:'Водка', items:[
-          ['Absolute Blue',2690],
-          ['Gray Goose',3290],
-          ['Beluga',3290],
-          ['Belvedere',3490],
-        ]},
-        { name:'Настойка', items:[
-          ['Jägermeister',2990],
-        ]},
-        { name:'Вермуты', items:[
-          ['Martini Bianco',2290],
-          ['Martini Rosso',2290],
-          ['Martini Extra Dry',2290],
-        ]},
-        { name:'Купажированный виски', items:[
-          ['Jameson Original',2990],
-          ['Jameson IPA',2990],
-          ['Jameson Black Barrel',2990],
-          ['Jack Daniel’s',2990],
-          ['Jim Beam',2990],
-          ['Chivas Regal 12 y.o',3990],
-          ['Chivas Regal 18 y.o',7690],
-          ['Ballantine’s Finest',2390],
-        ]},
-        { name:'Виски односолодовые', items:[
-          ['The Glenlivet 12 y.o',4990],
-          ['The Glenlivet 18 y.o',6990],
-          ['Glenfiddich 12 y.o',4790],
-          ['Macallan 12 y.o',7990],
-        ]},
-        { name:'Ром', items:[
-          ['Bacardi Oakheart',2890],
-          ['Bacardi Carta Blanca',2890],
-          ['Bacardi Carta Negra',2890],
-          ['Bacardi Spiced',2890],
-        ]},
-        { name:'Джин', items:[
-          ['Beefeater',2990],
-        ]},
-        { name:'Текила', items:[
-          ['Olmeca Blanco',2590],
-          ['Olmeca Gold',2590],
-          ['Avion',2990],
-        ]},
-        { name:'Коньяк', items:[
-          ['Ararat 5 y.o',2290],
-          ['Ararat 10 y.o',4190],
-          ['Hennessy VS',3990],
-          ['Hennessy VSOP',5890],
-          ['Hennessy XO',11990],
-        ]},
-        { name:'Вино', items:[
-          ['Casasole',19990],
-          ['San Valentin',23990],
-          ['Nuala',33990],
-        ]},
-        { name:'Игристые вина', items:[
-          ['Santo Stefano',17000],
-          ['Martini Asti',19000],
-          ['Moët & Chandon Imperial',116000],
-          ['Bottega Prosecco',29000],
-        ]},
-      ],
-      hookah: [
-        { name:'Кальяны', items:[
-          ['Lite',10000],
-          ['Hard',15000],
-          ['Замена чаши',7500],
-        ]}
-      ]
+/* =========================================================
+   ✅ ЯЗЫКИ / UI
+========================================================= */
+const DATA = {
+  ru: {
+    ui:{
+      search:'Поиск по меню...', all:'Всё', food:'Кухня', bar:'Бар', hookah:'Кальян',
+      picked:'Выбрано:', empty:'Корзина пуста', total:'Итого',
+      svc:'Сервис 10%', clear:'Очистить', show:'Показать заказ', send:'Отправить на WhatsApp',
+      sum:'Сумма', svcLine:'сервис 10%', svcOff:'сервис выключен',
+      modal:'Заказ', copied:'Скопировано ✅',
+      vipLabel:'VIP',
+      packs:'Пакеты 🎁',
+      congrats:'Autograph поздравление 🎉',
+      booking:'Бронирование VIP',
+      pay:'Оплата Kaspi',
+      occasion:'Повод',
+      guests:'Гостей',
+      included:'Включено',
+      minRule:'Правило пакета: позиции в счёте должны быть НЕ МЕНЬШЕ минимальной суммы пакета.',
+      minOk:'OK — сумма набора ≥ минимум',
+      minBad:'Внимание — сумма ниже минимума (увеличь “Основное” или добавь поздравление)',
+      name:'Имя', phone:'Телефон', date:'Дата', time:'Время', duration:'Длительность', comment:'Комментарий',
+      check:'Проверить', sendReq:'Отправить заявку',
+      busy:'ЗАНЯТО', free:'СВОБОДНО',
+      sentOk:'Заявка отправлена ✅ Менеджер подтвердит.',
+      sendMemo:'Памятка откроется в WhatsApp'
     },
+    food:[
+      { name:'Супы', items:[
+        ['Крем-суп из чечевицы',2260],
+        ['Рамен с курицей',4660],
+        ['Рамен с говядиной',5990],
+        ['Том ям с морепродуктами',5990],
+        ['Шорпа с баранины',4290],
+        ['Кеспе с кониной',4290],
+      ]},
+      { name:'Салаты', items:[
+        ['Салат «Баварский»',4960],
+        ['Хрустящие баклажаны',4990],
+        ['Цезарь с цыплёнком',5690],
+        ['Цезарь с креветками',5690],
+        ['Цезарь с лососем',5690],
+        ['Тёплый салат с лососем',5990],
+        ['Салат с рукколой и креветками',6290],
+        ['Салат с ростбифом',5290],
+        ['Оливье с сёмгой',4400],
+      ]},
+      { name:'Холодные закуски', items:[
+        ['Ассорти брускетт',4800],
+        ['Рыбная нарезка',12960],
+        ['Кавказская нарезка',12960],
+        ['Мясная нарезка',12960],
+        ['Ассорти из солений',4900],
+        ['Сельдь по-домашнему',3600],
+        ['Сырное плато',12960],
+        ['Фруктовое ассорти',12960],
+      ]},
+      { name:'Горячие закуски', items:[
+        ['Томлённые баклажаны',4990],
+        ['Соте из баклажан',5990],
+        ['Пивные креветки',6990],
+        ['Бараньи семечки',5990],
+        ['Пивной сет',9990],
+      ]},
+      { name:'Выпечка', items:[
+        ['Мини чебуреки',2990],
+        ['Самса',2990],
+        ['Хлебная корзина',1990],
+        ['Бауырсаки',1990],
+      ]},
+      { name:'Шашлыки', items:[
+        ['Шашлык утка',3800],
+        ['Шашлык шампиньоны',2500],
+        ['Шашлык из куриного филе',3500],
+        ['Шашлык баранина',4500],
+        ['Овощи на гриле',2500],
+        ['Люля куриный',3500],
+        ['Люля баранина',3800],
+        ['Крылышки',3500],
+      ]},
+      { name:'Блюда на компанию', items:[
+        ['Мясное плато на гриле',49990],
+        ['Рыбное плато',59990],
+        ['Ассорти шашлыков Hard',60000],
+        ['Ассорти шашлыков Lite',35000],
+      ]},
+      { name:'Паста', items:[
+        ['Паста болоньезе',4990],
+        ['Паста карбонара',4790],
+        ['Паста с морепродуктами',5790],
+        ['Фетучини альфредо',4790],
+      ]},
+      { name:'Вторые блюда', items:[
+        ['Печень с грибами',4400],
+        ['Бефстроганов из телятины',8660],
+        ['Филе миньон',11990],
+        ['Стейк Рибай',12660],
+        ['Стейк Ти-Бон',12990],
+        ['Стейк из лосося по-аргентински',15660],
+        ['Стейк из цветной капусты',3490],
+      ]},
+      { name:'Гарниры', items:[
+        ['Рис',1290],
+        ['Пюре',1290],
+        ['Картофель фри',1690],
+        ['Брокколи с цветной капустой',1690],
+        ['Картофельные дольки',1790],
+        ['Овощи на гриле',2590],
+        ['Картофель по-домашнему',2890],
+      ]},
+      { name:'Соусы', items:[
+        ['Демигласс',690],
+        ['Сырный',690],
+        ['Кетчуп',690],
+        ['Барбекю',690],
+        ['Сливочно-грибной',690],
+      ]},
+      { name:'Десерты', items:[
+        ['Чизкейк',3490],
+        ['Сникерс',3490],
+      ]},
+      { name:'Блюда по предзаказу', items:[
+        ['Запечённая сёмга целиком',139990],
+        ['Томлёные рёбра говядины',44990],
+        ['Запечённая ножка ягнёнка',48990],
+        ['Куырдак',49990],
+        ['Бешбармак',65000],
+        ['Казан кебаб',44990],
+      ]},
+    ],
+    bar:[
+      { name:'Безалкогольные напитки', items:[
+        ['ASSU 0.5',1990],
+        ['Cola 0.25',1690],
+        ['Schweppes',2590],
+        ['Red Bull 0.25',2590],
+        ['Сок в ассортименте',2990],
+      ]},
+      { name:'Авторские чаи', items:[
+        ['Black tea',2490],
+        ['Green tea',2490],
+        ['Tashkent’s tea',3490],
+        ['Moroccan tea',3490],
+        ['Tea of wild berries',3490],
+      ]},
+      { name:'Лимонады', items:[
+        ['Mango – Passion Fruit',3990],
+        ['Raspberry',3990],
+        ['Pomegranate',3990],
+        ['Kiwi – Lime',3990],
+        ['Watermelon – Melon',3990],
+      ]},
+      { name:'Коктейли', items:[
+        ['Long Island Ice Tea',4000],
+        ['Aperol Sprite',3800],
+        ['Gin Tonic',3900],
+        ['Autograph Special',3800],
+      ]},
+      { name:'Пиво бутылочное', items:[
+        ['Corona Extra',2990],
+        ['Miller',2590],
+      ]},
+      { name:'Пиво разливное', items:[
+        ['Bud (разлив)',2990],
+      ]},
+      { name:'Водка', items:[
+        ['Absolute Blue',2690],
+        ['Gray Goose',3290],
+        ['Beluga',3290],
+        ['Belvedere',3490],
+      ]},
+      { name:'Настойка', items:[
+        ['Jägermeister',2990],
+      ]},
+      { name:'Вермуты', items:[
+        ['Martini Bianco',2290],
+        ['Martini Rosso',2290],
+        ['Martini Extra Dry',2290],
+      ]},
+      { name:'Купажированный виски', items:[
+        ['Jameson Original',2990],
+        ['Jameson IPA',2990],
+        ['Jameson Black Barrel',2990],
+        ['Jack Daniel’s',2990],
+        ['Jim Beam',2990],
+        ['Chivas Regal 12 y.o',3990],
+        ['Chivas Regal 18 y.o',7690],
+        ['Ballantine’s Finest',2390],
+      ]},
+      { name:'Виски односолодовые', items:[
+        ['The Glenlivet 12 y.o',4990],
+        ['The Glenlivet 18 y.o',6990],
+        ['Glenfiddich 12 y.o',4790],
+        ['Macallan 12 y.o',7990],
+      ]},
+      { name:'Ром', items:[
+        ['Bacardi Oakheart',2890],
+        ['Bacardi Carta Blanca',2890],
+        ['Bacardi Carta Negra',2890],
+        ['Bacardi Spiced',2890],
+      ]},
+      { name:'Джин', items:[
+        ['Beefeater',2990],
+      ]},
+      { name:'Текила', items:[
+        ['Olmeca Blanco',2590],
+        ['Olmeca Gold',2590],
+        ['Avion',2990],
+      ]},
+      { name:'Коньяк', items:[
+        ['Ararat 5 y.o',2290],
+        ['Ararat 10 y.o',4190],
+        ['Hennessy VS',3990],
+        ['Hennessy VSOP',5890],
+        ['Hennessy XO',11990],
+      ]},
+      { name:'Вино', items:[
+        ['Casasole',19990],
+        ['San Valentin',23990],
+        ['Nuala',33990],
+      ]},
+      { name:'Игристые вина', items:[
+        ['Santo Stefano',17000],
+        ['Martini Asti',19000],
+        ['Moët & Chandon Imperial',116000],
+        ['Bottega Prosecco',29000],
+      ]},
+    ],
+    hookah:[{ name:'Кальяны', items:[['Lite',10000],['Hard',15000],['Замена чаши',7500]]}]
+  },
 
-    kz: { ui:{
-        search:'Мәзірден іздеу...', all:'Барлығы', food:'Ас мәзірі', bar:'Бар мәзірі', hookah:'Кальян',
-        picked:'Таңдалғаны:', empty:'Себет бос', total:'Барлығы',
-        svc:'Қызмет 10%', clear:'Тазалау', show:'Тапсырысты көрсету', send:'WhatsApp-қа жіберу',
-        sum:'Сома', svcLine:'қызмет 10%', svcOff:'қызмет өшірулі',
-        modal:'Тапсырыс', copied:'Көшірілді ✅', vipLabel:'VIP',
-        packs:'Пакеттер 🎁', congrats:'Autograph құттықтауы 🎉'
-      },
-      food: [],
-      bar: null,
-      hookah: [{ name:'Кальян', items:[['Lite',10000],['Hard',15000],['Тостаған ауыстыру',7500]] }]
+  kz: {
+    ui:{
+      search:'Мәзірден іздеу...', all:'Барлығы', food:'Ас мәзірі', bar:'Бар мәзірі', hookah:'Кальян',
+      picked:'Таңдалғаны:', empty:'Себет бос', total:'Барлығы',
+      svc:'Қызмет 10%', clear:'Тазалау', show:'Тапсырысты көрсету', send:'WhatsApp-қа жіберу',
+      sum:'Сома', svcLine:'қызмет 10%', svcOff:'қызмет өшірулі',
+      modal:'Тапсырыс', copied:'Көшірілді ✅',
+      vipLabel:'VIP',
+      packs:'Пакеттер 🎁',
+      congrats:'Autograph құттықтауы 🎉',
+      booking:'VIP брондау',
+      pay:'Kaspi төлемі',
+      occasion:'Себеп',
+      guests:'Қонақ',
+      included:'Кіреді',
+      minRule:'Пакет ережесі: есептегі позициялар пакеттің минималды сомасынан АЗ БОЛМАУЫ керек.',
+      minOk:'OK — жиынтық ≥ минимум',
+      minBad:'Ескерту — минимумнан төмен (Негізгі тағамды көбейт немесе құттықтау қос)',
+      name:'Аты', phone:'Телефон', date:'Күні', time:'Уақыты', duration:'Ұзақтығы', comment:'Комментарий',
+      check:'Тексеру', sendReq:'Өтінім жіберу',
+      busy:'Бос емес', free:'Бос',
+      sentOk:'Өтінім жіберілді ✅ Менеджер растайды.',
+      sendMemo:'WhatsApp-та еске салу ашылады'
     },
+    food: [
+      { name:'Сорпалар', items:[
+        ['Жасымық крем-сорпасы',2260],
+        ['Тауық қосылған рамен',4660],
+        ['Сиыр еті қосылған рамен',5990],
+        ['Теңіз өнімдерімен том ям',5990],
+        ['Қой етінен шорпа',4290],
+        ['Қонина қосылған кеспе',4290],
+      ]},
+      { name:'Салаттар', items:[
+        ['«Бавариялық» салат',4960],
+        ['Қытырлақ баклажан',4990],
+        ['Тауық қосылған Цезарь',5690],
+        ['Асшаян қосылған Цезарь',5690],
+        ['Албырт қосылған Цезарь',5690],
+        ['Жылы албырт салаты',5990],
+        ['Руккола және асшаян салаты',6290],
+        ['Ростбиф салаты',5290],
+        ['Албырт қосылған оливье',4400],
+      ]},
+      { name:'Суық тіскебасарлар', items:[
+        ['Брускетта ассорти',4800],
+        ['Балық тілімі',12960],
+        ['Кавказша тілім',12960],
+        ['Ет тілімі',12960],
+        ['Тұздалған көкөніс ассорти',4900],
+        ['Үйше сельдь',3600],
+        ['Ірімшік табақ',12960],
+        ['Жеміс ассорти',12960],
+      ]},
+      { name:'Ыстық тіскебасарлар', items:[
+        ['Бұқтырылған баклажан',4990],
+        ['Баклажан соте',5990],
+        ['Сыралық асшаян',6990],
+        ['Қойдың “семечки”',5990],
+        ['Сыралық сет',9990],
+      ]},
+      { name:'Пісіру', items:[
+        ['Мини чебурек',2990],
+        ['Самса',2990],
+        ['Нан себеті',1990],
+        ['Бауырсақ',1990],
+      ]},
+      { name:'Шашлықтар', items:[
+        ['Үйрек шашлығы',3800],
+        ['Шампиньон шашлығы',2500],
+        ['Тауық филесі шашлығы',3500],
+        ['Қой еті шашлығы',4500],
+        ['Гриль көкөністер',2500],
+        ['Тауық люля-кебаб',3500],
+        ['Қой люля-кебаб',3800],
+        ['Қанатшалар',3500],
+      ]},
+      { name:'Компанияға арналған', items:[
+        ['Грильдегі ет плато',49990],
+        ['Балық плато',59990],
+        ['Шашлық ассорти Hard',60000],
+        ['Шашлық ассорти Lite',35000],
+      ]},
+      { name:'Паста', items:[
+        ['Болоньезе пастасы',4990],
+        ['Карбонара пастасы',4790],
+        ['Теңіз өнімдерімен паста',5790],
+        ['Фетучини Альфредо',4790],
+      ]},
+      { name:'Негізгі тағамдар', items:[
+        ['Саңырауқұлақ қосылған бауыр',4400],
+        ['Бұзау етінен бефстроганов',8660],
+        ['Филе-миньон',11990],
+        ['Рибай стейк',12660],
+        ['Ти-Бон стейк',12990],
+        ['Аргентиналық албырт стейк',15660],
+        ['Түсті қырыққабат стейкі',3490],
+      ]},
+      { name:'Гарнирлер', items:[
+        ['Күріш',1290],
+        ['Картоп пюресі',1290],
+        ['Картоп фри',1690],
+        ['Брокколи және гүлді қырыққабат',1690],
+        ['Картоп тілімдері',1790],
+        ['Гриль көкөністер',2590],
+        ['Үйше картоп',2890],
+      ]},
+      { name:'Тұздықтар', items:[
+        ['Демиглас',690],
+        ['Ірімшік тұздығы',690],
+        ['Кетчуп',690],
+        ['Барбекю',690],
+        ['Кілегейлі-саңырауқұлақ',690],
+      ]},
+      { name:'Десерттер', items:[
+        ['Чизкейк',3490],
+        ['Сникерс',3490],
+      ]},
+      { name:'Алдын ала тапсырыс тағамдары', items:[
+        ['Тұтас пісірілген албырт',139990],
+        ['Бұқтырылған сиыр қабырғасы',44990],
+        ['Пісірілген қозы жамбасы',48990],
+        ['Қуырдақ',49990],
+        ['Бешбармақ',65000],
+        ['Қазан кебаб',44990],
+      ]},
+    ],
+    // ✅ KZ bar: категории переведены, русские позиции переведены (бренды оставлены)
+    bar:[
+      { name:'Алкогольсіз сусындар', items:[
+        ['ASSU 0.5',1990],
+        ['Cola 0.25',1690],
+        ['Schweppes',2590],
+        ['Red Bull 0.25',2590],
+        ['Шырын (ассорти)',2990],
+      ]},
+      { name:'Авторлық шайлар', items:[
+        ['Black tea',2490],
+        ['Green tea',2490],
+        ['Tashkent’s tea',3490],
+        ['Moroccan tea',3490],
+        ['Tea of wild berries',3490],
+      ]},
+      { name:'Лимонадтар', items:[
+        ['Mango – Passion Fruit',3990],
+        ['Raspberry',3990],
+        ['Pomegranate',3990],
+        ['Kiwi – Lime',3990],
+        ['Watermelon – Melon',3990],
+      ]},
+      { name:'Коктейльдер', items:[
+        ['Long Island Ice Tea',4000],
+        ['Aperol Sprite',3800],
+        ['Gin Tonic',3900],
+        ['Autograph Special',3800],
+      ]},
+      { name:'Бөтелкедегі сыра', items:[
+        ['Corona Extra',2990],
+        ['Miller',2590],
+      ]},
+      { name:'Құйылатын сыра', items:[
+        ['Bud (draft)',2990],
+      ]},
+      { name:'Арақ', items:[
+        ['Absolute Blue',2690],
+        ['Gray Goose',3290],
+        ['Beluga',3290],
+        ['Belvedere',3490],
+      ]},
+      { name:'Тұнбалар', items:[
+        ['Jägermeister',2990],
+      ]},
+      { name:'Вермуттар', items:[
+        ['Martini Bianco',2290],
+        ['Martini Rosso',2290],
+        ['Martini Extra Dry',2290],
+      ]},
+      { name:'Бленд виски', items:[
+        ['Jameson Original',2990],
+        ['Jameson IPA',2990],
+        ['Jameson Black Barrel',2990],
+        ['Jack Daniel’s',2990],
+        ['Jim Beam',2990],
+        ['Chivas Regal 12 y.o',3990],
+        ['Chivas Regal 18 y.o',7690],
+        ['Ballantine’s Finest',2390],
+      ]},
+      { name:'Single malt виски', items:[
+        ['The Glenlivet 12 y.o',4990],
+        ['The Glenlivet 18 y.o',6990],
+        ['Glenfiddich 12 y.o',4790],
+        ['Macallan 12 y.o',7990],
+      ]},
+      { name:'Ром', items:[
+        ['Bacardi Oakheart',2890],
+        ['Bacardi Carta Blanca',2890],
+        ['Bacardi Carta Negra',2890],
+        ['Bacardi Spiced',2890],
+      ]},
+      { name:'Джин', items:[
+        ['Beefeater',2990],
+      ]},
+      { name:'Текила', items:[
+        ['Olmeca Blanco',2590],
+        ['Olmeca Gold',2590],
+        ['Avion',2990],
+      ]},
+      { name:'Коньяк', items:[
+        ['Ararat 5 y.o',2290],
+        ['Ararat 10 y.o',4190],
+        ['Hennessy VS',3990],
+        ['Hennessy VSOP',5890],
+        ['Hennessy XO',11990],
+      ]},
+      { name:'Шарап', items:[
+        ['Casasole',19990],
+        ['San Valentin',23990],
+        ['Nuala',33990],
+      ]},
+      { name:'Ойыншық (игристое) шараптар', items:[
+        ['Santo Stefano',17000],
+        ['Martini Asti',19000],
+        ['Moët & Chandon Imperial',116000],
+        ['Bottega Prosecco',29000],
+      ]},
+    ],
+    hookah:[{ name:'Кальян', items:[['Lite',10000],['Hard',15000],['Тостаған ауыстыру',7500]]}]
+  },
 
-    en: { ui:{
-        search:'Search menu...', all:'All', food:'Food', bar:'Bar', hookah:'Hookah',
-        picked:'Selected:', empty:'Cart is empty', total:'Total',
-        svc:'Service 10%', clear:'Clear', show:'Show order', send:'Send to WhatsApp',
-        sum:'Subtotal', svcLine:'service 10%', svcOff:'service off',
-        modal:'Order', copied:'Copied ✅', vipLabel:'VIP',
-        packs:'Packages 🎁', congrats:'Autograph congratulations 🎉'
-      },
-      food: [],
-      bar: null,
-      hookah: [{ name:'Hookah', items:[['Lite',10000],['Hard',15000],['Bowl replacement',7500]] }]
-    }
-  };
-
-  // Быстрый запуск: KZ/EN берут RU меню целиком
-  DATA.kz.food = DATA.ru.food; DATA.en.food = DATA.ru.food;
-  DATA.kz.bar = DATA.ru.bar;   DATA.en.bar = DATA.ru.bar;
-  DATA.kz.hookah = DATA.ru.hookah; DATA.en.hookah = DATA.ru.hookah;
-
-  // ====== пакеты / поводы ======
-  const EVENTS = {
-    ru:[{val:'birthday', label:'День рождения'},{val:'hen', label:'Девичник'},{val:'corp', label:'Корпоратив'},{val:'date', label:'Романтик'}],
-    kz:[{val:'birthday', label:'Туған күн'},{val:'hen', label:'Девичник'},{val:'corp', label:'Корпоратив'},{val:'date', label:'Романтик'}],
-    en:[{val:'birthday', label:'Birthday'},{val:'hen', label:'Bachelorette'},{val:'corp', label:'Corporate'},{val:'date', label:'Date / Romantic'}]
-  };
-
-  const PACKS = [
-    {
-      id:'standard',
-      name:{ru:'STANDARD', kz:'STANDARD', en:'STANDARD'},
-      desc:{
-        ru:'Под ключ: салаты + закуски + лимонады + кальян(ы). Вы выбираете только “основное” (на 8–10 человек).',
-        kz:'“Под ключ”: салаттар + тіскебасар + лимонад + кальян. Тек “негізгі” таңдайсыз.',
-        en:'Turn-key: salads + appetizers + lemonades + hookah(s). You choose only “main” (sharing).'
-      },
-      note:{ru:'* Сервис 10% по чеку отдельно.', kz:'* Қызмет 10% бөлек.', en:'* Service 10% is separate.'},
-      host:false
+  en: {
+    ui:{
+      search:'Search menu...', all:'All', food:'Food', bar:'Bar', hookah:'Hookah',
+      picked:'Selected:', empty:'Cart is empty', total:'Total',
+      svc:'Service 10%', clear:'Clear', show:'Show order', send:'Send to WhatsApp',
+      sum:'Subtotal', svcLine:'service 10%', svcOff:'service off',
+      modal:'Order', copied:'Copied ✅',
+      vipLabel:'VIP',
+      packs:'Packages 🎁',
+      congrats:'Autograph congratulations 🎉',
+      booking:'VIP booking',
+      pay:'Kaspi payment',
+      occasion:'Occasion',
+      guests:'Guests',
+      included:'Included',
+      minRule:'Package rule: items in the bill must be NOT LESS than the package minimum total.',
+      minOk:'OK — bundle ≥ minimum',
+      minBad:'Warning — below minimum (increase “Main” or add congratulations)',
+      name:'Name', phone:'Phone', date:'Date', time:'Time', duration:'Duration', comment:'Comment',
+      check:'Check', sendReq:'Send request',
+      busy:'BUSY', free:'FREE',
+      sentOk:'Request sent ✅ Manager will confirm.',
+      sendMemo:'A memo will open in WhatsApp'
     },
-    {
-      id:'premium',
-      name:{ru:'PREMIUM', kz:'PREMIUM', en:'PREMIUM'},
-      desc:{
-        ru:'Максимум: усиленный стол + 🎤 ведущий (до 30 мин). Вы выбираете только “основное” (на 8–10 человек).',
-        kz:'Максимум: күшейтілген үстел + 🎤 жүргізуші (30 мин дейін).',
-        en:'Maximum: enhanced table + 🎤 host (up to 30 min). You choose only main sharing dishes.'
-      },
-      note:{
-        ru:'🎤 Ведущий — по предварительному бронированию минимум за 24 часа (при подтверждении менеджером). Сервис 10% отдельно.',
-        kz:'🎤 Жүргізуші — кемінде 24 сағат бұрын (менеджер растауы). Қызмет 10% бөлек.',
-        en:'🎤 Host requires booking at least 24h in advance (manager confirmation). Service 10% is separate.'
-      },
-      host:true
+    food: [
+      { name:'Soups', items:[
+        ['Lentil cream soup',2260],
+        ['Chicken ramen',4660],
+        ['Beef ramen',5990],
+        ['Tom yum (seafood)',5990],
+        ['Lamb shorpa',4290],
+        ['Kespе (horse meat)',4290],
+      ]},
+      { name:'Salads', items:[
+        ['Bavarian salad',4960],
+        ['Crispy eggplant',4990],
+        ['Caesar (chicken)',5690],
+        ['Caesar (shrimp)',5690],
+        ['Caesar (salmon)',5690],
+        ['Warm salmon salad',5990],
+        ['Arugula & shrimp salad',6290],
+        ['Roast beef salad',5290],
+        ['Olivier with salmon',4400],
+      ]},
+      { name:'Cold appetizers', items:[
+        ['Bruschetta assortment',4800],
+        ['Fish platter (sliced)',12960],
+        ['Caucasian platter (sliced)',12960],
+        ['Meat platter (sliced)',12960],
+        ['Pickles assortment',4900],
+        ['Homestyle herring',3600],
+        ['Cheese platter',12960],
+        ['Fruit assortment',12960],
+      ]},
+      { name:'Hot appetizers', items:[
+        ['Braised eggplant',4990],
+        ['Eggplant sauté',5990],
+        ['Beer shrimps',6990],
+        ['Lamb “seeds”',5990],
+        ['Beer set',9990],
+      ]},
+      { name:'Bakery', items:[
+        ['Mini chebureki',2990],
+        ['Samsa',2990],
+        ['Bread basket',1990],
+        ['Baursak',1990],
+      ]},
+      { name:'Kebabs', items:[
+        ['Duck kebab',3800],
+        ['Mushroom kebab',2500],
+        ['Chicken fillet kebab',3500],
+        ['Lamb kebab',4500],
+        ['Grilled vegetables',2500],
+        ['Chicken lula',3500],
+        ['Lamb lula',3800],
+        ['Chicken wings',3500],
+      ]},
+      { name:'Sharing dishes', items:[
+        ['Grilled meat platter',49990],
+        ['Fish platter',59990],
+        ['Kebab assortment Hard',60000],
+        ['Kebab assortment Lite',35000],
+      ]},
+      { name:'Pasta', items:[
+        ['Bolognese',4990],
+        ['Carbonara',4790],
+        ['Seafood pasta',5790],
+        ['Fettuccine Alfredo',4790],
+      ]},
+      { name:'Main courses', items:[
+        ['Liver with mushrooms',4400],
+        ['Veal beef stroganoff',8660],
+        ['Filet mignon',11990],
+        ['Ribeye steak',12660],
+        ['T-bone steak',12990],
+        ['Salmon steak (Argentinian)',15660],
+        ['Cauliflower steak',3490],
+      ]},
+      { name:'Sides', items:[
+        ['Rice',1290],
+        ['Mashed potatoes',1290],
+        ['French fries',1690],
+        ['Broccoli & cauliflower',1690],
+        ['Potato wedges',1790],
+        ['Grilled vegetables',2590],
+        ['Homestyle potatoes',2890],
+      ]},
+      { name:'Sauces', items:[
+        ['Demi-glace',690],
+        ['Cheese sauce',690],
+        ['Ketchup',690],
+        ['BBQ sauce',690],
+        ['Creamy mushroom',690],
+      ]},
+      { name:'Desserts', items:[
+        ['Cheesecake',3490],
+        ['Snickers dessert',3490],
+      ]},
+      { name:'Pre-order dishes', items:[
+        ['Whole baked salmon',139990],
+        ['Braised beef ribs',44990],
+        ['Baked lamb leg',48990],
+        ['Kuirdak',49990],
+        ['Beshbarmak',65000],
+        ['Kazan kebab',44990],
+      ]},
+    ],
+    // ✅ EN bar: translated category names + translated “Juice assorted”
+    bar:[
+      { name:'Soft drinks', items:[
+        ['ASSU 0.5',1990],
+        ['Cola 0.25',1690],
+        ['Schweppes',2590],
+        ['Red Bull 0.25',2590],
+        ['Juice (assorted)',2990],
+      ]},
+      { name:'Signature teas', items:[
+        ['Black tea',2490],
+        ['Green tea',2490],
+        ['Tashkent’s tea',3490],
+        ['Moroccan tea',3490],
+        ['Tea of wild berries',3490],
+      ]},
+      { name:'Lemonades', items:[
+        ['Mango – Passion Fruit',3990],
+        ['Raspberry',3990],
+        ['Pomegranate',3990],
+        ['Kiwi – Lime',3990],
+        ['Watermelon – Melon',3990],
+      ]},
+      { name:'Cocktails', items:[
+        ['Long Island Ice Tea',4000],
+        ['Aperol Sprite',3800],
+        ['Gin Tonic',3900],
+        ['Autograph Special',3800],
+      ]},
+      { name:'Bottled beer', items:[
+        ['Corona Extra',2990],
+        ['Miller',2590],
+      ]},
+      { name:'Draft beer', items:[
+        ['Bud (draft)',2990],
+      ]},
+      { name:'Vodka', items:[
+        ['Absolute Blue',2690],
+        ['Gray Goose',3290],
+        ['Beluga',3290],
+        ['Belvedere',3490],
+      ]},
+      { name:'Herbal liqueur', items:[
+        ['Jägermeister',2990],
+      ]},
+      { name:'Vermouth', items:[
+        ['Martini Bianco',2290],
+        ['Martini Rosso',2290],
+        ['Martini Extra Dry',2290],
+      ]},
+      { name:'Blended whisky', items:[
+        ['Jameson Original',2990],
+        ['Jameson IPA',2990],
+        ['Jameson Black Barrel',2990],
+        ['Jack Daniel’s',2990],
+        ['Jim Beam',2990],
+        ['Chivas Regal 12 y.o',3990],
+        ['Chivas Regal 18 y.o',7690],
+        ['Ballantine’s Finest',2390],
+      ]},
+      { name:'Single malt whisky', items:[
+        ['The Glenlivet 12 y.o',4990],
+        ['The Glenlivet 18 y.o',6990],
+        ['Glenfiddich 12 y.o',4790],
+        ['Macallan 12 y.o',7990],
+      ]},
+      { name:'Rum', items:[
+        ['Bacardi Oakheart',2890],
+        ['Bacardi Carta Blanca',2890],
+        ['Bacardi Carta Negra',2890],
+        ['Bacardi Spiced',2890],
+      ]},
+      { name:'Gin', items:[
+        ['Beefeater',2990],
+      ]},
+      { name:'Tequila', items:[
+        ['Olmeca Blanco',2590],
+        ['Olmeca Gold',2590],
+        ['Avion',2990],
+      ]},
+      { name:'Cognac', items:[
+        ['Ararat 5 y.o',2290],
+        ['Ararat 10 y.o',4190],
+        ['Hennessy VS',3990],
+        ['Hennessy VSOP',5890],
+        ['Hennessy XO',11990],
+      ]},
+      { name:'Wine', items:[
+        ['Casasole',19990],
+        ['San Valentin',23990],
+        ['Nuala',33990],
+      ]},
+      { name:'Sparkling wine', items:[
+        ['Santo Stefano',17000],
+        ['Martini Asti',19000],
+        ['Moët & Chandon Imperial',116000],
+        ['Bottega Prosecco',29000],
+      ]},
+    ],
+    hookah:[{ name:'Hookah', items:[['Lite',10000],['Hard',15000],['Bowl replacement',7500]]}]
+  }
+};
+
+const EVENTS = {
+  ru:[{val:'birthday',label:'День рождения'},{val:'hen',label:'Девичник'},{val:'corp',label:'Корпоратив'},{val:'date',label:'Романтик'}],
+  kz:[{val:'birthday',label:'Туған күн'},{val:'hen',label:'Девичник'},{val:'corp',label:'Корпоратив'},{val:'date',label:'Романтик'}],
+  en:[{val:'birthday',label:'Birthday'},{val:'hen',label:'Bachelorette'},{val:'corp',label:'Corporate'},{val:'date',label:'Date / Romantic'}]
+};
+
+/* =========================================================
+   ✅ ПАКЕТЫ (ВАЖНО): чтобы “в счёт” выходило НЕ МЕНЬШЕ минимума
+   - Правило: мы считаем сумму набора (авто-включено + основное + опции)
+   - И показываем статус OK/ниже минимума
+   - Минимум задаётся по гостям (настрой ниже)
+   - Дополнительно: убрал “лишнюю 4-ю горячую” для 30 человек (в premium больше НЕ добавляем extra hot)
+========================================================= */
+const PACKS = [
+  {
+    id:'standard',
+    name:{ru:'STANDARD',kz:'STANDARD',en:'STANDARD'},
+    desc:{
+      ru:'Под ключ: салаты + закуски + лимонады + кальян(ы). Вы выбираете только “Основное” (на 8–10 человек).',
+      kz:'Под ключ: салаттар + тіскебасар + лимонад + кальян. Тек “Негізгі” таңдайсыз.',
+      en:'Turn-key: salads + appetizers + lemonades + hookah(s). You choose only “Main” (sharing).'
+    },
+    host:false
+  },
+  {
+    id:'premium',
+    name:{ru:'PREMIUM',kz:'PREMIUM',en:'PREMIUM'},
+    desc:{
+      ru:'Усиленный стол + 🎤 ведущий (до 30 мин). Вы выбираете только “Основное”.',
+      kz:'Күшейтілген үстел + 🎤 жүргізуші (30 мин дейін). Тек “Негізгі” таңдаңыз.',
+      en:'Enhanced table + 🎤 host (up to 30 min). Choose only “Main”.'
+    },
+    host:true
+  }
+];
+
+// ✅ НАСТРОЙ МИНИМАЛЬНОЙ СУММЫ ПАКЕТА
+// Можно легко подкрутить: сколько тг на 1 гостя для Standard/Premium
+const MIN_PER_GUEST = {
+  standard: 8500, // пример: 8 500 ₸ на человека
+  premium: 10500  // пример: 10 500 ₸ на человека
+};
+
+let lang='ru', section='all';
+let cart = {};
+let pkGuests = 10;
+let pkType = 'birthday';
+let pkPack = 'standard';
+let pkMain = [];
+let pkAddCongrats = false;
+let ptType = 'birthday';
+
+const $ = (id)=>document.getElementById(id);
+const fmt = (n)=>String(n||0).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+const ui = ()=>DATA[lang].ui;
+
+function getVip(val){ return VIPS.find(v=>v.val===val) || VIPS[0]; }
+function fillVip(selectId){
+  const sel = $(selectId);
+  sel.innerHTML = '';
+  for(const v of VIPS){
+    const o=document.createElement('option');
+    o.value=v.val;
+    o.textContent = (lang==='ru'?v.ru:(lang==='kz'?v.kz:v.en));
+    sel.appendChild(o);
+  }
+}
+function fillEvents(selectId){
+  const sel=$(selectId); sel.innerHTML='';
+  for(const t of EVENTS[lang]){
+    const o=document.createElement('option');
+    o.value=t.val; o.textContent=t.label;
+    sel.appendChild(o);
+  }
+}
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('[data-lang]').forEach(b=>b.classList.toggle('active', b.dataset.lang===l));
+  $('q').placeholder = ui().search;
+
+  document.querySelector('[data-section="all"]').textContent = ui().all;
+  document.querySelector('[data-section="food"]').textContent = ui().food;
+  document.querySelector('[data-section="bar"]').textContent = ui().bar;
+  document.querySelector('[data-section="hookah"]').textContent = ui().hookah;
+
+  $('cartTitle').textContent = ui().picked;
+  $('svcLabel').textContent = ui().svc;
+  $('clearBtn').textContent = ui().clear;
+  $('copyBtn').textContent = ui().show;
+  $('sendBtn').textContent = ui().send;
+  $('mTitle').textContent = ui().modal;
+
+  $('packsBtn').textContent = ui().packs;
+  $('partyBtn').textContent = ui().congrats;
+
+  $('bTitle').textContent = ui().booking;
+  $('payTitle').textContent = ui().pay;
+
+  $('pkVipLabel').textContent = ui().vipLabel;
+  $('pkTypeLabel').textContent = ui().occasion;
+  $('pkGuestsLabel').textContent = ui().guests;
+
+  $('ptVipLabel').textContent = ui().vipLabel;
+  $('ptTypeLabel').textContent = ui().occasion;
+
+  $('bVipLabel').textContent = ui().vipLabel;
+  $('bDateLabel').textContent = ui().date;
+  $('bTimeLabel').textContent = ui().time;
+  $('bDurLabel').textContent = ui().duration;
+  $('bNameLabel').textContent = ui().name;
+  $('bPhoneLabel').textContent = ui().phone;
+  $('bGuestsLabel').textContent = ui().guests;
+  $('bCommentLabel').textContent = ui().comment;
+  $('bCheck').textContent = ui().check;
+  $('bSend').textContent = ui().sendReq;
+
+  $('payDesc').textContent = (lang==='ru' ? 'Ссылка для оплаты:' : (lang==='kz' ? 'Төлем сілтемесі:' : 'Payment link:'));
+  $('payOpen').textContent = (lang==='ru' ? 'Открыть Kaspi Pay' : (lang==='kz' ? 'Kaspi Pay ашу' : 'Open Kaspi Pay'));
+  $('payCopy').textContent = (lang==='ru' ? 'Скопировать ссылку' : (lang==='kz' ? 'Сілтемені көшіру' : 'Copy link'));
+  $('payClose').textContent = (lang==='ru' ? 'Закрыть' : (lang==='kz' ? 'Жабу' : 'Close'));
+  $('payLinkBox').textContent = KASPI_PAY_LINK;
+
+  fillVip('vip');
+  fillVip('pkVip');
+  fillVip('ptVip');
+  fillVip('bVip');
+  fillEvents('pkType');
+  fillEvents('ptType');
+
+  render();
+  updateCart();
+}
+
+/* ========================= MENU RENDER ========================= */
+function setSection(s){
+  section=s;
+  document.querySelectorAll('[data-section]').forEach(t=>t.classList.toggle('active', t.dataset.section===s));
+  render();
+}
+function add(name, price){
+  if(!cart[name]) cart[name]={price, qty:0};
+  cart[name].qty++;
+  updateCart(); refreshQty();
+}
+function sub(name){
+  if(!cart[name]) return;
+  cart[name].qty--;
+  if(cart[name].qty<=0) delete cart[name];
+  updateCart(); refreshQty();
+}
+function clearCart(){ cart={}; updateCart(); refreshQty(); }
+
+function blocks(){
+  const d=DATA[lang];
+  const out=[];
+  if(section==='all'||section==='food') out.push(...d.food);
+  if(section==='all'||section==='bar') out.push(...d.bar);
+  if(section==='all'||section==='hookah') out.push(...d.hookah);
+  return out;
+}
+function render(){
+  const q = ($('q').value||'').trim().toLowerCase();
+  const root=$('menu');
+  root.innerHTML='';
+
+  for(const cat of blocks()){
+    const items = cat.items.filter(([n]) => !q || n.toLowerCase().includes(q));
+    if(!items.length) continue;
+
+    const wrap=document.createElement('div'); wrap.className='category';
+    const h2=document.createElement('h2'); h2.textContent=cat.name;
+    wrap.appendChild(h2);
+
+    for(const [name, price] of items){
+      const row=document.createElement('div'); row.className='item';
+
+      const left=document.createElement('div');
+      left.className='iname';
+      left.textContent=name;
+
+      const ps=document.createElement('span');
+      ps.className='iprice';
+      ps.textContent = fmt(price)+' ₸';
+      left.appendChild(ps);
+
+      const ctr=document.createElement('div'); ctr.className='controls';
+      const bSub=document.createElement('button');
+      bSub.className='btn'; bSub.textContent='−';
+      bSub.dataset.action='sub'; bSub.dataset.name=name;
+
+      const qty=document.createElement('div');
+      qty.className='qty'; qty.dataset.qty=name;
+      qty.textContent=String(cart[name]?.qty||0);
+
+      const bAdd=document.createElement('button');
+      bAdd.className='btn'; bAdd.textContent='+';
+      bAdd.dataset.action='add'; bAdd.dataset.name=name;
+      bAdd.dataset.price=String(price);
+
+      ctr.appendChild(bSub); ctr.appendChild(qty); ctr.appendChild(bAdd);
+      row.appendChild(left); row.appendChild(ctr);
+      wrap.appendChild(row);
     }
-  ];
-
-  let lang='ru', section='all';
-  let cart = {};
-
-  let pkGuests = 10;
-  let pkType = 'birthday';
-  let pkPack = 'standard';
-  let pkMain = [];
-  let pkAddCongrats = false;
-  let ptType = 'birthday';
-
-  const $ = (id)=>document.getElementById(id);
-  const fmt = (n)=>String(n||0).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
-  const ui = ()=>DATA[lang].ui;
-
-  function getVip(val){ return VIPS.find(v=>v.val===val) || VIPS[0]; }
-
-  function fillVip(selectId='vip'){
-    const sel = $(selectId);
-    if(!sel) return;
-    sel.innerHTML = '';
-    for(const v of VIPS){
-      const o = document.createElement('option');
-      o.value = v.val;
-      o.textContent = (lang==='ru'?v.ru:(lang==='kz'?v.kz:v.en));
-      sel.appendChild(o);
-    }
+    root.appendChild(wrap);
   }
-  function fillEvents(selectId){
-    const sel = $(selectId);
-    if(!sel) return;
-    sel.innerHTML = '';
-    for(const t of EVENTS[lang]){
-      const o = document.createElement('option');
-      o.value = t.val;
-      o.textContent = t.label;
-      sel.appendChild(o);
-    }
+}
+function refreshQty(){
+  document.querySelectorAll('[data-qty]').forEach(el=>{
+    const name=el.dataset.qty;
+    el.textContent=String(cart[name]?.qty||0);
+  });
+}
+
+/* ========================= CART ========================= */
+function updateCart(){
+  const entries=Object.entries(cart);
+  if(!entries.length){
+    $('cartItems').textContent=ui().empty;
+    $('total').textContent=ui().total+': 0 ₸';
+    $('breakdown').textContent='';
+    return;
   }
-
-  function setLang(l){
-    lang=l;
-    document.querySelectorAll('[data-lang]').forEach(b=>b.classList.toggle('active', b.dataset.lang===l));
-    $('q').placeholder = ui().search;
-
-    document.querySelector('[data-section="all"]').textContent = ui().all;
-    document.querySelector('[data-section="food"]').textContent = ui().food;
-    document.querySelector('[data-section="bar"]').textContent = ui().bar;
-    document.querySelector('[data-section="hookah"]').textContent = ui().hookah;
-
-    $('cartTitle').textContent = ui().picked;
-    $('svcLabel').textContent = ui().svc;
-    $('clearBtn').textContent = ui().clear;
-    $('copyBtn').textContent = ui().show;
-    $('sendBtn').textContent = ui().send;
-    $('mTitle').textContent = ui().modal;
-
-    $('packsBtn').textContent = ui().packs;
-    $('partyBtn').textContent = ui().congrats;
-
-    fillVip('vip');
-    fillVip('pkVip');
-    fillVip('ptVip');
-    fillVip('bVip');
-    fillEvents('pkType');
-    fillEvents('ptType');
-
-    render();
-    updateCart();
+  let sum=0, html='';
+  for(const [name,it] of entries){
+    const line=it.price*it.qty;
+    sum+=line;
+    html += `${name} ×${it.qty} — ${fmt(line)} ₸<br>`;
   }
+  const svcOn=$('svc').checked;
+  const svc=svcOn?Math.round(sum*0.10):0;
+  const total=sum+svc;
 
-  function setSection(s){
-    section=s;
-    document.querySelectorAll('[data-section]').forEach(t=>t.classList.toggle('active', t.dataset.section===s));
-    render();
+  $('cartItems').innerHTML=html;
+  $('total').textContent=ui().total+': '+fmt(total)+' ₸';
+  $('breakdown').textContent = svcOn
+    ? `${ui().sum}: ${fmt(sum)} ₸ + ${ui().svcLine}: ${fmt(svc)} ₸`
+    : `${ui().sum}: ${fmt(sum)} ₸ (${ui().svcOff})`;
+}
+function orderText(){
+  const entries=Object.entries(cart);
+  if(!entries.length) return '';
+
+  const vipVal=$('vip').value||VIPS[0].val;
+  const vipObj=getVip(vipVal);
+  const vipLabel=(lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
+
+  const svcOn=$('svc').checked;
+  let sum=0;
+
+  let t=`AUTOGRAPH GOLD — ${ui().modal}\n${ui().vipLabel}: ${vipLabel}\n\n`;
+  for(const [name,it] of entries){
+    const line=it.price*it.qty;
+    sum+=line;
+    t += `• ${name} ×${it.qty} — ${fmt(line)} ₸\n`;
   }
+  const svc=svcOn?Math.round(sum*0.10):0;
+  const total=sum+svc;
+  t += `\n${ui().sum}: ${fmt(sum)} ₸\n`;
+  t += svcOn ? `${ui().svcLine}: ${fmt(svc)} ₸\n` : `${ui().svcOff}\n`;
+  t += `${ui().total}: ${fmt(total)} ₸\n`;
+  return t;
+}
+async function copyOrder(){
+  const t=orderText(); if(!t) return;
+  try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
+  catch{ $('orderText').textContent=t; showModal(); }
+}
+function showModal(){
+  const t=orderText(); if(!t) return;
+  $('orderText').textContent=t;
+  $('mb').style.display='flex';
+  $('mb').scrollTop=0;
+}
+function hideModal(){ $('mb').style.display='none'; }
+function sendWA(text){
+  const t=text || orderText(); if(!t) return;
+  window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(t)}`, '_blank');
+}
 
-  function add(name, price){
-    if(!cart[name]) cart[name]={price, qty:0};
-    cart[name].qty++;
-    updateCart(); refreshQty();
+/* ========================= PACK BUILDER ========================= */
+function qtyByGuests(g, a,b,c){ if(g<=10) return a; if(g<=20) return b; return c; }
+
+// ✅ “основное” считаем: 1 позиция на 8–10 чел
+function mainCount(g){ return Math.max(1, Math.ceil(g/9)); }
+
+// ✅ кальян: 1 до 12, 2 до 20, 3 до 35
+function hookahCount(g){ if(g<=12) return 1; if(g<=20) return 2; return 3; }
+
+const SALAD_POOL_RU = ['Цезарь с цыплёнком','Салат «Баварский»','Тёплый салат с лососем','Салат с ростбифом','Салат с рукколой и креветками'];
+const COLD_POOL_RU  = ['Ассорти брускетт','Ассорти из солений','Сырное плато','Мясная нарезка','Фруктовое ассорти'];
+const HOT_POOL_RU   = ['Томлённые баклажаны','Соте из баклажан','Пивные креветки','Бараньи семечки','Пивной сет'];
+const LEM_POOL_RU   = ['Mango – Passion Fruit','Raspberry','Pomegranate','Kiwi – Lime','Watermelon – Melon'];
+
+function allRuItems(){
+  return [].concat(...DATA.ru.food.map(c=>c.items), ...DATA.ru.bar.map(c=>c.items), ...DATA.ru.hookah.map(c=>c.items));
+}
+function priceOfRu(name){
+  const found = allRuItems().find(([n])=>n===name);
+  return found ? Number(found[1]||0) : 0;
+}
+function mainOptionsRu(){
+  const company = DATA.ru.food.find(x=>x.name==='Блюда на компанию')?.items || [];
+  const pre     = DATA.ru.food.find(x=>x.name==='Блюда по предзаказу')?.items || [];
+  const map = (arr, group)=>arr.map(([n,p])=>({name:n, price:p, group}));
+  return [...map(company,'company'), ...map(pre,'pre')];
+}
+function labelOption(opt){
+  const g = opt.group==='company'
+    ? (lang==='ru'?'(на компанию)':(lang==='kz'?'(компанияға)':'(sharing)'))
+    : (lang==='ru'?'(предзаказ)':(lang==='kz'?'(алдын ала)':'(pre-order)'));
+  return `${opt.name} ${g} — ${fmt(opt.price)} ₸`;
+}
+
+function ensureMainSelections(){
+  const need = mainCount(pkGuests);
+  const opts = mainOptionsRu();
+  if(!opts.length){ pkMain=[]; return; }
+  if(pkMain.length !== need){
+    pkMain = Array.from({length:need}, (_,i)=> opts[i % opts.length].name);
+  } else {
+    const names = new Set(opts.map(o=>o.name));
+    pkMain = pkMain.map(x => names.has(x) ? x : opts[0].name);
   }
-  function sub(name){
-    if(!cart[name]) return;
-    cart[name].qty--;
-    if(cart[name].qty<=0) delete cart[name];
-    updateCart(); refreshQty();
+}
+
+function buildAutoIncluded(guests, packId){
+  // ✅ Количества: оптимально по гостям
+  const saladsN = qtyByGuests(guests, 2, 3, 4);
+  const coldN   = qtyByGuests(guests, 1, 2, 3);
+  const hotN    = qtyByGuests(guests, 1, 2, 3);  // ✅ Для 30 чел = 3 горячих (как ты сказал)
+  const lemN    = qtyByGuests(guests, 3, 5, 8);
+  const hookN   = hookahCount(guests);
+
+  const included = [];
+  for(let i=0;i<saladsN;i++) included.push({name:SALAD_POOL_RU[i % SALAD_POOL_RU.length], qty:1, group:'salad'});
+  for(let i=0;i<coldN;i++)   included.push({name:COLD_POOL_RU[i % COLD_POOL_RU.length], qty:1, group:'cold'});
+  for(let i=0;i<hotN;i++)    included.push({name:HOT_POOL_RU[i % HOT_POOL_RU.length], qty:1, group:'hot'});
+  for(let i=0;i<lemN;i++)    included.push({name:LEM_POOL_RU[i % LEM_POOL_RU.length], qty:1, group:'lem'});
+  included.push({name:'Lite', qty:hookN, group:'hookah'});
+
+  // ✅ Premium: НЕ добавляем extra hot (чтобы на 30 не было 4 горячих)
+  // Можно слегка усилить лимонадами при Premium:
+  if(packId==='premium' && guests>=21){
+    included.push({name:LEM_POOL_RU[(lemN) % LEM_POOL_RU.length], qty:1, group:'lem'});
   }
-  function clearCart(){ cart={}; updateCart(); refreshQty(); }
+  return included;
+}
 
-  function blocks(){
-    const d = DATA[lang];
-    const out=[];
-    if(section==='all'||section==='food') out.push(...d.food);
-    if(section==='all'||section==='bar') out.push(...d.bar);
-    if(section==='all'||section==='hookah') out.push(...d.hookah);
-    return out;
-  }
+function calcPackSum(packId, guests, mainSel, addCongrats){
+  let sum=0;
+  const auto = buildAutoIncluded(guests, packId);
+  for(const it of auto) sum += priceOfRu(it.name) * it.qty;
+  for(const nm of (mainSel||[])) sum += priceOfRu(nm);
+  if(addCongrats) sum += 30000;
+  return sum;
+}
+function packMinTotal(packId, guests){
+  const per = MIN_PER_GUEST[packId] || MIN_PER_GUEST.standard;
+  return Math.round(per * guests);
+}
 
-  function render(){
-    const q = ($('q').value||'').trim().toLowerCase();
-    const root = $('menu');
-    root.innerHTML='';
+function validateVipGuests(vipVal, g){
+  const vip = getVip(vipVal);
+  if(g<=vip.cap) return {ok:true, msg:''};
+  const fits = VIPS.filter(v=>g<=v.cap).map(v=> (lang==='ru'?v.ru:(lang==='kz'?v.kz:v.en)) ).join(', ');
+  const name = (lang==='ru'?vip.ru:(lang==='kz'?vip.kz:vip.en));
+  const msg = (lang==='ru'
+    ? `⚠️ В ${name} максимум ${vip.cap} гостей. Для ${g} гостей выберите: ${fits || 'другой VIP'}.`
+    : (lang==='kz'
+      ? `⚠️ ${name} үшін максимум ${vip.cap}. ${g} қонаққа: ${fits || 'басқа VIP'}.`
+      : `⚠️ ${name} max is ${vip.cap} guests. For ${g} guests choose: ${fits || 'another VIP'}.`
+    )
+  );
+  return {ok:false, msg};
+}
 
-    for(const cat of blocks()){
-      const items = cat.items.filter(([n]) => !q || n.toLowerCase().includes(q));
-      if(!items.length) continue;
+function renderPackCards(){
+  const root=$('pkCards');
+  root.innerHTML='';
+  for(const p of PACKS){
+    const card=document.createElement('div');
+    card.className='card' + (p.id===pkPack ? ' active' : '');
 
-      const wrap = document.createElement('div');
-      wrap.className='category';
-      const h2=document.createElement('h2');
-      h2.textContent=cat.name;
-      wrap.appendChild(h2);
+    const h=document.createElement('h4'); h.textContent=p.name[lang]; card.appendChild(h);
+    const d=document.createElement('div'); d.className='desc'; d.textContent=p.desc[lang]; card.appendChild(d);
 
-      for(const [name, price] of items){
-        const row=document.createElement('div');
-        row.className='item';
+    const sum = calcPackSum(p.id, pkGuests, pkMain, (p.id==='premium' && pkAddCongrats));
+    const min = packMinTotal(p.id, pkGuests);
 
-        const left=document.createElement('div');
-        left.className='iname';
-        left.textContent=name;
+    const pr=document.createElement('div'); pr.className='price';
+    pr.textContent = `${fmt(sum)} ₸`;
+    card.appendChild(pr);
 
-        const ps=document.createElement('span');
-        ps.className='iprice';
-        ps.textContent = fmt(price)+' ₸';
-        left.appendChild(ps);
-
-        const ctr=document.createElement('div');
-        ctr.className='controls';
-
-        const bSub=document.createElement('button');
-        bSub.className='btn';
-        bSub.textContent='−';
-        bSub.dataset.action='sub';
-        bSub.dataset.name=name;
-
-        const qty=document.createElement('div');
-        qty.className='qty';
-        qty.dataset.qty=name;
-        qty.textContent=String(cart[name]?.qty||0);
-
-        const bAdd=document.createElement('button');
-        bAdd.className='btn';
-        bAdd.textContent='+';
-        bAdd.dataset.action='add';
-        bAdd.dataset.name=name;
-        bAdd.dataset.price=String(price);
-
-        ctr.appendChild(bSub); ctr.appendChild(qty); ctr.appendChild(bAdd);
-        row.appendChild(left); row.appendChild(ctr);
-        wrap.appendChild(row);
-      }
-      root.appendChild(wrap);
-    }
-  }
-
-  function refreshQty(){
-    document.querySelectorAll('[data-qty]').forEach(el=>{
-      const name=el.dataset.qty;
-      el.textContent=String(cart[name]?.qty||0);
-    });
-  }
-
-  function updateCart(){
-    const entries = Object.entries(cart);
-    if(!entries.length){
-      $('cartItems').textContent=ui().empty;
-      $('total').textContent=ui().total+': 0 ₸';
-      $('breakdown').textContent='';
-      return;
-    }
-    let sum=0, html='';
-    for(const [name, it] of entries){
-      const line=it.price*it.qty;
-      sum+=line;
-      html += `${name} ×${it.qty} — ${fmt(line)} ₸<br>`;
-    }
-    const svcOn = $('svc').checked;
-    const svc = svcOn ? Math.round(sum*0.10) : 0;
-    const total = sum + svc;
-
-    $('cartItems').innerHTML=html;
-    $('total').textContent=ui().total+': '+fmt(total)+' ₸';
-    $('breakdown').textContent = svcOn
-      ? `${ui().sum}: ${fmt(sum)} ₸ + ${ui().svcLine}: ${fmt(svc)} ₸`
-      : `${ui().sum}: ${fmt(sum)} ₸ (${ui().svcOff})`;
-  }
-
-  function orderText(){
-    const entries=Object.entries(cart);
-    if(!entries.length) return '';
-
-    const vipVal = $('vip').value || '';
-    const vipText = getVip(vipVal);
-    const vipLabel = (lang==='ru'?vipText.ru:(lang==='kz'?vipText.kz:vipText.en));
-
-    const svcOn=$('svc').checked;
-    let sum=0;
-
-    let t=`AUTOGRAPH GOLD — ${ui().modal}\n${ui().vipLabel}: ${vipLabel}\n\n`;
-
-    for(const [name, it] of entries){
-      const line=it.price*it.qty;
-      sum+=line;
-      t += `• ${name} ×${it.qty} — ${fmt(line)} ₸\n`;
-    }
-
-    const svc=svcOn?Math.round(sum*0.10):0;
-    const total=sum+svc;
-
-    t += `\n${ui().sum}: ${fmt(sum)} ₸\n`;
-    t += svcOn ? `${ui().svcLine}: ${fmt(svc)} ₸\n` : `${ui().svcOff}\n`;
-    t += `${ui().total}: ${fmt(total)} ₸\n`;
-
-    return t;
-  }
-
-  async function copyOrder(){
-    const t=orderText(); if(!t) return;
-    try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
-    catch{ $('orderText').textContent=t; showModal(); }
-  }
-
-  function showModal(){
-    const t=orderText(); if(!t) return;
-    $('orderText').textContent=t;
-    $('mb').style.display='flex';
-    $('mb').scrollTop = 0;
-  }
-  function hideModal(){ $('mb').style.display='none'; }
-
-  function sendWA(text){
-    const t = text || orderText(); if(!t) return;
-    window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(t)}`, '_blank');
-  }
-
-  // ========= PACKS =========
-  function qtyByGuests(g, a,b,c,d){ if(g<=8) return a; if(g<=12) return b; if(g<=20) return c; return d; }
-  function mainCount(g){ return Math.ceil(g/9); }
-  function hookahCount(g){ if(g<=12) return 1; if(g<=20) return 2; return 3; }
-
-  function getCategoryItemsRu(catNameRu){
-    for(const c of DATA.ru.food){ if(c.name===catNameRu) return c.items.slice(); }
-    return [];
-  }
-
-  const SALAD_POOL = ['Цезарь с цыплёнком','Салат «Баварский»','Тёплый салат с лососем','Салат с ростбифом','Салат с рукколой и креветками'];
-  const COLD_POOL  = ['Ассорти брускетт','Ассорти из солений','Сырное плато','Мясная нарезка','Фруктовое ассорти'];
-  const HOT_POOL   = ['Томлённые баклажаны','Соте из баклажан','Пивные креветки','Бараньи семечки','Пивной сет'];
-  const LEM_POOL   = ['Mango – Passion Fruit','Raspberry','Pomegranate','Kiwi – Lime','Watermelon – Melon'];
-
-  function priceOfRu(name){
-    const all = [].concat(
-      ...DATA.ru.food.map(c=>c.items),
-      ...DATA.ru.bar.map(c=>c.items),
-      ...DATA.ru.hookah.map(c=>c.items)
-    );
-    const found = all.find(([n])=>n===name);
-    return found ? Number(found[1]||0) : 0;
-  }
-
-  function buildAutoIncluded(g, packId){
-    const saladsN = qtyByGuests(g,2,3,4,5);
-    const coldN   = qtyByGuests(g,1,2,3,4);
-    const hotN    = qtyByGuests(g,1,2,2,3);
-    const lemN    = qtyByGuests(g,2,3,5,8);
-    const hookN   = hookahCount(g);
-
-    const included = [];
-    for(let i=0;i<saladsN;i++) included.push({name:SALAD_POOL[i % SALAD_POOL.length], qty:1, group:'salad'});
-    for(let i=0;i<coldN;i++)   included.push({name:COLD_POOL[i % COLD_POOL.length], qty:1, group:'cold'});
-    for(let i=0;i<hotN;i++)    included.push({name:HOT_POOL[i % HOT_POOL.length], qty:1, group:'hot'});
-    for(let i=0;i<lemN;i++)    included.push({name:LEM_POOL[i % LEM_POOL.length], qty:1, group:'lem'});
-    included.push({name:'Lite', qty:hookN, group:'hookah'});
-
-    if(packId==='premium'){
-      if(g>=13) included.push({name:LEM_POOL[(lemN) % LEM_POOL.length], qty:1, group:'lem'});
-      if(g>=21) included.push({name:HOT_POOL[(hotN) % HOT_POOL.length], qty:1, group:'hot'});
-    }
-    return included;
-  }
-
-  function validateVipGuests(vipVal, g){
-    const vip = getVip(vipVal);
-    if(g<=vip.cap) return {ok:true, msg:''};
-    const fits = VIPS.filter(v=>g<=v.cap).map(v=> (lang==='ru'?v.ru:(lang==='kz'?v.kz:v.en)) ).join(', ');
-    const name = (lang==='ru'?vip.ru:(lang==='kz'?vip.kz:v.en));
-    const msg = (lang==='ru'
-      ? `⚠️ В ${name} максимум ${vip.cap} гостей. Для ${g} гостей выберите: ${fits || 'другой VIP'}.`
+    const mini=document.createElement('div'); mini.className='mini';
+    mini.textContent = (lang==='ru'
+      ? `Авто: салаты ${qtyByGuests(pkGuests,2,3,4)} • закуски ${qtyByGuests(pkGuests,1,2,3)}+${qtyByGuests(pkGuests,1,2,3)} • лимонады ${qtyByGuests(pkGuests,3,5,8)} • кальян Lite ×${hookahCount(pkGuests)}`
       : (lang==='kz'
-        ? `⚠️ ${name} үшін максимум ${vip.cap}. ${g} қонаққа: ${fits || 'басқа VIP'}.`
-        : `⚠️ ${name} max is ${vip.cap} guests. For ${g} guests choose: ${fits || 'another VIP'}.`
+        ? `Авто: салат ${qtyByGuests(pkGuests,2,3,4)} • тіскебасар ${qtyByGuests(pkGuests,1,2,3)}+${qtyByGuests(pkGuests,1,2,3)} • лимонад ${qtyByGuests(pkGuests,3,5,8)} • кальян Lite ×${hookahCount(pkGuests)}`
+        : `Auto: salads ${qtyByGuests(pkGuests,2,3,4)} • apps ${qtyByGuests(pkGuests,1,2,3)}+${qtyByGuests(pkGuests,1,2,3)} • lemonades ${qtyByGuests(pkGuests,3,5,8)} • hookah Lite ×${hookahCount(pkGuests)}`
       )
     );
-    return {ok:false, msg};
+    card.appendChild(mini);
+
+    const minLine=document.createElement('div'); minLine.className='mini';
+    minLine.innerHTML = (sum>=min)
+      ? `<span class="tagOk">${ui().minOk}</span> · ${fmt(min)} ₸`
+      : `<span class="tagBad">${ui().minBad}</span> · ${fmt(min)} ₸`;
+    card.appendChild(minLine);
+
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='btnTop';
+    btn.textContent = (lang==='ru'?'Выбрать':(lang==='kz'?'Таңдау':'Select'));
+    btn.dataset.pack = p.id;
+    btn.style.width='100%';
+    btn.style.marginTop='10px';
+    card.appendChild(btn);
+
+    root.appendChild(card);
   }
+}
 
-  function mainOptionsRu(){
-    const company = getCategoryItemsRu('Блюда на компанию').map(([n,p])=>({name:n, price:p, group:'company'}));
-    const pre     = getCategoryItemsRu('Блюда по предзаказу').map(([n,p])=>({name:n, price:p, group:'pre'}));
-    return [...company, ...pre];
-  }
+function renderMainChoices(){
+  ensureMainSelections();
+  const root=$('pkMainChoices');
+  root.innerHTML='';
+  const opts=mainOptionsRu();
+  const need=mainCount(pkGuests);
 
-  function labelOption(opt){
-    const g = opt.group==='company'
-      ? (lang==='ru'?'(на компанию)':(lang==='kz'?'(компанияға)':'(sharing)'))
-      : (lang==='ru'?'(предзаказ)':(lang==='kz'?'(алдын ала)':'(pre-order)'));
-    return `${opt.name} ${g} — ${fmt(opt.price)} ₸`;
-  }
-
-  function ensureMainSelections(){
-    const need = mainCount(pkGuests);
-    const opts = mainOptionsRu();
-    if(!opts.length){ pkMain=[]; return; }
-    if(pkMain.length !== need){
-      pkMain = Array.from({length:need}, (_,i)=> opts[i % opts.length].name);
-    }else{
-      const names = new Set(opts.map(o=>o.name));
-      pkMain = pkMain.map(x => names.has(x) ? x : opts[0].name);
-    }
-  }
-
-  function estimatePackTotal(packId, guests, mainSel, addCongrats){
-    let sum = 0;
-    const auto = buildAutoIncluded(guests, packId);
-    for(const it of auto) sum += priceOfRu(it.name) * it.qty;
-    for(const nm of (mainSel||[])) sum += priceOfRu(nm);
-    if(addCongrats) sum += 30000;
-    return sum;
-  }
-
-  function renderPackCards(){
-    const root = $('pkCards');
-    root.innerHTML = '';
-    for(const p of PACKS){
-      const card = document.createElement('div');
-      card.className = 'card' + (p.id===pkPack ? ' active' : '');
-
-      const h = document.createElement('h4');
-      h.textContent = p.name[lang];
-      card.appendChild(h);
-
-      const d = document.createElement('div');
-      d.className = 'desc';
-      d.textContent = p.desc[lang];
-      card.appendChild(d);
-
-      const est = estimatePackTotal(p.id, pkGuests, pkMain, (p.id==='premium' && pkAddCongrats));
-      const pr = document.createElement('div');
-      pr.className='price';
-      pr.textContent = `${fmt(est)} ₸`;
-      card.appendChild(pr);
-
-      const mini = document.createElement('div');
-      mini.className='mini';
-      mini.textContent = (lang==='ru'
-        ? `Авто-включено: салаты ${qtyByGuests(pkGuests,2,3,4,5)} • закуски ${qtyByGuests(pkGuests,1,2,3,4)}+${qtyByGuests(pkGuests,1,2,2,3)} • лимонады ${qtyByGuests(pkGuests,2,3,5,8)} • кальян Lite ×${hookahCount(pkGuests)}`
-        : (lang==='kz'
-          ? `Авто: салат ${qtyByGuests(pkGuests,2,3,4,5)} • тіскебасар ${qtyByGuests(pkGuests,1,2,3,4)}+${qtyByGuests(pkGuests,1,2,2,3)} • лимонад ${qtyByGuests(pkGuests,2,3,5,8)} • кальян Lite ×${hookahCount(pkGuests)}`
-          : `Auto: salads ${qtyByGuests(pkGuests,2,3,4,5)} • apps ${qtyByGuests(pkGuests,1,2,3,4)}+${qtyByGuests(pkGuests,1,2,2,3)} • lemonades ${qtyByGuests(pkGuests,2,3,5,8)} • hookah Lite ×${hookahCount(pkGuests)}`
-        )
-      );
-      card.appendChild(mini);
-
-      if(p.host){
-        const host = document.createElement('div');
-        host.className='mini';
-        host.textContent = (lang==='ru'
-          ? `🎤 Ведущий: до 30 минут (бронь минимум за 24 часа)`
-          : (lang==='kz'
-            ? `🎤 Жүргізуші: 30 мин дейін (24 сағат бұрын)`
-            : `🎤 Host: up to 30 min (book 24h in advance)`
-          )
-        );
-        card.appendChild(host);
-      }
-
-      const btn = document.createElement('button');
-      btn.type='button';
-      btn.textContent = (lang==='ru' ? 'Выбрать' : (lang==='kz' ? 'Таңдау' : 'Select'));
-      btn.dataset.pack = p.id;
-      card.appendChild(btn);
-
-      root.appendChild(card);
-    }
-  }
-
-  function renderMainChoices(){
-    ensureMainSelections();
-    const root = $('pkMainChoices');
-    root.innerHTML = '';
-
-    const opts = mainOptionsRu();
-    const need = mainCount(pkGuests);
-
-    for(let i=0;i<need;i++){
-      const sel = document.createElement('select');
-      sel.dataset.mainIndex = String(i);
-      for(const opt of opts){
-        const o = document.createElement('option');
-        o.value = opt.name;
-        o.textContent = labelOption(opt);
-        sel.appendChild(o);
-      }
-      sel.value = pkMain[i] || (opts[0]?.name || '');
-      root.appendChild(sel);
-    }
-
-    $('pkMainTitle').textContent = (lang==='ru'
-      ? `Основное (на 8–10 человек): выберите ${need} шт`
-      : (lang==='kz'
-        ? `Негізгі (8–10 адамға): ${need} дана таңдаңыз`
-        : `Main (8–10 people): choose ${need}`
-      )
-    );
-  }
-
-  function renderCongratsOption(){
-    const line = $('pkCongratsLine');
-    if(pkPack !== 'premium'){
-      line.style.display = 'none';
-      pkAddCongrats = false;
-      $('pkAddCongrats').checked = false;
-      return;
-    }
-    line.style.display = '';
-  }
-
-  function packText(){
-    const vipVal = $('pkVip').value || $('vip').value || VIPS[0].val;
-    const vipObj = getVip(vipVal);
-    const vipLabel = (lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
-    const typeLabel = EVENTS[lang].find(x=>x.val===pkType)?.label || '';
-    const pack = PACKS.find(x=>x.id===pkPack) || PACKS[0];
-
-    const auto = buildAutoIncluded(pkGuests, pkPack);
-    const total = estimatePackTotal(pkPack, pkGuests, pkMain, (pkPack==='premium' && pkAddCongrats));
-
-    const lines = [];
-    lines.push(`AUTOGRAPH GOLD — ПАКЕТ`);
-    lines.push(`VIP: ${vipLabel}`);
-    lines.push(`${lang==='en'?'Occasion':'Повод'}: ${typeLabel}`);
-    lines.push(`${lang==='en'?'Guests':'Гостей'}: ${pkGuests}`);
-    lines.push(`${lang==='en'?'Package':'Пакет'}: ${pack.name[lang]}`);
-    lines.push('');
-
-    lines.push(`${lang==='en'?'Main (8–10 people):':'Основное (на 8–10 человек):'} ${pkMain.length} шт`);
-    pkMain.forEach((x,i)=> lines.push(`• ${i+1}) ${x}`));
-
-    lines.push('');
-    lines.push(lang==='en' ? 'Auto-included:' : 'Авто-включено (под ключ):');
-
-    function emit(title, list){
-      if(!list.length) return;
-      lines.push(`• ${title}:`);
-      for(const it of list) lines.push(`   - ${it.name}${it.qty>1 ? ` ×${it.qty}`:''}`);
-    }
-
-    emit(lang==='en'?'Salads':'Салаты', auto.filter(x=>x.group==='salad'));
-    emit(lang==='en'?'Cold appetizers':'Холодные закуски', auto.filter(x=>x.group==='cold'));
-    emit(lang==='en'?'Hot appetizers':'Горячие закуски', auto.filter(x=>x.group==='hot'));
-    emit(lang==='en'?'Lemonades':'Лимонады', auto.filter(x=>x.group==='lem'));
-    emit(lang==='en'?'Hookah':'Кальян', auto.filter(x=>x.group==='hookah'));
-
-    if(pkPack==='premium'){
-      lines.push('');
-      lines.push('🎤 ' + (lang==='en' ? 'Host: up to 30 min' : (lang==='kz' ? 'Жүргізуші: 30 мин дейін' : 'Ведущий: до 30 минут')));
-      if(pkAddCongrats){
-        lines.push('');
-        lines.push('🎉 Autograph поздравление: +30 000 ₸');
-        lines.push('Включено: Martini Asti (1 бутылка) • Торт (подача) • Фейерверк/свечи • Поздравление в VIP');
-      }
-    }
-
-    lines.push('');
-    lines.push(`${lang==='en'?'Estimated total':'Ориентир по сумме'}: ${fmt(total)} ₸`);
-    lines.push(lang==='en'?'Service 10% is separate.':'Сервис 10% по чеку отдельно.');
-    lines.push(pack.note[lang] || '');
-    lines.push('');
-    lines.push(lang==='en'?'Send date/time — manager will confirm.':'Напишите дату/время — менеджер подтвердит бронирование.');
-
-    return lines.join('\n');
-  }
-
-  function renderPacksUI(){
-    $('pkGuests').textContent = String(pkGuests);
-
-    const vipVal = $('pkVip').value || $('vip').value || VIPS[0].val;
-    const check = validateVipGuests(vipVal, pkGuests);
-    const warn = $('pkWarn');
-
-    if(check.ok){
-      warn.style.display='none';
-      warn.textContent='';
-      $('pkSend').classList.remove('disabled');
-    } else {
-      warn.style.display='';
-      warn.textContent=check.msg;
-      $('pkSend').classList.add('disabled');
-    }
-
-    renderPackCards();
-    renderMainChoices();
-    renderCongratsOption();
-
-    $('pkHint').textContent = (lang==='ru'
-      ? 'Выберите пакет и “основное”. Всё остальное подставляется автоматически — чтобы всем хватило.'
-      : (lang==='kz'
-        ? 'Пакет пен “негізгі” таңдаңыз. Қалғаны автоматты түрде қосылады — бәріне жетеді.'
-        : 'Pick a package and main dishes. The rest is auto-included so everyone has enough.'
-      )
-    );
-  }
-
-  function openPacks(){
-    fillVip('pkVip'); fillEvents('pkType');
-    $('pkVip').value = $('vip').value || VIPS[0].val;
-    $('pkType').value = pkType;
-
-    $('pkText').style.display='none';
-    $('packsMb').style.display='flex';
-    $('packsMb').scrollTop = 0;
-
-    renderPacksUI();
-    showPack(true);
-  }
-  function closePacks(){ $('packsMb').style.display='none'; }
-
-  function showPack(scrollToChoices){
-    const t = packText();
-    $('pkText').style.display='block';
-    $('pkText').textContent = t;
-    if(scrollToChoices){
-      $('pkChoices')?.scrollIntoView({behavior:'smooth', block:'start'});
-    }
-  }
-
-  async function copyPack(){
-    const t = packText();
-    try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
-    catch{ $('pkText').style.display='block'; $('pkText').textContent=t; }
-  }
-
-  // ========= CONGRATS =========
-  function congratsText(){
-    const vipVal = $('ptVip').value || $('vip').value || VIPS[0].val;
-    const vipObj = getVip(vipVal);
-    const vipLabel = (lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
-    const typeLabel = EVENTS[lang].find(x=>x.val===ptType)?.label || '';
-
-    const lines = [];
-    lines.push(`AUTOGRAPH GOLD — AUTOGRAPH ${lang==='en'?'CONGRATULATIONS':'ПОЗДРАВЛЕНИЕ'} 🎉`);
-    lines.push(`VIP: ${vipLabel}`);
-    lines.push(`${lang==='en'?'Occasion':'Повод'}: ${typeLabel}`);
-    lines.push('');
-    lines.push(`${lang==='en'?'Price':'Стоимость'}: 30 000 ₸`);
-    lines.push(lang==='en'?'Included:':'Включено:');
-    lines.push('• Martini Asti (1 бутылка)');
-    lines.push('• Торт (подача)');
-    lines.push('• Фейерверк/свечи (подача)');
-    lines.push('• Поздравление в VIP');
-    lines.push('');
-    lines.push(lang==='en'?'* Please confirm serving time with manager.':'* Время подачи согласовать с менеджером.');
-    lines.push(lang==='en'?'Send date/time & name — manager will confirm.':'Напишите дату/время и имя — менеджер подтвердит.');
-    return lines.join('\n');
-  }
-
-  function openCongrats(){
-    fillVip('ptVip'); fillEvents('ptType');
-    $('ptVip').value = $('vip').value || VIPS[0].val;
-    $('ptType').value = ptType;
-    $('partyMb').style.display='flex';
-    $('partyMb').scrollTop = 0;
-  }
-  function closeCongrats(){ $('partyMb').style.display='none'; }
-
-  async function copyCongrats(){
-    const t = congratsText();
-    try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
-    catch{ $('ptText').style.display='block'; $('ptText').textContent=t; }
-  }
-
-  // ========= BOOKING =========
-  function fillTimes(){
-    const sel = $('bTime');
-    sel.innerHTML = '';
-    const slots = [];
-    for(let h=12; h<=23; h++){
-      slots.push(`${String(h).padStart(2,'0')}:00`);
-      slots.push(`${String(h).padStart(2,'0')}:30`);
-    }
-    slots.push('00:00','00:30','01:00','01:30','02:00','02:30','03:00');
-    for(const t of slots){
+  for(let i=0;i<need;i++){
+    const sel=document.createElement('select');
+    sel.dataset.mainIndex=String(i);
+    for(const opt of opts){
       const o=document.createElement('option');
-      o.value=t; o.textContent=t;
+      o.value=opt.name; o.textContent=labelOption(opt);
       sel.appendChild(o);
+    }
+    sel.value = pkMain[i] || (opts[0]?.name || '');
+    root.appendChild(sel);
+  }
+
+  $('pkMainTitle').textContent = (lang==='ru'
+    ? `Основное (на 8–10 человек): выберите ${need} шт`
+    : (lang==='kz'
+      ? `Негізгі (8–10 адамға): ${need} дана таңдаңыз`
+      : `Main (8–10 people): choose ${need}`
+    )
+  );
+}
+
+function renderCongratsOption(){
+  const line=$('pkCongratsLine');
+  if(pkPack!=='premium'){
+    line.style.display='none';
+    pkAddCongrats=false;
+    $('pkAddCongrats').checked=false;
+    return;
+  }
+  line.style.display='';
+  $('pkCongratsText').textContent = (lang==='ru'
+    ? 'Добавить Autograph поздравление +30 000 ₸'
+    : (lang==='kz'
+      ? 'Autograph құттықтауы +30 000 ₸ қосу'
+      : 'Add Autograph congratulations +30 000 ₸'
+    )
+  );
+}
+
+function renderMinStatus(){
+  const sum = calcPackSum(pkPack, pkGuests, pkMain, (pkPack==='premium' && pkAddCongrats));
+  const min = packMinTotal(pkPack, pkGuests);
+  $('pkMinText').textContent = ui().minRule + ' ' + (lang==='en'?'Minimum: ':'Минимум: ') + fmt(min) + ' ₸';
+  $('pkMinStatus').innerHTML = (sum>=min)
+    ? `<span class="tagOk">${ui().minOk}</span> (${fmt(sum)} ₸)`
+    : `<span class="tagBad">${ui().minBad}</span> (${fmt(sum)} ₸)`;
+}
+
+function renderPacksUI(){
+  $('pkGuests').textContent=String(pkGuests);
+
+  const vipVal = $('pkVip').value || $('vip').value || VIPS[0].val;
+  const check = validateVipGuests(vipVal, pkGuests);
+  const warn = $('pkWarn');
+
+  if(check.ok){
+    warn.style.display='none';
+    warn.textContent='';
+    $('pkSend').classList.remove('disabled');
+  } else {
+    warn.style.display='';
+    warn.textContent=check.msg;
+    $('pkSend').classList.add('disabled');
+  }
+
+  renderPackCards();
+  renderMainChoices();
+  renderCongratsOption();
+  renderMinStatus();
+
+  $('pkHint').textContent = (lang==='ru'
+    ? 'Важно: в счёт менеджер пробивает позиции из списка пакета. Следи, чтобы сумма пакета была НЕ НИЖЕ минимума.'
+    : (lang==='kz'
+      ? 'Маңызды: менеджер пакет позицияларын чекке бөлек енгізеді. Сома минимумнан төмен болмауы керек.'
+      : 'Important: the manager enters items from the package into the bill. Make sure total is not below the minimum.'
+    )
+  );
+}
+
+function packText(){
+  const vipVal = $('pkVip').value || $('vip').value || VIPS[0].val;
+  const vipObj = getVip(vipVal);
+  const vipLabel = (lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
+  const typeLabel = EVENTS[lang].find(x=>x.val===pkType)?.label || '';
+  const pack = PACKS.find(x=>x.id===pkPack) || PACKS[0];
+
+  const auto = buildAutoIncluded(pkGuests, pkPack);
+  const sum = calcPackSum(pkPack, pkGuests, pkMain, (pkPack==='premium' && pkAddCongrats));
+  const min = packMinTotal(pkPack, pkGuests);
+
+  const lines=[];
+  lines.push(`AUTOGRAPH GOLD — ${lang==='en'?'PACKAGE':'ПАКЕТ'}`);
+  lines.push(`${ui().vipLabel}: ${vipLabel}`);
+  lines.push(`${ui().occasion}: ${typeLabel}`);
+  lines.push(`${ui().guests}: ${pkGuests}`);
+  lines.push(`${lang==='en'?'Package':'Пакет'}: ${pack.name[lang]}`);
+  lines.push('');
+  lines.push(`${lang==='en'?'Main (choose)':'Основное (выбор)'}: ${pkMain.length} шт`);
+  pkMain.forEach((x,i)=>lines.push(`• ${i+1}) ${x}`));
+  lines.push('');
+  lines.push(`${lang==='en'?'Auto-included':'Авто-включено'}:`);
+
+  const groupTitle = (g)=>({
+    salad: (lang==='ru'?'Салаты':(lang==='kz'?'Салаттар':'Salads')),
+    cold:  (lang==='ru'?'Холодные закуски':(lang==='kz'?'Суық тіскебасарлар':'Cold appetizers')),
+    hot:   (lang==='ru'?'Горячие закуски':(lang==='kz'?'Ыстық тіскебасарлар':'Hot appetizers')),
+    lem:   (lang==='ru'?'Лимонады':(lang==='kz'?'Лимонадтар':'Lemonades')),
+    hookah:(lang==='ru'?'Кальян':(lang==='kz'?'Кальян':'Hookah'))
+  }[g] || g);
+
+  for(const g of ['salad','cold','hot','lem','hookah']){
+    const list = auto.filter(x=>x.group===g);
+    if(!list.length) continue;
+    lines.push(`• ${groupTitle(g)}:`);
+    for(const it of list) lines.push(`   - ${it.name}${it.qty>1 ? ` ×${it.qty}`:''}`);
+  }
+
+  if(pkPack==='premium'){
+    lines.push('');
+    lines.push('🎤 ' + (lang==='ru' ? 'Ведущий: до 30 минут (по предзаказу)' : (lang==='kz' ? 'Жүргізуші: 30 мин дейін (алдын ала)' : 'Host: up to 30 min (pre-booking)')));
+    if(pkAddCongrats){
+      lines.push('');
+      lines.push('🎉 Autograph поздравление: +30 000 ₸');
+      lines.push('• Martini Asti (1 бутылка) • Торт (подача) • Фейерверк/свечи • Поздравление в VIP');
     }
   }
 
-  function openBooking(){
-    $('bookMb').style.display='flex';
-    $('bookMb').scrollTop=0;
+  lines.push('');
+  lines.push(`${lang==='en'?'Bundle total':'Сумма набора'}: ${fmt(sum)} ₸`);
+  lines.push(`${lang==='en'?'Package minimum':'Минимум пакета'}: ${fmt(min)} ₸`);
+  lines.push(sum>=min ? `✅ ${ui().minOk}` : `⚠️ ${ui().minBad}`);
+  lines.push('');
+  lines.push(lang==='en'?'Send date/time — manager will confirm.':'Напишите дату/время — менеджер подтвердит.');
+  return lines.join('\n');
+}
 
-    fillVip('bVip');
-    fillTimes();
+function openPacks(){
+  fillVip('pkVip'); fillEvents('pkType');
+  $('pkVip').value = $('vip').value || VIPS[0].val;
+  $('pkType').value = pkType;
 
-    $('bVip').value = $('vip').value || VIPS[0].val;
+  $('pkText').style.display='none';
+  $('packsMb').style.display='flex';
+  $('packsMb').scrollTop=0;
 
-    const d = new Date();
-    const z=(n)=>String(n).padStart(2,'0');
-    $('bDate').value = `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
+  renderPacksUI();
+  showPack(false);
+}
+function closePacks(){ $('packsMb').style.display='none'; }
 
-    $('bStatus').textContent = 'Статус: выберите VIP/дату/время и нажмите “Проверить”';
+function showPack(scrollChoices){
+  $('pkText').style.display='block';
+  $('pkText').textContent = packText();
+  if(scrollChoices) $('pkChoices')?.scrollIntoView({behavior:'smooth', block:'start'});
+}
+async function copyPack(){
+  const t=packText();
+  try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
+  catch{ $('pkText').style.display='block'; $('pkText').textContent=t; }
+}
+
+/* ========================= CONGRATS ========================= */
+function congratsText(){
+  const vipVal = $('ptVip').value || $('vip').value || VIPS[0].val;
+  const vipObj = getVip(vipVal);
+  const vipLabel = (lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
+  const typeLabel = EVENTS[lang].find(x=>x.val===ptType)?.label || '';
+
+  const lines=[];
+  lines.push(`AUTOGRAPH GOLD — ${lang==='en'?'CONGRATULATIONS':'ПОЗДРАВЛЕНИЕ'} 🎉`);
+  lines.push(`${ui().vipLabel}: ${vipLabel}`);
+  lines.push(`${ui().occasion}: ${typeLabel}`);
+  lines.push('');
+  lines.push(`${lang==='en'?'Price':'Стоимость'}: 30 000 ₸`);
+  lines.push(lang==='en'?'Included:':'Включено:');
+  lines.push('• Martini Asti (1 бутылка)');
+  lines.push('• Торт (подача)');
+  lines.push('• Фейерверк/свечи (подача)');
+  lines.push('• Поздравление в VIP');
+  lines.push('');
+  lines.push(lang==='en'?'* Please confirm serving time with manager.':'* Время подачи согласовать с менеджером.');
+  return lines.join('\n');
+}
+function openCongrats(){
+  fillVip('ptVip'); fillEvents('ptType');
+  $('ptVip').value = $('vip').value || VIPS[0].val;
+  $('ptType').value = ptType;
+  $('ptText').style.display='none';
+  $('partyMb').style.display='flex';
+  $('partyMb').scrollTop=0;
+
+  $('ptTitle').textContent = ui().congrats;
+  $('ptName').textContent = ui().congrats;
+  $('ptDesc').textContent = (lang==='ru'
+    ? 'Праздничная подача в VIP с тортом и напитком.'
+    : (lang==='kz' ? 'VIP ішінде торт пен сусынмен мерекелік подача.' : 'A festive VIP presentation with cake & a drink.')
+  );
+  $('ptInc').textContent = (lang==='ru'
+    ? 'Включено: Martini Asti (1 бут) • Торт (подача) • Фейерверк/свечи • Поздравление в VIP'
+    : (lang==='kz'
+      ? 'Кіреді: Martini Asti (1 бут) • Торт • фейерверк/шам • VIP құттықтау'
+      : 'Included: Martini Asti (1 btl) • Cake • sparkler/candles • VIP congratulations'
+    )
+  );
+  $('ptNote').textContent = (lang==='ru'
+    ? '* Время подачи согласовать с менеджером.'
+    : (lang==='kz'
+      ? '* Подача уақытын менеджермен келісіңіз.'
+      : '* Please confirm serving time with manager.'
+    )
+  );
+}
+function closeCongrats(){ $('partyMb').style.display='none'; }
+async function copyCongrats(){
+  const t=congratsText();
+  try{ await navigator.clipboard.writeText(t); alert(ui().copied); }
+  catch{ $('ptText').style.display='block'; $('ptText').textContent=t; }
+}
+
+/* ========================= BOOKING ========================= */
+function fillTimes(){
+  const sel=$('bTime'); sel.innerHTML='';
+  const slots=[];
+  for(let h=12; h<=23; h++){
+    slots.push(`${String(h).padStart(2,'0')}:00`);
+    slots.push(`${String(h).padStart(2,'0')}:30`);
+  }
+  slots.push('00:00','00:30','01:00','01:30','02:00','02:30','03:00');
+  for(const t of slots){
+    const o=document.createElement('option');
+    o.value=t; o.textContent=t;
+    sel.appendChild(o);
+  }
+}
+function openBooking(){
+  $('bookMb').style.display='flex';
+  $('bookMb').scrollTop=0;
+
+  fillVip('bVip');
+  fillTimes();
+  $('bVip').value = $('vip').value || VIPS[0].val;
+
+  const d=new Date();
+  const z=(n)=>String(n).padStart(2,'0');
+  $('bDate').value = `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
+
+  $('bStatus').textContent = (lang==='ru'
+    ? 'Статус: выберите VIP/дату/время и нажмите “Проверить”'
+    : (lang==='kz'
+      ? 'Статус: VIP/күн/уақыт таңдаңыз да “Тексеру” басыңыз'
+      : 'Status: choose VIP/date/time and press “Check”'
+    )
+  );
+  $('bSend').classList.add('disabled');
+}
+function closeBooking(){ $('bookMb').style.display='none'; }
+
+async function checkBusy(){
+  const vip=$('bVip').value;
+  const date=$('bDate').value;
+  const time=$('bTime').value;
+  const dur=$('bDur').value;
+
+  if(!vip || !date || !time){
+    $('bStatus').textContent = (lang==='ru'?'Заполните VIP, дату и время':(lang==='kz'?'VIP/күн/уақыт толтырыңыз':'Fill VIP/date/time'));
+    $('bSend').classList.add('disabled');
+    return;
+  }
+  $('bStatus').textContent = (lang==='ru'?'Проверяю…':(lang==='kz'?'Тексеріп жатыр…':'Checking…'));
+
+  try{
+    const url = `${BOOKING_API}?action=check&vip=${encodeURIComponent(vip)}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&dur=${encodeURIComponent(dur)}`;
+    const r = await fetch(url, {method:'GET'});
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.error || 'check error');
+
+    if(j.busy){
+      $('bStatus').textContent = `${ui().busy} ❌ (${vip} ${date} ${time})`;
+      $('bSend').classList.add('disabled');
+    } else {
+      $('bStatus').textContent = `${ui().free} ✅ (${vip} ${date} ${time})`;
+      $('bSend').classList.remove('disabled');
+    }
+  }catch(e){
+    $('bStatus').textContent = (lang==='ru'?'Ошибка проверки: ':'Check error: ') + String(e);
     $('bSend').classList.add('disabled');
   }
-  function closeBooking(){ $('bookMb').style.display='none'; }
+}
 
-  async function checkBusy(){
-    const vip = $('bVip').value;
-    const date = $('bDate').value;
-    const time = $('bTime').value;
-    const dur = $('bDur').value;
+// ✅ Памятка после успеха
+function bookingMemoText(p){
+  const vipObj=getVip(p.vip);
+  const vipLabel=(lang==='ru'?vipObj.ru:(lang==='kz'?vipObj.kz:vipObj.en));
 
-    if(!vip || !date || !time){
-      $('bStatus').textContent = 'Заполните VIP, дату и время';
-      $('bSend').classList.add('disabled');
-      return;
-    }
+  let t = `AUTOGRAPH GOLD — ${lang==='en'?'MEMO':'ПАМЯТКА'} ✅\n\n`;
+  t += `VIP: ${vipLabel}\n`;
+  t += `${ui().date}: ${p.date}\n`;
+  t += `${ui().time}: ${p.time}\n`;
+  t += `${ui().duration}: ${p.durationHours} ${lang==='en'?'h':'ч.'}\n`;
+  t += `${ui().guests}: ${p.guests}\n\n`;
+  t += `${ui().name}: ${p.name}\n`;
+  t += `${ui().phone}: ${p.phone}\n`;
+  if(p.comment) t += `${ui().comment}: ${p.comment}\n`;
+  t += `\n💳 Kaspi: ${KASPI_PAY_LINK}\n`;
+  t += `\n${lang==='en'?'If plans change — message us in advance.':'Если планы изменятся — напишите заранее.'}`;
+  return t;
+}
+function openWAWithText(text){
+  window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(text)}`, '_blank');
+}
 
-    $('bStatus').textContent = 'Проверяю…';
+async function sendBooking(){
+  if($('bSend').classList.contains('disabled')) return;
 
-    try{
-      const url = `${BOOKING_API}?action=check&vip=${encodeURIComponent(vip)}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&dur=${encodeURIComponent(dur)}`;
-      const r = await fetch(url, {method:'GET'});
-      const j = await r.json();
-      if(!j.ok) throw new Error(j.error || 'check error');
+  const payload = {
+    name: ($('bName').value||'').trim(),
+    phone: ($('bPhone').value||'').trim(),
+    vip: $('bVip').value,
+    guests: ($('bGuests').value||'').trim(),
+    date: $('bDate').value,
+    time: $('bTime').value,
+    durationHours: Number($('bDur').value||2),
+    comment: ($('bComment').value||'').trim()
+  };
 
-      if(j.busy){
-        $('bStatus').textContent = `ЗАНЯТО ❌ (${vip} ${date} ${time})`;
+  if(!payload.name || !payload.phone){
+    $('bStatus').textContent = (lang==='ru'?'Введите имя и телефон':(lang==='kz'?'Аты мен телефонды енгізіңіз':'Enter name and phone'));
+    return;
+  }
+
+  $('bStatus').textContent = (lang==='ru'?'Отправляю…':(lang==='kz'?'Жіберіп жатыр…':'Sending…'));
+
+  try{
+    const r = await fetch(BOOKING_API, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    const j = await r.json();
+
+    if(!j.ok){
+      if(String(j.error||'').toUpperCase().includes('BUSY')){
+        $('bStatus').textContent = (lang==='ru'
+          ? 'Только что заняли этот слот ❌ Выберите другое время.'
+          : (lang==='kz'
+            ? 'Бұл уақыт жаңа ғана брондалды ❌ Басқа уақыт таңдаңыз.'
+            : 'This slot was just booked ❌ Choose another time.'
+          )
+        );
         $('bSend').classList.add('disabled');
-      } else {
-        $('bStatus').textContent = `СВОБОДНО ✅ (${vip} ${date} ${time})`;
-        $('bSend').classList.remove('disabled');
+        return;
       }
-    } catch(e){
-      $('bStatus').textContent = 'Ошибка проверки: ' + String(e);
-      $('bSend').classList.add('disabled');
+      throw new Error(j.error || 'send error');
     }
+
+    $('bStatus').textContent = ui().sentOk + ' · ' + ui().sendMemo;
+    $('bSend').classList.add('disabled');
+
+    // ✅ открываем WhatsApp с памяткой после успеха
+    openWAWithText(bookingMemoText(payload));
+
+  }catch(e){
+    $('bStatus').textContent = (lang==='ru'?'Ошибка отправки: ':'Send error: ') + String(e);
+  }
+}
+
+/* ========================= PAY ========================= */
+function openPay(){
+  $('payMb').style.display='flex';
+  $('payMb').scrollTop=0;
+  $('payLinkBox').textContent = KASPI_PAY_LINK;
+}
+function closePay(){ $('payMb').style.display='none'; }
+async function copyPay(){
+  try{ await navigator.clipboard.writeText(KASPI_PAY_LINK); alert(ui().copied); }catch{}
+}
+function openKaspiLink(){ window.open(KASPI_PAY_LINK, '_blank'); }
+
+/* ========================= EVENTS ========================= */
+document.addEventListener('click',(e)=>{
+  const t=e.target;
+
+  if(t.matches('[data-lang]')) return setLang(t.dataset.lang);
+  if(t.matches('[data-section]')) return setSection(t.dataset.section);
+
+  if(t.dataset.action){
+    const name=t.dataset.name;
+    if(t.dataset.action==='add') return add(name, Number(t.dataset.price||0));
+    return sub(name);
   }
 
-  async function sendBooking(){
-    if($('bSend').classList.contains('disabled')) return;
+  if(t.id==='clearBtn') return clearCart();
+  if(t.id==='copyBtn') return showModal();
+  if(t.id==='sendBtn') return sendWA();
 
-    const payload = {
-      name: ($('bName').value||'').trim(),
-      phone: ($('bPhone').value||'').trim(),
-      vip: $('bVip').value,
-      guests: ($('bGuests').value||'').trim(),
-      date: $('bDate').value,
-      time: $('bTime').value,
-      durationHours: Number($('bDur').value||2),
-      comment: ($('bComment').value||'').trim()
-    };
+  if(t.id==='mCopy') return copyOrder();
+  if(t.id==='mClose' || t.id==='mb') return hideModal();
 
-    if(!payload.name || !payload.phone){
-      $('bStatus').textContent = 'Введите имя и телефон';
-      return;
-    }
+  if(t.id==='packsBtn') return openPacks();
+  if(t.id==='partyBtn') return openCongrats();
 
-    $('bStatus').textContent = 'Отправляю…';
+  if(t.id==='packsMb') return closePacks();
+  if(t.id==='partyMb') return closeCongrats();
 
-    try{
-      const r = await fetch(BOOKING_API, {
-        method:'POST',
-        headers:{'Content-Type':'text/plain;charset=utf-8'},
-        body: JSON.stringify(payload)
-      });
-      const j = await r.json();
-      if(!j.ok){
-        if(String(j.error||'').toUpperCase().includes('BUSY')){
-          $('bStatus').textContent = 'Только что заняли этот слот ❌ Выберите другое время.';
-          $('bSend').classList.add('disabled');
-          return;
-        }
-        throw new Error(j.error || 'send error');
-      }
-      $('bStatus').textContent = 'Заявка отправлена ✅ Менеджер подтвердит.';
-      $('bSend').classList.add('disabled');
-    } catch(e){
-      $('bStatus').textContent = 'Ошибка отправки: ' + String(e);
-    }
+  if(t.id==='pkClose') return closePacks();
+  if(t.id==='pkShow') return showPack(true);
+  if(t.id==='pkCopy') return copyPack();
+  if(t.id==='pkSend'){
+    if(t.classList.contains('disabled')) return;
+    // ✅ если ниже минимума — не блокирую, но ты увидишь статус и можешь поправить
+    return sendWA(packText());
   }
 
-  // ========= PAYMENT =========
-  function openPay(){
-    $('payMb').style.display='flex';
-    $('payMb').scrollTop=0;
-  }
-  function closePay(){ $('payMb').style.display='none'; }
-  async function copyPay(){
-    try{ await navigator.clipboard.writeText(KASPI_PAY_LINK); alert(ui().copied); }
-    catch{}
-  }
-  function openKaspiLink(){
-    window.open(KASPI_PAY_LINK, '_blank');
-  }
+  if(t.id==='ptClose') return closeCongrats();
+  if(t.id==='ptCopy') return copyCongrats();
+  if(t.id==='ptSend') return sendWA(congratsText());
 
-  // ========= EVENTS =========
-  document.addEventListener('click',(e)=>{
-    const t=e.target;
+  if(t.id==='pkMinus'){ pkGuests=Math.max(4, pkGuests-1); renderPacksUI(); showPack(false); return; }
+  if(t.id==='pkPlus'){ pkGuests=Math.min(35, pkGuests+1); renderPacksUI(); showPack(false); return; }
 
-    if(t.matches('[data-lang]')) return setLang(t.dataset.lang);
-    if(t.matches('[data-section]')) return setSection(t.dataset.section);
-
-    if(t.dataset.action){
-      const name=t.dataset.name;
-      if(t.dataset.action==='add') return add(name, Number(t.dataset.price||0));
-      return sub(name);
-    }
-
-    if(t.id==='clearBtn') return clearCart();
-    if(t.id==='copyBtn') return showModal();
-    if(t.id==='sendBtn') return sendWA();
-
-    if(t.id==='mCopy') return copyOrder();
-    if(t.id==='mClose' || t.id==='mb') return hideModal();
-
-    if(t.id==='packsBtn') return openPacks();
-    if(t.id==='partyBtn') return openCongrats();
-
-    if(t.id==='pkClose') return closePacks();
-    if(t.id==='pkShow') return showPack(true);
-    if(t.id==='pkCopy') return copyPack();
-    if(t.id==='pkSend'){
-      if(t.classList.contains('disabled')) return;
-      return sendWA(packText());
-    }
-    if(t.id==='packsMb' && t === $('packsMb')) return closePacks();
-
-    if(t.id==='ptClose') return closeCongrats();
-    if(t.id==='ptCopy') return copyCongrats();
-    if(t.id==='ptSend') return sendWA(congratsText());
-    if(t.id==='partyMb' && t === $('partyMb')) return closeCongrats();
-
-    if(t.id==='pkMinus'){ pkGuests = Math.max(4, pkGuests-1); renderPacksUI(); showPack(false); return; }
-    if(t.id==='pkPlus'){ pkGuests = Math.min(35, pkGuests+1); renderPacksUI(); showPack(false); return; }
-
-    if(t.dataset.pack){
-      pkPack = t.dataset.pack;
-      renderPacksUI();
-      showPack(true);
-      return;
-    }
-
-    // Booking
-    if(t.id==='bookBtn') return openBooking();
-    if(t.id==='bookClose') return closeBooking();
-    if(t.id==='bookMb' && t === $('bookMb')) return closeBooking();
-    if(t.id==='bCheck') return checkBusy();
-    if(t.id==='bSend') return sendBooking();
-    if(t.id==='bPayOpen') return openKaspiLink();
-
-    // Payment
-    if(t.id==='payBtn') return openPay();
-    if(t.id==='payClose') return closePay();
-    if(t.id==='payMb' && t === $('payMb')) return closePay();
-    if(t.id==='payOpen') return openKaspiLink();
-    if(t.id==='payCopy') return copyPay();
-  });
-
-  $('q').addEventListener('input', render);
-  $('svc').addEventListener('change', updateCart);
-
-  $('pkVip').addEventListener('change', ()=>{ renderPacksUI(); showPack(false); });
-  $('pkType').addEventListener('change', (e)=>{ pkType = e.target.value; showPack(false); });
-
-  $('pkMainChoices').addEventListener('change', (e)=>{
-    const idx = e.target?.dataset?.mainIndex;
-    if(idx==null) return;
-    pkMain[Number(idx)] = e.target.value;
-    renderPackCards();
+  if(t.dataset.pack){
+    pkPack=t.dataset.pack;
+    renderPacksUI();
     showPack(false);
-  });
+    return;
+  }
 
-  $('pkAddCongrats').addEventListener('change', (e)=>{
-    pkAddCongrats = !!e.target.checked;
-    renderPackCards();
-    showPack(false);
-  });
+  // Booking
+  if(t.id==='bookBtn') return openBooking();
+  if(t.id==='bookClose' || t.id==='bookMb') return closeBooking();
+  if(t.id==='bCheck') return checkBusy();
+  if(t.id==='bSend') return sendBooking();
+  if(t.id==='bPayOpen') return openKaspiLink();
 
-  $('ptType').addEventListener('change', (e)=>{ ptType = e.target.value; });
+  // Payment
+  if(t.id==='payBtn') return openPay();
+  if(t.id==='payClose' || t.id==='payMb') return closePay();
+  if(t.id==='payOpen') return openKaspiLink();
+  if(t.id==='payCopy') return copyPay();
+});
 
-  // ====== init ======
-  fillVip('vip');
-  setLang('ru');
-  setSection('all');
+$('q').addEventListener('input', render);
+$('svc').addEventListener('change', updateCart);
 
-  // Kaspi QR images (generated from link)
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(KASPI_PAY_LINK)}`;
-  $('kaspiQrImg').src = qrUrl;
-  $('kaspiQrImg2').src = qrUrl;
+$('pkVip').addEventListener('change', ()=>{ renderPacksUI(); showPack(false); });
+$('pkType').addEventListener('change', (e)=>{ pkType=e.target.value; showPack(false); });
+
+$('pkMainChoices').addEventListener('change', (e)=>{
+  const idx = e.target?.dataset?.mainIndex;
+  if(idx==null) return;
+  pkMain[Number(idx)] = e.target.value;
+  renderPacksUI();
+  showPack(false);
+});
+
+$('pkAddCongrats').addEventListener('change', (e)=>{
+  pkAddCongrats = !!e.target.checked;
+  renderPacksUI();
+  showPack(false);
+});
+
+$('ptType').addEventListener('change', (e)=>{ ptType=e.target.value; });
+
+function openPacks(){
+  fillVip('pkVip'); fillEvents('pkType');
+  $('pkVip').value = $('vip').value || VIPS[0].val;
+  $('pkType').value = pkType;
+
+  $('pkText').style.display='none';
+  $('packsMb').style.display='flex';
+  $('packsMb').scrollTop=0;
+
+  renderPacksUI();
+  showPack(false);
+}
+
+/* ========================= INIT ========================= */
+fillVip('vip');
+fillVip('pkVip');
+fillVip('ptVip');
+fillVip('bVip');
+fillEvents('pkType');
+fillEvents('ptType');
+
+setLang('ru');
+setSection('all');
+fillTimes();
 </script>
 </body>
 </html>
